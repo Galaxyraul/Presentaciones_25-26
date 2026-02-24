@@ -502,44 +502,39 @@
 
     <script>
         let currentSlideIdx = 0;
-        const slides = document.querySelectorAll('.slide');
-        const progressBar = document.getElementById('progressBar');
-        const pageHeader = document.getElementById('pageCounterHeader');
-        const pageFooter = document.getElementById('pageCounterFooter');
+const slides = document.querySelectorAll('.slide');
+const progressBar = document.getElementById('progressBar');
+const pageFooter = document.getElementById('pageCounterFooter');
 
-        function updateSlideUI() {
-            slides.forEach((s, i) => {
-                s.classList.toggle('active', i === currentSlideIdx);
-            });
+function updateSlideUI() {
+    slides.forEach((s, i) => {
+        s.classList.toggle('active', i === currentSlideIdx);
+    });
 
-            // Actualizar progreso
-            const percent = ((currentSlideIdx + 1) / slides.length) * 100;
-            progressBar.style.width = percent + '%';
+    // Actualizar progreso
+    const percent = ((currentSlideIdx + 1) / slides.length) * 100;
+    progressBar.style.width = percent + '%';
 
-            // Actualizar contadores
-            const text = `Pág. ${currentSlideIdx + 1} / ${slides.length}`;
-            pageHeader.innerText = text;
-            pageFooter.innerText = `${currentSlideIdx + 1} / ${slides.length}`;
-        }
+    // Actualizar contador footer
+    pageFooter.innerText = `${currentSlideIdx + 1} / ${slides.length}`;
+}
 
-        function changeSlide(dir) {
-            currentSlideIdx = (currentSlideIdx + dir + slides.length) % slides.length;
-            updateSlideUI();
-        }
+function changeSlide(dir) {
+    currentSlideIdx = (currentSlideIdx + dir + slides.length) % slides.length;
+    updateSlideUI();
+}
 
-        function goToSlide(idx) {
-            currentSlideIdx = idx;
-            updateSlideUI();
-        }
+function goToSlide(idx) {
+    currentSlideIdx = idx;
+    updateSlideUI();
+}
 
-        // Eventos de Teclado
-        document.addEventListener('keydown', (e) => {
-            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
-            if (e.key === "ArrowLeft") changeSlide(-1);
-        });
+document.addEventListener('keydown', (e) => {
+    if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+    if (e.key === "ArrowLeft") changeSlide(-1);
+});
 
-        // Inicializar
-        updateSlideUI();
+updateSlideUI();
     </script>
 </body>
 </html>
