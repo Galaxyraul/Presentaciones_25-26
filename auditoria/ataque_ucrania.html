@@ -200,6 +200,19 @@
             background: linear-gradient(transparent, var(--bg-color));
         }
 
+        .navbar {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
         .nav-btn {
             background: var(--card-bg);
             color: white;
@@ -224,6 +237,22 @@
             padding: 6px 16px;
             border-radius: 20px;
             border: 1px solid var(--border);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: var(--primary);
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
         }
 
         /* --- CONFIGURACIÓN PARA IMPRESIÓN --- */
@@ -282,6 +311,18 @@
 </head>
 <body>
 
+    <nav class="navbar">
+        <div class="logo">
+            <div class="logo-icon">A</div>
+            <div class="brand">
+                <h1>Audioría Informática</h1>
+                <span>Ciberataque a la Red Eléctrica de Ucrania</span>
+            </div>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">
+            CURSO 2025/26
+        </div>
+    </nav>
     <div class="progress-container">
         <div id="progressBar" class="progress-bar"></div>
     </div>
@@ -439,7 +480,7 @@
                     "La seguridad física de la población depende hoy de la robustez digital de su infraestructura crítica."
                 </p>
                 <div style="margin-top: 2rem; font-weight: bold;">
-                    UCANIA 2015: UN ANTES Y UN DESPUÉS
+                    UCRANIA 2015: UN ANTES Y UN DESPUÉS
                 </div>
             </div>
             <div class="slide-internal-num">07 / 07</div>
