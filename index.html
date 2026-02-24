@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KDD Project Hub - Grupo 5</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #020617;
+            color: #f8fafc;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: #38bdf8;
+            box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.2);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-6">
+
+    <!-- Hero Section -->
+    <header class="text-center mb-16 animate-fade-in">
+        <div class="inline-block px-4 py-1.5 mb-4 text-xs font-semibold tracking-wider text-sky-400 uppercase bg-sky-400/10 border border-sky-400/20 rounded-full">
+            Proyecto KDD 2026
+        </div>
+        <h1 class="text-5xl md:text-7xl font-extrabold mb-4 tracking-tight">
+            Grupo 5
+        </h1>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">
+            Análisis Bivariable de Relaciones Lineales y Dependencias: 
+            <span class="text-slate-200 font-semibold">Numérica vs. Categórica</span>.
+        </p>
+    </header>
+
+    <!-- Navigation Hub -->
+    <main class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
+        
+        <!-- Recurso 1: Presentación -->
+        <a href="./presentaciones/presentacion_kdd.html" class="glass-card p-8 rounded-3xl group">
+            <div class="w-14 h-14 bg-sky-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-sky-500/20 transition-colors">
+                <i class="fas fa-desktop text-2xl text-sky-400"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-3">Presentación</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                Diapositivas interactivas con conceptos teóricos, tipos de gráficos y explicación de los tests estadísticos.
+            </p>
+            <div class="flex items-center text-sky-400 font-semibold text-sm">
+                Abrir diapositivas <i class="fas fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+            </div>
+        </a>
+
+        <!-- Recurso 2: Cuaderno Colab -->
+        <div class="glass-card p-8 rounded-3xl group relative overflow-hidden">
+            <div class="w-14 h-14 bg-amber-500/10 rounded-2xl flex items-center justify-center mb-6">
+                <i class="fab fa-python text-2xl text-amber-400"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-3">Cuaderno Experimental</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                Implementación en Python con datos reales del repositorio UCI KDD (Adult Dataset) y validación de hipótesis.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-6">
+                <span class="px-2 py-1 bg-slate-800 text-[10px] rounded uppercase font-bold tracking-tighter">Pandas</span>
+                <span class="px-2 py-1 bg-slate-800 text-[10px] rounded uppercase font-bold tracking-tighter">Seaborn</span>
+                <span class="px-2 py-1 bg-slate-800 text-[10px] rounded uppercase font-bold tracking-tighter">ANOVA</span>
+            </div>
+            <button onclick="copyColabCode()" class="w-full py-3 bg-white/5 hover:bg-white/10 rounded-xl text-sm font-semibold transition-colors border border-white/10">
+                Copiar código Python
+            </button>
+        </div>
+
+        <!-- Recurso 3: Estrategia de Defensa -->
+        <div class="glass-card p-8 rounded-3xl group border-indigo-500/20">
+            <div class="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center mb-6">
+                <i class="fas fa-shield-halved text-2xl text-indigo-400"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-3">Guía de Defensa</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                Puntos clave para defender el proyecto: justificación del dataset, interpretación de p-valores y conclusiones.
+            </p>
+            <ul class="text-xs space-y-2 text-slate-500 mb-6">
+                <li><i class="fas fa-check text-indigo-400 mr-2"></i> Justificación UCI Adult</li>
+                <li><i class="fas fa-check text-indigo-400 mr-2"></i> Interpretación T-Test</li>
+            </ul>
+            <div class="text-xs text-indigo-300 italic font-medium">
+                Consulta el archivo .md para el guion completo
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-20 text-slate-500 text-sm">
+        <p>&copy; 2026 Universidad - Grado en Ingeniería de Datos / KDD</p>
+    </footer>
+
+    <script>
+        function copyColabCode() {
+            // Nota: En un entorno real, aquí se copiaría el contenido del archivo .py
+            // Por limitaciones del navegador en iframes, mostramos un mensaje
+            const message = document.createElement('div');
+            message.className = 'fixed bottom-10 left-1/2 -translate-x-1/2 bg-sky-500 text-white px-6 py-3 rounded-full shadow-lg transition-all animate-bounce';
+            message.innerText = 'Copia el contenido del archivo analisis_bivariable_kdd.py';
+            document.body.appendChild(message);
+            setTimeout(() => message.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
