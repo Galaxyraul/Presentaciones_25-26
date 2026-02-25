@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KDD Grupo 5 - Limpieza de Datos</title>
+    <style>
+        :root {
+            --bg-color: #020617;
+            --card-bg: #0f172a;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --accent-red: #ef4444;
+            --accent-green: #22c55e;
+            --border: #1e293b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
+
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            overflow: hidden; 
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Barra de Progreso */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #1e293b;
+            z-index: 1000;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.4s ease;
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* Cabecera */
+        .navbar {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo { display: flex; align-items: center; gap: 12px; }
+        .logo-icon {
+            background: var(--primary);
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: white;
+        }
+        .brand h1 { font-size: 1.1rem; letter-spacing: 1px; }
+        .brand span { color: var(--text-dim); font-size: 0.75rem; text-transform: uppercase; }
+
+        /* Contenedor Principal */
+        .presentation-viewport {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            perspective: 1000px;
+        }
+
+        .slide {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 900px;
+            min-height: 550px;
+            border-radius: 28px;
+            padding: 3rem 4rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .slide.active { display: flex; }
+
+        .slide-title { font-size: 2.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 0.5rem; }
+        .slide-subtitle { color: var(--primary); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 2rem; }
+        .accent-bar { width: 80px; height: 6px; background: var(--primary); border-radius: 10px; margin-bottom: 2rem; }
+
+        .slide-internal-num {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            opacity: 0.6;
+        }
+
+        /* Elementos UI */
+        .index-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        .index-item:hover { border-color: var(--primary); background: rgba(59, 130, 246, 0.1); }
+        .index-num {
+            background: var(--primary);
+            color: white;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+        .data-card {
+            background: #1e293b;
+            padding: 1.2rem;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .data-card h3 { font-size: 1.5rem; color: var(--primary); margin-bottom: 0.5rem; }
+        .data-card p { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; }
+
+        .policy-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: rgba(30, 41, 59, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .policy-table th, .policy-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+        .policy-table th { background: rgba(59, 130, 246, 0.1); color: var(--primary); font-weight: 800; }
+
+        /* Controles */
+        .controls-wrapper {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            background: linear-gradient(transparent, var(--bg-color));
+        }
+
+        .nav-btn {
+            background: var(--card-bg);
+            color: white;
+            border: 1px solid var(--border);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover { background: var(--primary); border-color: var(--primary); transform: scale(1.1); }
+        .nav-btn.primary { background: var(--primary); width: 130px; border-radius: 30px; font-weight: bold; }
+
+        .page-indicator {
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            background: var(--card-bg);
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        @media print {
+            .navbar, .controls-wrapper, .progress-container { display: none !important; }
+            .slide { display: flex !important; page-break-after: always !important; background: white !important; color: black !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <div class="logo-icon">L</div>
+            <div class="brand">
+                <h1>Preparación de Datos</h1>
+                <span>Tratamiento de Outliers y Missing Values</span>
+            </div>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">GRUPO 5 - KDD</div>
+    </nav>
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="presentation-viewport">
+        <!-- 1. Portada -->
+        <div class="slide active" id="slide-0">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Calidad del Dato</h1>
+            <p class="slide-subtitle">Tratamiento de Outliers y Valores Faltantes</p>
+            <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
+                <p style="color: var(--primary); font-weight: bold; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 1rem;">Integrantes Grupo 5:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <p>• Participante A</p>
+                    <p>• Participante B</p>
+                </div>
+            </div>
+            <div class="slide-internal-num">01 / 10</div>
+        </div>
+
+        <!-- 2. Índice -->
+        <div class="slide" id="slide-1">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Índice</h1>
+            <p class="slide-subtitle">Hoja de ruta del tratamiento</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <div class="index-item" onclick="goToSlide(2)"><div class="index-num">1</div>Tipos de errores tabulares</div>
+                    <div class="index-item" onclick="goToSlide(3)"><div class="index-num">2</div>Estrategias: Imputación</div>
+                    <div class="index-item" onclick="goToSlide(4)"><div class="index-num">3</div>Estrategias: Eliminación</div>
+                    <div class="index-item" onclick="goToSlide(5)"><div class="index-num">4</div>Apoyo Visual: Detección</div>
+                </div>
+                <div>
+                    <div class="index-item" onclick="goToSlide(6)"><div class="index-num">5</div>Caso A: Missing Value</div>
+                    <div class="index-item" onclick="goToSlide(7)"><div class="index-num">6</div>Caso B: Outlier</div>
+                    <div class="index-item" onclick="goToSlide(8)"><div class="index-num">7</div>Políticas de Limpieza</div>
+                    <div class="index-item" onclick="goToSlide(9)"><div class="index-num">8</div>Conclusiones Finales</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">02 / 10</div>
+        </div>
+
+        <!-- 3. Errores Tabulares -->
+        <div class="slide" id="slide-2">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Errores en Datasets</h1>
+            <p class="slide-subtitle">Identificación de datos ruidosos</p>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h3 style="color: var(--accent-red);">Missing</h3>
+                    <p>Celdas nulas o vacías que rompen el flujo algorítmico.</p>
+                </div>
+                <div class="data-card">
+                    <h3 style="color: #f59e0b;">Noise</h3>
+                    <p>Datos inconsistentes, errores de formato o valores semánticamente erróneos.</p>
+                </div>
+            </div>
+            <p style="margin-top: 1.5rem; color: var(--text-dim); font-size: 0.9rem;">
+                La mayoría de algoritmos de Machine Learning no toleran valores nulos, lo que obliga a una fase de pre-procesamiento exhaustiva.
+            </p>
+            <div class="slide-internal-num">03 / 10</div>
+        </div>
+
+        <!-- 4. Outliers -->
+        <div class="slide" id="slide-3">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Outliers</h1>
+            <p class="slide-subtitle">Valores atípicos y anómalos</p>
+            <div style="background: rgba(59, 130, 246, 0.1); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.2);">
+                <p>Un <strong>outlier</strong> es una observación que se desvía tanto de las demás observaciones que despierta sospechas de que fue generada por un mecanismo diferente.</p>
+            </div>
+            <ul style="margin-top: 1.5rem; margin-left: 1.5rem; color: var(--text-dim);">
+                <li>Errores de medición o entrada de datos.</li>
+                <li>Variabilidad natural (casos reales extremos).</li>
+                <li>Errores experimentales.</li>
+            </ul>
+            <div class="slide-internal-num">04 / 10</div>
+        </div>
+
+        <!-- 5. Imputación -->
+        <div class="slide" id="slide-4">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Imputación</h1>
+            <p class="slide-subtitle">Estrategias de relleno</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div class="data-card"><h4>Media</h4><p>Variables numéricas simétricas</p></div>
+                <div class="data-card"><h4>Mediana</h4><p>Variables con sesgo o outliers</p></div>
+                <div class="data-card"><h4>Moda</h4><p>Variables categóricas</p></div>
+            </div>
+            <div style="margin-top: 1.5rem; padding: 1rem; background: #020617; border-radius: 8px; font-family: monospace; font-size: 0.8rem; color: var(--accent-green);">
+                df['edad'].fillna(df['edad'].median(), inplace=True)
+            </div>
+            <div class="slide-internal-num">05 / 10</div>
+        </div>
+
+        <!-- 6. Eliminación -->
+        <div class="slide" id="slide-5">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Eliminación</h1>
+            <p class="slide-subtitle">Cuándo descartar información</p>
+            <div style="display: flex; gap: 2rem;">
+                <div style="flex: 1;">
+                    <h4 style="color: var(--accent-red); margin-bottom: 0.5rem;">Listwise Deletion</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Eliminar toda la fila si falta un valor clave. Riesgo: pérdida masiva de datos.</p>
+                </div>
+                <div style="flex: 1;">
+                    <h4 style="color: var(--accent-red); margin-bottom: 0.5rem;">Variable Deletion</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Eliminar la columna completa si el % de nulos es inasumible (ej. > 60%).</p>
+                </div>
+            </div>
+            <div class="slide-internal-num">06 / 10</div>
+        </div>
+
+        <!-- 7. Caso A: Missing -->
+        <div class="slide" id="slide-6">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Caso A: Missing</h1>
+            <p class="slide-subtitle">Dataset UCI: Heart Disease</p>
+            <div style="display: flex; gap: 1.5rem; align-items: center;">
+                <div style="flex: 1;">
+                    <p><strong>Problema:</strong> Variables críticas como 'ca' (vasos coloreados) presentan valores nulos.</p>
+                    <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-dim);">En medicina, no podemos inventar datos. Se aplica imputación por <strong>Moda</strong> al ser valores discretos o eliminación controlada.</p>
+                </div>
+                <div style="width: 200px; height: 120px; background: rgba(34, 197, 94, 0.1); border: 1px dashed var(--accent-green); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--accent-green); font-weight: bold; text-align: center;">
+                    Imputación<br>Estratégica
+                </div>
+            </div>
+            <div class="slide-internal-num">07 / 10</div>
+        </div>
+
+        <!-- 8. Caso B: Outlier -->
+        <div class="slide" id="slide-7">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Caso B: Outlier</h1>
+            <p class="slide-subtitle">Dataset UCI: Breast Cancer</p>
+            <div style="display: flex; gap: 1.5rem; align-items: center;">
+                <div style="width: 250px;">
+                    <div style="height: 100px; border-left: 2px solid var(--text-dim); border-bottom: 2px solid var(--text-dim); position: relative; margin-left: 20px;">
+                        <div style="position: absolute; bottom: 20px; left: 10px; width: 40px; height: 60px; border: 2px solid var(--primary); background: rgba(59, 130, 246, 0.2);"></div>
+                        <div style="position: absolute; bottom: 90px; left: 28px; width: 6px; height: 6px; background: var(--accent-red); border-radius: 50%;"></div>
+                    </div>
+                    <p style="text-align: center; font-size: 0.7rem; color: var(--accent-red); margin-top: 5px;">Detección por Boxplot</p>
+                </div>
+                <div style="flex: 1;">
+                    <p><strong>Anomalía:</strong> Valores de 'área extrema' que triplican la media.</p>
+                    <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-dim);">¿Es error o un tumor agresivo? Usamos la regla del <strong>IQR (Rango Intercuartílico)</strong> para identificar candidatos a eliminación.</p>
+                </div>
+            </div>
+            <div class="slide-internal-num">08 / 10</div>
+        </div>
+
+        <!-- 9. Políticas de Limpieza -->
+        <div class="slide" id="slide-8">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Políticas de Limpieza</h1>
+            <p class="slide-subtitle">Reglas de negocio aplicadas</p>
+            <table class="policy-table">
+                <thead>
+                    <tr>
+                        <th>Contexto</th>
+                        <th>Condición (IF)</th>
+                        <th>Acción (THEN)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Valores Nulos</strong></td>
+                        <td>Faltantes < 5%</td>
+                        <td>Eliminar filas (Dropna)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Valores Nulos</strong></td>
+                        <td>Faltantes > 5%</td>
+                        <td>Imputar (Media/Moda)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Anomalías</strong></td>
+                        <td>Valor > Q3 + 1.5*IQR</td>
+                        <td>Tratar como Outlier</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Consistencia</strong></td>
+                        <td>Edad < 0 o > 120</td>
+                        <td>Eliminar por Ruido</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="slide-internal-num">09 / 10</div>
+        </div>
+
+        <!-- 10. Conclusiones -->
+        <div class="slide" id="slide-9">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Conclusiones</h1>
+            <p class="slide-subtitle">Hacia un modelo robusto</p>
+            <div style="margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div class="index-item" style="cursor: default; flex-direction: column; align-items: flex-start;">
+                    <strong>Calidad > Cantidad</strong>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);">Es preferible un dataset pequeño pero limpio que uno masivo lleno de ruido.</p>
+                </div>
+                <div class="index-item" style="cursor: default; flex-direction: column; align-items: flex-start;">
+                    <strong>Integridad</strong>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);">Las políticas de limpieza deben documentarse para asegurar la reproducibilidad del proceso KDD.</p>
+                </div>
+            </div>
+            <div style="margin-top: 2rem; text-align: center; color: var(--primary); font-weight: 800; font-size: 1.2rem;">¡GRACIAS POR SU ATENCIÓN!</div>
+            <div class="slide-internal-num">10 / 10</div>
+        </div>
+    </div>
+
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="page-indicator" id="pageCounterFooter">1 / 10</div>
+        <button class="nav-btn primary" onclick="changeSlide(1)">Siguiente</button>
+    </div>
+
+    <script>
+        let currentSlideIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageFooter = document.getElementById('pageCounterFooter');
+
+        function updateSlideUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentSlideIdx));
+            const percent = ((currentSlideIdx + 1) / slides.length) * 100;
+            progressBar.style.width = percent + '%';
+            pageFooter.innerText = `${currentSlideIdx + 1} / ${slides.length}`;
+        }
+
+        function changeSlide(dir) {
+            currentSlideIdx = (currentSlideIdx + dir + slides.length) % slides.length;
+            updateSlideUI();
+        }
+
+        function goToSlide(idx) {
+            currentSlideIdx = idx;
+            updateSlideUI();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+        });
+
+        updateSlideUI();
+    </script>
+</body>
+</html>
