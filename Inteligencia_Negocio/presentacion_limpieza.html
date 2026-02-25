@@ -75,6 +75,22 @@
         .brand h1 { font-size: 1.1rem; letter-spacing: 1px; }
         .brand span { color: var(--text-dim); font-size: 0.75rem; text-transform: uppercase; }
 
+        .btn-print {
+            background: var(--accent-green);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-print:hover { background: #16a34a; transform: translateY(-1px); }
+
         /* Contenedor Principal */
         .presentation-viewport {
             flex: 1;
@@ -214,9 +230,49 @@
             border: 1px solid var(--border);
         }
 
+        /* --- CONFIGURACIÓN PARA IMPRESIÓN --- */
         @media print {
+            html, body { 
+                background: white !important; 
+                color: black !important; 
+                overflow: visible !important; 
+                height: auto !important; 
+                display: block !important;
+            }
             .navbar, .controls-wrapper, .progress-container { display: none !important; }
-            .slide { display: flex !important; page-break-after: always !important; background: white !important; color: black !important; }
+            .presentation-viewport { 
+                display: block !important; 
+                padding: 0 !important; 
+                overflow: visible !important;
+                height: auto !important;
+            }
+            .slide {
+                display: flex !important;
+                page-break-after: always !important;
+                border: 1px solid #eee !important;
+                box-shadow: none !important;
+                background: white !important;
+                color: black !important;
+                width: 100% !important;
+                max-width: none !important;
+                margin: 0 0 1cm 0 !important;
+                padding: 2.5cm !important;
+                min-height: 25cm !important;
+                justify-content: center !important;
+                animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            .slide-title, .slide-subtitle, p, li, td, th, div { color: black !important; }
+            .accent-bar, .index-num { background: #3b82f6 !important; color: white !important; }
+            .index-item, .data-card, .policy-table { 
+                border: 1px solid #ddd !important; 
+                background: #f8f9fa !important; 
+            }
+            .slide-internal-num { 
+                color: #666 !important; 
+                opacity: 1 !important;
+            }
         }
     </style>
 </head>
@@ -230,7 +286,7 @@
                 <span>Tratamiento de Outliers y Missing Values</span>
             </div>
         </div>
-        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">GRUPO 5 - KDD</div>
+        
     </nav>
     <div class="progress-container">
         <div id="progressBar" class="progress-bar"></div>
@@ -245,8 +301,10 @@
             <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
                 <p style="color: var(--primary); font-weight: bold; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 1rem;">Integrantes Grupo 5:</p>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <p>• Participante A</p>
-                    <p>• Participante B</p>
+                    <p>• Raúl Gómez Téllez</p>
+                    <p>• Víctor Aguilar Méndez</p>
+                    <p>• Rubén Ramírez Peña</p>
+                    <p>• Jaime Manuel Cazalla Chica</p>
                 </div>
             </div>
             <div class="slide-internal-num">01 / 10</div>
