@@ -1,114 +1,86 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KDD Project Hub - Grupo 5</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #020617;
-            color: #f8fafc;
-        }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .glass-card:hover {
-            transform: translateY(-5px);
-            border-color: #38bdf8;
-            box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.2);
-        }
-        .gradient-text {
-            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-    </style>
+    <title>KDD Hub - Inteligencia de Negocio</title>
+    <link rel="stylesheet" href="../style.css">
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-6">
 
-    <!-- Hero Section -->
-    <header class="text-center mb-12 animate-fade-in">
-        <div class="inline-block px-4 py-1.5 mb-4 text-xs font-semibold tracking-wider text-sky-400 uppercase bg-sky-400/10 border border-sky-400/20 rounded-full">
-            Proyecto KDD 2026
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="../index.html"
+                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon">I</div>
+                <div class="brand">
+                    <h1>Inteligencia de Negocio</h1>
+                    <span>Proyecto KDD 2026</span>
+                </div>
+            </a>
         </div>
-        <h1 class="text-5xl md:text-7xl font-extrabold mb-4 tracking-tight">
-            Grupo 5
-        </h1>
+        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">
+            CURSO 2025/26
+        </div>
+    </nav>
 
-        <!-- Zona de Participantes -->
-        <div class="flex flex-wrap justify-center gap-4 max-w-3xl mx-auto">
-            <div class="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300">
-                <i class="fas fa-user-circle text-sky-400"></i>
-                <span>Raúl Gómez Téllez</span>
+    <main class="container">
+        <section class="welcome-section">
+            <h2>Casos de Estudio: Minería de Datos</h2>
+            <div class="authors-badge">
+                <div>Por: <span class="author-name">Gómez, Aguilar, Ramírez & Cazalla</span></div>
             </div>
-            <div class="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300">
-                <i class="fas fa-user-circle text-sky-400"></i>
-                <span>Víctor Aguilar Méndez</span>
+        </section>
+
+        <div class="subjects-grid">
+            <div class="subject-card">
+                <div class="subject-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                        <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                    </svg>
+                </div>
+                <h3>Presentación KDD</h3>
+                <p>Conceptos teóricos, tipos de gráficos y explicación de tests estadísticos para minería de datos.</p>
+                <a href="presentacion_kdd.html" class="view-btn">
+                    Ver Presentación
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
             </div>
-            <div class="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300">
-                <i class="fas fa-user-circle text-sky-400"></i>
-                <span>Rubén Ramírez Peña</span>
-            </div>
-            <div class="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300">
-                <i class="fas fa-user-circle text-sky-400"></i>
-                <span>Jaime Manuel Cazalla Chica</span>
+
+            <div class="subject-card">
+                <div class="subject-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14"></path>
+                    </svg>
+                </div>
+                <h3>Presentación Limpieza</h3>
+                <p>Metodologías para la limpieza y preprocesamiento de datasets complejos en entornos reales.</p>
+                <a href="presentacion_limpieza.html" class="view-btn">
+                    Ver Presentación
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
             </div>
         </div>
-    </header>
-
-    <!-- Navigation Hub -->
-    <main class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
-        
-        <!-- Recurso 1: Presentación -->
-        <a href="./presentacion_kdd.html" class="glass-card p-8 rounded-3xl group">
-            <div class="w-14 h-14 bg-sky-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-sky-500/20 transition-colors">
-                <i class="fas fa-desktop text-2xl text-sky-400"></i>
-            </div>
-            <h3 class="text-2xl font-bold mb-3">Presentación KDD</h3>
-            <p class="text-slate-400 text-sm leading-relaxed mb-6">
-                Diapositivas interactivas con conceptos teóricos, tipos de gráficos y explicación de los tests estadísticos.
-            </p>
-            <div class="flex items-center text-sky-400 font-semibold text-sm">
-                Abrir diapositivas <i class="fas fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
-            </div>
-        </a>
-
-        <a href="./presentacion_limpieza.html" class="glass-card p-8 rounded-3xl group">
-            <div class="w-14 h-14 bg-sky-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-sky-500/20 transition-colors">
-                <i class="fas fa-desktop text-2xl text-sky-400"></i>
-            </div>
-            <h3 class="text-2xl font-bold mb-3">Presentación Limpieza</h3>
-            <p class="text-slate-400 text-sm leading-relaxed mb-6">
-                Diapositivas interactivas con conceptos teóricos, tipos de gráficos y explicación de los tests estadísticos.
-            </p>
-            <div class="flex items-center text-sky-400 font-semibold text-sm">
-                Abrir diapositivas <i class="fas fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
-            </div>
-        </a>
-
-
     </main>
 
-    <!-- Footer -->
-    <footer class="mt-20 text-slate-500 text-sm">
-        <p>&copy; 2026 Universidad - Grado en Ingeniería de Datos / KDD</p>
+    <footer
+        style="margin-top: auto; padding: 3rem 2rem; text-align: center; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.8rem; letter-spacing: 1px;">
+        GÓMEZ & RAMÍREZ • INTELIGENCIA DE NEGOCIO • 2026
     </footer>
 
-    <script>
-        function copyColabCode() {
-            const message = document.createElement('div');
-            message.className = 'fixed bottom-10 left-1/2 -translate-x-1/2 bg-sky-500 text-white px-6 py-3 rounded-full shadow-lg transition-all animate-bounce';
-            message.innerText = 'Copia el contenido del archivo analisis_bivariable_kdd.py';
-            document.body.appendChild(message);
-            setTimeout(() => message.remove(), 3000);
-        }
-    </script>
 </body>
+
 </html>

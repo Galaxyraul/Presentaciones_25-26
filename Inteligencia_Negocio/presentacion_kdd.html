@@ -1,439 +1,245 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KDD presentation - Grupo 5: Los Segmentadores</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --primary: #38bdf8;
-            --primary-hover: #0ea5e9;
-            --text-main: #f1f5f9;
-            --text-dim: #64748b;
-            --accent-green: #22c55e;
-            --border: rgba(255, 255, 255, 0.1);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Cabecera */
-        .navbar {
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            z-index: 100;
-        }
-
-        .btn-print {
-            background: var(--accent-green);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.8rem;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .btn-print:hover { background: #16a34a; transform: translateY(-1px); }
-
-        /* Barra de Progreso */
-        .progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 4px;
-            background: var(--primary);
-            transition: width 0.3s ease;
-            z-index: 200;
-            box-shadow: 0 0 10px var(--primary);
-        }
-
-        /* Viewport Diapositivas */
-        .presentation-viewport {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        .slide {
-            display: none;
-            width: 100%;
-            max-width: 900px;
-            min-height: 550px;
-            padding: 3rem 4rem;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            backdrop-filter: blur(10px);
-            border-radius: 28px;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        .slide.active {
-            display: flex;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .gradient-text {
-            background: linear-gradient(90deg, #38bdf8, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .card {
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid var(--border);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover { border-color: var(--primary); }
-
-        .page-number {
-            position: absolute;
-            bottom: 2rem;
-            left: 4rem;
-            font-size: 0.875rem;
-            color: var(--text-dim);
-            font-weight: 600;
-        }
-
-        /* Controles */
-        .controls-wrapper {
-            padding: 1.5rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-            background: linear-gradient(transparent, var(--bg-color));
-        }
-
-        .nav-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .nav-btn:hover { background: rgba(56, 189, 248, 0.2); border-color: var(--primary); }
-
-        .index-item {
-            cursor: pointer;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            background: rgba(255, 255, 255, 0.03);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            transition: all 0.2s;
-        }
-        .index-item:hover { background: rgba(56, 189, 248, 0.1); border-color: var(--primary); }
-
-        /* --- CONFIGURACIÓN PARA IMPRESIÓN --- */
-        @media print {
-            html, body { 
-                background: white !important; 
-                color: black !important; 
-                overflow: visible !important; 
-                height: auto !important; 
-                display: block !important;
-            }
-            .navbar, .controls-wrapper, .progress-bar, .nav-btn { display: none !important; }
-            .presentation-viewport { 
-                display: block !important; 
-                padding: 0 !important; 
-            }
-            .slide {
-                display: flex !important;
-                page-break-after: always !important;
-                border: 1px solid #eee !important;
-                box-shadow: none !important;
-                background: white !important;
-                color: black !important;
-                width: 100% !important;
-                max-width: none !important;
-                margin: 0 0 1cm 0 !important;
-                padding: 2.5cm !important;
-                min-height: 25cm !important;
-                animation: none !important;
-                opacity: 1 !important;
-                transform: none !important;
-                position: relative !important;
-            }
-            .gradient-text {
-                -webkit-text-fill-color: black !important;
-                background: none !important;
-                color: black !important;
-            }
-            .card {
-                background: #f8f9fa !important;
-                border: 1px solid #ddd !important;
-                color: black !important;
-            }
-            .page-number { color: #666 !important; opacity: 1 !important; }
-            .index-item { border: 1px solid #ddd !important; color: black !important; background: white !important; }
-        }
-    </style>
+    <title>KDD Presentation - Grupo 5</title>
+    <link rel="stylesheet" href="../style.css">
 </head>
-<body>
+
+<body class="presentation-mode">
 
     <nav class="navbar">
-        <div class="flex items-center gap-3">
-            <div class="bg-sky-500 p-1.5 rounded-lg text-white font-bold text-sm">S</div>
-            <div>
-                <h1 class="text-sm font-bold tracking-tight">KDD - Grupo 5</h1>
-                <span class="text-[10px] uppercase text-slate-500 font-bold">Los Segmentadores</span>
-            </div>
+        <div class="logo">
+            <a href="index.html"
+                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon">I</div>
+                <div class="brand">
+                    <h1>Inteligencia de Negocio</h1>
+                    <span>Análisis Bivariable KDD</span>
+                </div>
+            </a>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">
+            CURSO 2025/26
         </div>
     </nav>
 
-    <div id="progress" class="progress-bar" style="width: 0%"></div>
+    <div id="progress" class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
 
     <div class="presentation-viewport">
         <!-- Slide 1: Portada -->
-        <div class="slide active" id="slide-0">
-            <div class="w-20 h-1.5 bg-sky-500 rounded-full mb-8"></div>
-            <h1 class="text-6xl font-extrabold mb-4 gradient-text tracking-tighter">Los Segmentadores</h1>
-            <p class="text-2xl text-slate-400 mb-10">Análisis Bivariable: Variables Numéricas vs. Categóricas</p>
-            
-            <div class="flex flex-wrap gap-3 mb-10">
-                <div class="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300">
-                    <i class="fas fa-user-circle text-sky-400"></i>
-                    <span>Raúl Gómez Téllez</span>
-                </div>
-                <div class="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300">
-                    <i class="fas fa-user-circle text-sky-400"></i>
-                    <span>Víctor Aguilar Méndez</span>
-                </div>
-                <div class="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300">
-                    <i class="fas fa-user-circle text-sky-400"></i>
-                    <span>Rubén Ramírez Peña</span>
-                </div>
-                <div class="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300">
-                    <i class="fas fa-user-circle text-sky-400"></i>
-                    <span>Jaime Manuel Cazalla Chica</span>
+        <div class="slide active">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Los Segmentadores</h1>
+            <p class="slide-subtitle">Análisis Bivariable: Numéricas vs. Categóricas</p>
+
+            <div class="authors-box">
+                <p
+                    style="color: var(--primary); font-weight: bold; font-size: 0.8rem; letter-spacing: 0.1em; margin-bottom: 1rem; text-transform: uppercase;">
+                    Realizado por el Grupo 5:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="author-tag">Raúl Gómez Téllez</div>
+                    <div class="author-tag">Víctor Aguilar Méndez</div>
+                    <div class="author-tag">Rubén Ramírez Peña</div>
+                    <div class="author-tag">Jaime M. Cazalla</div>
                 </div>
             </div>
-            <div class="page-number">01 / 08</div>
+            <div class="slide-internal-num">01 / 08</div>
         </div>
 
         <!-- Slide 2: Índice -->
-        <div class="slide" id="slide-1">
-            <h2 class="text-4xl font-bold mb-8 text-sky-400">Contenido de la Sesión</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div onclick="showSlide(2)" class="index-item"><span class="text-sky-500 font-bold">01</span> Contexto y Objetivos</div>
-                <div onclick="showSlide(3)" class="index-item"><span class="text-sky-500 font-bold">02</span> Visualizaciones Combinadas</div>
-                <div onclick="showSlide(4)" class="index-item"><span class="text-sky-500 font-bold">03</span> Validación mediante Tests</div>
-                <div onclick="showSlide(5)" class="index-item"><span class="text-sky-500 font-bold">04</span> Dataset UCI KDD Práctico</div>
-                <div onclick="showSlide(6)" class="index-item"><span class="text-sky-500 font-bold">05</span> Herramientas del Analista</div>
-                <div onclick="showSlide(7)" class="index-item"><span class="text-sky-500 font-bold">06</span> Conclusiones finales</div>
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Contenido de la Sesión</h1>
+            <p class="slide-subtitle">Estructura del Proyecto KDD</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div onclick="goToSlide(3)" class="index-item">
+                    <div class="index-num">1</div> Contexto y Objetivos
+                </div>
+                <div onclick="goToSlide(4)" class="index-item">
+                    <div class="index-num">2</div> Visualizaciones Combinadas
+                </div>
+                <div onclick="goToSlide(5)" class="index-item">
+                    <div class="index-num">3</div> Validación mediante Tests
+                </div>
+                <div onclick="goToSlide(6)" class="index-item">
+                    <div class="index-num">4</div> Dataset UCI KDD Práctico
+                </div>
+                <div onclick="goToSlide(7)" class="index-item">
+                    <div class="index-num">5</div> Herramientas del Analista
+                </div>
+                <div onclick="goToSlide(8)" class="index-item">
+                    <div class="index-num">6</div> Conclusiones finales
+                </div>
             </div>
-            <div class="page-number">02 / 08</div>
+            <div class="slide-internal-num">02 / 08</div>
         </div>
 
         <!-- Slide 3: Contexto -->
-        <div class="slide" id="slide-2">
-            <h2 class="text-4xl font-bold mb-8 flex items-center gap-3"><i class="fas fa-bullseye text-sky-400"></i> Objetivos</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="card">
-                    <h3 class="text-xl font-bold mb-4 text-sky-300">Exploración</h3>
-                    <p class="text-slate-300 text-sm leading-relaxed">Determinar si una variable categórica segmenta eficazmente el comportamiento de una numérica.</p>
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Objetivos de Negocio</h1>
+            <p class="slide-subtitle">Exploración y Descubrimiento</p>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h3>Exploración</h3>
+                    <p>Determinar si una variable segmenta el comportamiento.</p>
                 </div>
-                <div class="card">
-                    <h3 class="text-xl font-bold mb-4 text-indigo-300">Descubrimiento</h3>
-                    <ul class="text-sm space-y-2 text-slate-400">
-                        <li>• Identificar disparidades grupales.</li>
-                        <li>• Detectar anomalías por categorías.</li>
-                        <li>• Validar hipótesis de investigación.</li>
-                    </ul>
+                <div class="data-card">
+                    <h3>Validación</h3>
+                    <p>Detectar anomalías y disparidades por categorías.</p>
                 </div>
             </div>
-            <div class="page-number">03 / 08</div>
+            <div class="slide-internal-num">03 / 08</div>
         </div>
 
         <!-- Slide 4: Visualizaciones -->
-        <div class="slide" id="slide-3">
-            <h2 class="text-4xl font-bold mb-8">Visualizaciones Combinadas</h2>
-            <div class="grid grid-cols-3 gap-6">
-                <div class="card text-center">
-                    <i class="fas fa-chart-column text-3xl mb-4 text-sky-400"></i>
-                    <h4 class="font-bold mb-2">Barras</h4>
-                    <p class="text-xs text-slate-400">Tendencia central (media) por cada categoría.</p>
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Visualizaciones</h1>
+            <p class="slide-subtitle">Técnicas de Análisis Gráfico</p>
+            <div class="grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                <div class="data-card">
+                    <h4>Barras</h4>
+                    <p>Tendencia central por cada categoría.</p>
                 </div>
-                <div class="card text-center">
-                    <i class="fas fa-box-archive text-3xl mb-4 text-emerald-400"></i>
-                    <h4 class="font-bold mb-2">Boxplots</h4>
-                    <p class="text-xs text-slate-400">Cuartiles, medianas y valores atípicos.</p>
+                <div class="data-card">
+                    <h4>Boxplots</h4>
+                    <p>Cuartiles, medianas y valores atípicos.</p>
                 </div>
-                <div class="card text-center">
-                    <i class="fas fa-chart-area text-3xl mb-4 text-purple-400"></i>
-                    <h4 class="font-bold mb-2">Violin Plots</h4>
-                    <p class="text-xs text-slate-400">Combinan boxplots con densidad de probabilidad.</p>
+                <div class="data-card">
+                    <h4>Violin</h4>
+                    <p>Densidad de probabilidad combinada.</p>
                 </div>
             </div>
-            <div class="page-number">04 / 08</div>
+            <div class="slide-internal-num">04 / 08</div>
         </div>
 
         <!-- Slide 5: Tests -->
-        <div class="slide" id="slide-4">
-            <h2 class="text-4xl font-bold mb-8">Tests de Hipótesis</h2>
-            <div class="space-y-4">
-                <div class="p-4 rounded-xl bg-white/5 border border-white/10 flex justify-between items-center">
-                    <span><strong>z-test:</strong> Muestras grandes, varianza conocida.</span>
-                    <span class="text-xs bg-sky-500/20 text-sky-400 px-3 py-1 rounded-full">N > 30</span>
-                </div>
-                <div class="p-4 rounded-xl bg-white/5 border border-white/10 flex justify-between items-center">
-                    <span><strong>t-test:</strong> Comparar medias de 2 grupos.</span>
-                    <span class="text-xs bg-indigo-500/20 text-indigo-400 px-3 py-1 rounded-full">2 Categorías</span>
-                </div>
-                <div class="p-4 rounded-xl bg-white/5 border border-white/10 flex justify-between items-center">
-                    <span><strong>ANOVA:</strong> Comparar medias de 3+ grupos.</span>
-                    <span class="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full">> 2 Categorías</span>
-                </div>
-            </div>
-            <div class="page-number">05 / 08</div>
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Tests de Hipótesis</h1>
+            <p class="slide-subtitle">Validación Estadística</p>
+            <ul>
+                <li><strong>t-test:</strong> Comparar medias entre exactamente 2 categorías.</li>
+                <li><strong>ANOVA:</strong> Comparar medias entre 3 o más categorías.</li>
+                <li><strong>p-value:</strong> Criterio de significancia estadística (p < 0.05).</li>
+            </ul>
+            <div class="slide-internal-num">05 / 08</div>
         </div>
 
         <!-- Slide 6: Dataset -->
-        <div class="slide" id="slide-5">
-            <h2 class="text-4xl font-bold mb-6 text-sky-400">Práctico: UCI Adult Dataset</h2>
-            <div class="card border-dashed border-2 border-slate-700">
-                <p class="text-sm font-mono text-emerald-400 mb-6 italic">Dataset: Census Income (Adult)</p>
-                <div class="grid grid-cols-2 gap-8">
-                    <div>
-                        <h5 class="text-xs font-bold uppercase text-slate-500 mb-3">Numéricas</h5>
-                        <ul class="text-sm space-y-2">
-                            <li>- Hours per week</li>
-                            <li>- Age</li>
-                            <li>- Capital Gain</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h5 class="text-xs font-bold uppercase text-slate-500 mb-3">Categóricas</h5>
-                        <ul class="text-sm space-y-2">
-                            <li>- Income (>50K / <=50K)</li>
-                            <li>- Education</li>
-                            <li>- Occupation</li>
-                        </ul>
-                    </div>
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Dataset: UCI Adult</h1>
+            <p class="slide-subtitle">Caso Práctico Census Income</p>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h4 style="color: var(--primary);">Numéricas</h4>
+                    <ul style="border:none; background:transparent;">
+                        <li style="border:none; padding:0; background:transparent;">Hours per week</li>
+                        <li style="border:none; padding:0; background:transparent;">Age / Capital Gain</li>
+                    </ul>
+                </div>
+                <div class="data-card">
+                    <h4 style="color: var(--accent-green);">Categóricas</h4>
+                    <ul style="border:none; background:transparent;">
+                        <li style="border:none; padding:0; background:transparent;">Income / Education</li>
+                        <li style="border:none; padding:0; background:transparent;">Occupation</li>
+                    </ul>
                 </div>
             </div>
-            <div class="page-number">06 / 08</div>
+            <div class="slide-internal-num">06 / 08</div>
         </div>
 
         <!-- Slide 7: Herramientas -->
-        <div class="slide" id="slide-6">
-            <h2 class="text-4xl font-bold mb-8 text-sky-400">Ecosistema</h2>
-            <div class="grid grid-cols-2 gap-6">
-                <div class="card">
-                    <h4 class="font-bold text-yellow-500 mb-3">Python Ecosystem</h4>
-                    <p class="text-xs text-slate-400 leading-relaxed">Pandas para manipulación, SciPy para inferencia y Seaborn para gráficos estadísticos.</p>
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Ecosistema BI</h1>
+            <p class="slide-subtitle">Herramientas de Minería</p>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h4 style="color: #f59e0b;">Python</h4>
+                    <p>Pandas, SciPy & Seaborn</p>
                 </div>
-                <div class="card">
-                    <h4 class="font-bold text-blue-400 mb-3">Software BI</h4>
-                    <p class="text-xs text-slate-400 leading-relaxed">Weka para minería pura y Tableau para dashboards de segmentación.</p>
+                <div class="data-card">
+                    <h4 style="color: #3b82f6;">Business Tools</h4>
+                    <p>Weka & Tableau</p>
                 </div>
             </div>
-            <div class="page-number">07 / 08</div>
+            <div class="slide-internal-num">07 / 08</div>
         </div>
 
         <!-- Slide 8: Conclusión -->
-        <div class="slide" id="slide-7">
-            <h1 class="text-5xl font-bold mb-8 gradient-text tracking-tight">Conclusiones</h1>
-            <div class="space-y-6">
-                <div class="flex gap-4 items-start">
-                    <div class="mt-1 text-sky-500"><i class="fas fa-check-circle"></i></div>
-                    <p class="text-slate-300">La segmentación bivariable transforma datos en <strong>conocimiento accionable</strong>.</p>
-                </div>
-                <div class="flex gap-4 items-start">
-                    <div class="mt-1 text-sky-500"><i class="fas fa-check-circle"></i></div>
-                    <p class="text-slate-300">La validación estadística garantiza que los patrones no son fruto del azar.</p>
-                </div>
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Conclusiones</h1>
+            <p class="slide-subtitle">Conocimiento Accionable</p>
+            <ul>
+                <li>La segmentación bivariable revela patrones ocultos.</li>
+                <li>La validación estadística mitiga el sesgo subjetivo.</li>
+                <li>Clave para la toma de decisiones basada en datos.</li>
+            </ul>
+            <div class="authors-box">
+                <p style="color: var(--primary); font-weight: bold; margin-bottom: 0.5rem;">Cierre de Sesión</p>
+                <div class="author-tag">Grupo 5 • 2026</div>
             </div>
-            <div class="page-number">08 / 08</div>
+            <div class="slide-internal-num">08 / 08</div>
         </div>
     </div>
 
     <div class="controls-wrapper">
-        <button class="nav-btn" onclick="prevSlide()"><i class="fas fa-chevron-left"></i></button>
-        <div class="page-indicator" id="page-display">1 / 8</div>
-        <button class="nav-btn" onclick="nextSlide()"><i class="fas fa-chevron-right"></i></button>
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <div class="page-indicator" id="pageIndicator">1 / 8</div>
+        <button class="nav-btn primary" onclick="changeSlide(1)">
+            Siguiente
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
     </div>
 
     <script>
-        let currentSlide = 0;
+        let currentIdx = 0;
         const slides = document.querySelectorAll('.slide');
-        const progressBar = document.getElementById('progress');
-        const pageDisplay = document.getElementById('page-display');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const totalSlides = slides.length;
 
         function updateUI() {
-            const percent = ((currentSlide) / (slides.length - 1)) * 100;
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / totalSlides) * 100;
             progressBar.style.width = percent + '%';
-            pageDisplay.innerText = `${currentSlide + 1} / ${slides.length}`;
+            pageIndicator.innerText = `${currentIdx + 1} / ${totalSlides}`;
         }
 
-        function showSlide(index) {
-            slides.forEach(s => s.classList.remove('active'));
-            slides[index].classList.add('active');
-            currentSlide = index;
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + totalSlides) % totalSlides;
             updateUI();
         }
 
-        function nextSlide() {
-            if (currentSlide < slides.length - 1) {
-                showSlide(currentSlide + 1);
-            }
-        }
-
-        function prevSlide() {
-            if (currentSlide > 0) {
-                showSlide(currentSlide - 1);
-            }
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
         }
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
-            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
         });
 
         updateUI();
     </script>
 </body>
+
 </html>

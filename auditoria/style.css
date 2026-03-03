@@ -1,0 +1,368 @@
+/* 
+   SISTEMA DE DISEÑO UNIFICADO - GÓMEZ & RAMÍREZ
+   Auditoría Informática 2025/26
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code&display=swap');
+
+:root {
+    --bg-color: #020617;
+    --card-bg: #0f172a;
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --text-main: #f8fafc;
+    --text-dim: #94a3b8;
+    --border: #1e293b;
+    --accent-green: #22c55e;
+    --accent-red: #ef4444;
+    --glass-bg: rgba(15, 23, 42, 0.8);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 1. Base / Resets */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+body.presentation-mode {
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* 2. Cabecera (Navbar) */
+.navbar {
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    background: var(--primary);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    color: white;
+}
+
+.brand h1 { font-size: 1rem; letter-spacing: 0.5px; }
+.brand h2 { font-size: 1rem; letter-spacing: 0.5px; }
+.brand span { color: var(--text-dim); font-size: 0.7rem; text-transform: uppercase; }
+
+/* 3. Barra de Progreso */
+.progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--border);
+    z-index: 1100;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--primary);
+    width: 0%;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 10px var(--primary);
+}
+
+/* 4. Sistema de Diapositivas */
+.presentation-viewport {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    perspective: 1000px;
+}
+
+.slide {
+    background: var(--card-bg);
+    width: 100%;
+    max-width: 950px;
+    min-height: 580px;
+    border-radius: 28px;
+    padding: 2.5rem 3.5rem 4.5rem 3.5rem;
+    border: 1px solid var(--border);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    animation: slideIn 0.5s ease-out;
+    overflow: hidden;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.slide.active { display: flex; }
+
+.slide-title { font-size: 2.22rem; font-weight: 800; line-height: 1.1; margin-bottom: 0.4rem; }
+.slide-subtitle { color: var(--primary); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1.5rem; }
+.accent-bar { width: 50px; height: 4px; background: var(--primary); border-radius: 10px; margin-bottom: 1.2rem; }
+
+.slide-internal-num {
+    position: absolute;
+    bottom: 25px;
+    right: 35px;
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    opacity: 0.5;
+}
+
+/* 5. Componentes de Contenido */
+ul { list-style: none; margin-top: 0.4rem; }
+li, .index-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.6rem 1rem;
+    background: rgba(30, 41, 59, 0.4);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 0.5rem;
+    text-align: left;
+    font-size: 0.95rem;
+    transition: var(--transition);
+}
+li::before { content: "✓"; color: var(--accent-green); font-weight: bold; }
+
+.index-item:hover { border-color: var(--primary); background: rgba(59, 130, 246, 0.1); cursor: pointer; }
+
+.index-num {
+    background: var(--primary);
+    color: white;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+pre {
+    background: #0f172a;
+    padding: 0.8rem 1.2rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--primary);
+    color: #e2e8f0;
+    font-family: 'Fira Code', monospace;
+    margin-top: 0.6rem;
+    overflow-x: auto;
+    text-align: left;
+    font-size: 0.8rem;
+    width: 100%;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.authors-box {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    text-align: center;
+}
+.author-tag { font-size: 1.1rem; font-weight: 500; color: var(--text-main); margin: 0.3rem 0; }
+
+/* 6. Controles de Navegación */
+.controls-wrapper {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2.5rem;
+    background: linear-gradient(transparent, var(--bg-color));
+}
+
+.nav-btn {
+    background: var(--card-bg);
+    color: white;
+    border: 1px solid var(--border);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+.nav-btn:hover { background: var(--primary); border-color: var(--primary); transform: scale(1.1); }
+.nav-btn.primary { background: var(--primary); border-color: var(--primary); width: 130px; border-radius: 30px; font-weight: bold; gap: 8px; font-size: 0.9rem; }
+
+.page-indicator {
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    background: var(--card-bg);
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+}
+
+/* 7. Grilla del Index */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    width: 100%;
+}
+
+.welcome-section { margin-bottom: 4rem; text-align: center; }
+.welcome-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(to right, #fff, var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text; /* Compatibilidad */
+}
+
+.authors-badge {
+    display: inline-flex;
+    gap: 1.5rem;
+    background: var(--card-bg);
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+    color: var(--text-dim);
+}
+.author-name { color: var(--text-main); font-weight: 600; }
+
+.subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
+.subject-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 2rem;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.subject-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+}
+
+.subject-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 4px;
+    background: var(--primary);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.subject-card:hover::before { opacity: 1; }
+
+.subject-icon {
+    width: 50px; height: 50px;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+}
+
+.view-btn {
+    background: var(--border);
+    color: var(--text-main);
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.subject-card:hover .view-btn { background: var(--primary); }
+
+/* 8. Estilos Específicos para Ucrania / Datos */
+.data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-top: 1rem; }
+.data-card { background: rgba(30, 41, 59, 0.5); padding: 1.2rem; border-radius: 16px; text-align: center; border: 1px solid var(--border); }
+.data-card h3 { font-size: 2rem; color: var(--primary); margin-bottom: 0.2rem; }
+.data-card p { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+
+.list-step { display: flex; gap: 1.2rem; margin-bottom: 1rem; align-items: flex-start; }
+.step-num {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--accent-red);
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+/* 9. Modo Impresión */
+@media print {
+    * { color-adjust: exact; -webkit-print-color-adjust: exact; }
+    body { background: white !important; color: black !important; overflow: visible !important; height: auto !important; }
+    .navbar, .controls-wrapper, .progress-container { display: none !important; }
+    .presentation-viewport { display: block !important; padding: 0 !important; }
+    .slide { 
+        display: flex !important; page-break-after: always !important; 
+        background: white !important; color: black !important; border: 1px solid #ddd !important; 
+        box-shadow: none !important; margin-bottom: 2cm !important;
+        min-height: 25cm !important;
+    }
+    .slide-title, .slide-subtitle, .author-tag, li, p, pre, .index-item { color: black !important; }
+}
+
+@media (max-width: 768px) {
+    .welcome-section h2 { font-size: 1.8rem; }
+    .subjects-grid { grid-template-columns: 1fr; }
+    .slide { padding: 1.5rem; min-height: auto; }
+}

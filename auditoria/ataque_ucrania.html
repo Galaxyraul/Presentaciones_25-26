@@ -1,355 +1,59 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ciberataque Ucrania 2015 - Presentación</title>
-    <style>
-        :root {
-            --bg-color: #020617;
-            --card-bg: #0f172a;
-            --primary: #3b82f6;
-            --primary-hover: #2563eb;
-            --text-main: #f8fafc;
-            --text-dim: #94a3b8;
-            --accent-red: #ef4444;
-            --accent-green: #22c55e;
-            --border: #1e293b;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
-
-        body { 
-            background-color: var(--bg-color); 
-            color: var(--text-main); 
-            overflow: hidden; 
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Barra de Progreso */
-        .progress-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: #1e293b;
-            z-index: 1000;
-        }
-        .progress-bar {
-            height: 100%;
-            background: var(--primary);
-            width: 0%;
-            transition: width 0.4s ease;
-            box-shadow: 0 0 10px var(--primary);
-        }
-
-        /* Cabecera */
-        .header {
-            padding: 1.2rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            z-index: 900;
-        }
-
-        .brand h2 { font-size: 1.1rem; letter-spacing: 1px; }
-        .brand span { color: var(--text-dim); font-size: 0.75rem; text-transform: uppercase; }
-
-        .btn-print {
-            background: var(--accent-green);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: transform 0.2s, background 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .btn-print:hover { background: #16a34a; transform: translateY(-1px); }
-
-        /* Contenedor Principal */
-        .presentation-viewport {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            perspective: 1000px;
-        }
-
-        .slide {
-            background: var(--card-bg);
-            width: 100%;
-            max-width: 900px;
-            min-height: 550px;
-            border-radius: 28px;
-            padding: 3rem 4rem;
-            border: 1px solid var(--border);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .slide.active { display: flex; }
-
-        .slide-title { font-size: 2.8rem; font-weight: 800; line-height: 1.1; margin-bottom: 0.5rem; }
-        .slide-subtitle { color: var(--primary); font-size: 0.9rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 2.5rem; }
-        .accent-bar { width: 80px; height: 6px; background: var(--primary); border-radius: 10px; margin-bottom: 2rem; }
-
-        /* Número de Diapositiva Interior */
-        .slide-internal-num {
-            position: absolute;
-            bottom: 30px;
-            right: 40px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            color: var(--text-dim);
-            letter-spacing: 2px;
-            opacity: 0.6;
-        }
-
-        /* Contenidos Específicos */
-        .authors-box {
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border);
-            text-align: center;
-        }
-        .author-tag {
-            font-size: 1.2rem;
-            font-weight: 500;
-            color: var(--text-main);
-            margin: 0.5rem 0;
-        }
-
-        .index-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            margin-bottom: 0.8rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .index-item:hover { border-color: var(--primary); background: rgba(59, 130, 246, 0.1); }
-        .index-num {
-            background: var(--primary);
-            color: white;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem; }
-        .data-card {
-            background: #1e293b;
-            padding: 1.5rem;
-            border-radius: 16px;
-            text-align: center;
-        }
-        .data-card h3 { font-size: 2rem; color: var(--primary); }
-        .data-card p { font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; }
-
-        .list-step {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 1.2rem;
-            align-items: flex-start;
-        }
-        .step-num {
-            background: rgba(239, 68, 68, 0.2);
-            color: var(--accent-red);
-            padding: 0.4rem 0.8rem;
-            border-radius: 8px;
-            font-weight: 800;
-        }
-
-        /* Controles Inferiores */
-        .controls-wrapper {
-            padding: 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 3rem;
-            background: linear-gradient(transparent, var(--bg-color));
-        }
-
-        .navbar {
-            padding: 1.5rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav-btn {
-            background: var(--card-bg);
-            color: white;
-            border: 1px solid var(--border);
-            width: 54px;
-            height: 54px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-        .nav-btn:hover { background: var(--primary); border-color: var(--primary); transform: scale(1.1); }
-        .nav-btn.primary { background: var(--primary); border-color: var(--primary); width: 140px; border-radius: 30px; font-weight: bold; gap: 8px; }
-
-        .page-indicator {
-            font-family: monospace;
-            font-size: 1rem;
-            color: var(--text-dim);
-            background: var(--card-bg);
-            padding: 6px 16px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-icon {
-            background: var(--primary);
-            width: 35px;
-            height: 35px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-        }
-
-        /* --- CONFIGURACIÓN PARA IMPRESIÓN --- */
-        @media print {
-            html, body { 
-                background: white !important; 
-                color: black !important; 
-                overflow: visible !important; 
-                height: auto !important; 
-                display: block !important;
-            }
-            .header, .controls-wrapper, .progress-container { display: none !important; }
-            .presentation-viewport { 
-                display: block !important; 
-                padding: 0 !important; 
-                overflow: visible !important;
-                height: auto !important;
-            }
-            .slide {
-                display: flex !important;
-                page-break-after: always !important;
-                border: 1px solid #eee !important;
-                box-shadow: none !important;
-                background: white !important;
-                color: black !important;
-                width: 100% !important;
-                max-width: none !important;
-                margin: 0 0 1cm 0 !important;
-                padding: 2.5cm !important;
-                min-height: 25cm !important;
-                justify-content: center !important;
-                animation: none !important;
-                opacity: 1 !important;
-                transform: none !important;
-            }
-            .slide-title { color: black !important; }
-            .slide-subtitle { color: #2563eb !important; }
-            .accent-bar { background: #2563eb !important; }
-            .index-item, .data-card { 
-                border: 1px solid #ddd !important; 
-                background: #f8f9fa !important; 
-                color: black !important; 
-            }
-            .index-num { background: #2563eb !important; color: white !important; }
-            .author-tag, p, li, strong, div { color: black !important; }
-            .step-num { background: #fee2e2 !important; color: #b91c1c !important; }
-            .data-card h3 { color: #2563eb !important; }
-            .slide-internal-num { 
-                color: #666 !important; 
-                opacity: 1 !important;
-                bottom: 20px !important;
-                right: 30px !important;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../style.css">
 </head>
-<body>
+
+<body class="presentation-mode">
 
     <nav class="navbar">
         <div class="logo">
-            <div class="logo-icon">A</div>
-            <div class="brand">
-                <h1>Audioría Informática</h1>
-                <span>Ciberataque a la Red Eléctrica de Ucrania</span>
-            </div>
+            <a href="index.html"
+                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon">A</div>
+                <div class="brand">
+                    <h1>Audioría Informática</h1>
+                    <span>Ciberataque a la Red Eléctrica de Ucrania</span>
+                </div>
+            </a>
         </div>
         <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">
             CURSO 2025/26
         </div>
     </nav>
+
     <div class="progress-container">
         <div id="progressBar" class="progress-bar"></div>
     </div>
 
-
     <div class="presentation-viewport">
         <!-- Diapositiva 1: Portada -->
-        <div class="slide active" id="slide-0">
+        <div class="slide active">
             <div class="accent-bar"></div>
             <h1 class="slide-title">Ciberataque a la Red Eléctrica de Ucrania</h1>
             <p class="slide-subtitle">Análisis del primer apagón masivo por malware</p>
-            
+
             <div class="authors-box">
-                <p style="color: var(--primary); font-weight: bold; font-size: 0.8rem; letter-spacing: 0.1em; margin-bottom: 1rem; text-transform: uppercase;">Realizado por:</p>
+                <p
+                    style="color: var(--primary); font-weight: bold; font-size: 0.8rem; letter-spacing: 0.1em; margin-bottom: 1rem; text-transform: uppercase;">
+                    Realizado por:</p>
                 <div class="author-tag">Raúl Gómez Téllez</div>
                 <div class="author-tag">Rubén Ramírez Peña</div>
             </div>
-            
+
             <div class="slide-internal-num">01 / 07</div>
         </div>
 
         <!-- Diapositiva 2: Índice -->
-        <div class="slide" id="slide-1">
+        <div class="slide">
             <div class="accent-bar"></div>
             <h1 class="slide-title">Índice</h1>
             <p class="slide-subtitle">Estructura de la investigación</p>
-            
+
             <div style="margin-top: 1rem;">
                 <div class="index-item" onclick="goToSlide(2)">
                     <div class="index-num">1</div>
@@ -376,18 +80,20 @@
         </div>
 
         <!-- Diapositiva 3: Antecedentes -->
-        <div class="slide" id="slide-2">
+        <div class="slide">
             <div class="accent-bar"></div>
             <h1 class="slide-title">Antecedentes</h1>
             <p class="slide-subtitle">Contexto Geopolítico y Técnico</p>
             <div style="line-height: 1.8; font-size: 1.1rem; color: var(--text-dim);">
-                <p style="margin-bottom: 1.5rem;">El ataque ocurrió el <strong>23 de diciembre de 2015</strong> en un ambiente de alta tensión regional.</p>
-                <div style="background: rgba(59,130,246,0.1); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(59,130,246,0.2);" class="index-item">
+                <p style="margin-bottom: 1.5rem;">El ataque ocurrió el <strong>23 de diciembre de 2015</strong> en un
+                    ambiente de alta tensión regional.</p>
+                <div style="background: rgba(59,130,246,0.1); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(59,130,246,0.2);"
+                    class="index-item">
                     <p style="font-weight: 500;">Sistemas Afectados:</p>
-                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
-                        <li>Infraestructura SCADA (Supervisory Control and Data Acquisition).</li>
-                        <li>Empresas: Kyivoblenergo, Chernivtsioblenergo y Prykarpattyaoblenergo.</li>
-                        <li>Equipos HMI (Human-Machine Interface) de control remoto.</li>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem; list-style: disc;">
+                        <li>Infraestructura SCADA (Control Industrial).</li>
+                        <li>Empresas: Kyivoblenergo y Prykarpattyaoblenergo.</li>
+                        <li>Equipos HMI de control remoto.</li>
                     </ul>
                 </div>
             </div>
@@ -395,36 +101,36 @@
         </div>
 
         <!-- Diapositiva 4: Descripción del Ataque -->
-        <div class="slide" id="slide-3">
+        <div class="slide">
             <div class="accent-bar"></div>
             <h1 class="slide-title">Fases del Ataque</h1>
             <p class="slide-subtitle">Malware BlackEnergy 3</p>
-            
+
             <div class="list-step">
                 <div class="step-num">1</div>
-                <div><strong>Acceso Inicial:</strong> Spear-phishing dirigido a personal administrativo con macros maliciosas en Office.</div>
+                <div><strong>Acceso Inicial:</strong> Spear-phishing con macros maliciosas en Office.</div>
             </div>
             <div class="list-step">
                 <div class="step-num">2</div>
-                <div><strong>Movimiento Lateral:</strong> Robo de credenciales VPN para saltar de la red IT a la red OT (Control Industrial).</div>
+                <div><strong>Movimiento Lateral:</strong> Robo de credenciales VPN hacia la red OT.</div>
             </div>
             <div class="list-step">
                 <div class="step-num">3</div>
-                <div><strong>Ejecución:</strong> Toma de control de estaciones de operador; apertura remota de interruptores físicos.</div>
+                <div><strong>Ejecución:</strong> Apertura remota de interruptores físicos.</div>
             </div>
             <div class="list-step">
                 <div class="step-num">4</div>
-                <div><strong>Sabotaje Final:</strong> Uso de KillDisk para destruir el SO y TDoS para bloquear líneas de atención.</div>
+                <div><strong>Sabotaje Final:</strong> Uso de KillDisk para destruir el SO.</div>
             </div>
             <div class="slide-internal-num">04 / 07</div>
         </div>
 
         <!-- Diapositiva 5: Impacto -->
-        <div class="slide" id="slide-4">
+        <div class="slide">
             <div class="accent-bar"></div>
             <h1 class="slide-title">Impacto</h1>
             <p class="slide-subtitle">Consecuencias del Incidente</p>
-            
+
             <div class="data-grid">
                 <div class="data-card">
                     <h3>230,000</h3>
@@ -435,49 +141,41 @@
                     <p>Subestaciones desconectadas</p>
                 </div>
             </div>
-            
-            <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(239, 68, 68, 0.1); border-radius: 12px; border: 1px solid rgba(239, 68, 68, 0.2);" class="index-item">
-                <p><strong>Impacto Social:</strong> El corte duró entre 1 y 6 horas en pleno invierno. La recuperación total tomó meses, ya que las estaciones debieron ser operadas manualmente tras el borrado del software de gestión.</p>
+
+            <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(239, 68, 68, 0.1); border-radius: 12px; border: 1px solid rgba(239, 68, 68, 0.2);"
+                class="index-item">
+                <p><strong>Impacto Social:</strong> El corte duró entre 1 y 6 horas en pleno invierno. La recuperación
+                    fue manual tras el sabotaje del software.</p>
             </div>
             <div class="slide-internal-num">05 / 07</div>
         </div>
 
         <!-- Diapositiva 6: Medidas Preventivas -->
-        <div class="slide" id="slide-5">
+        <div class="slide">
             <div class="accent-bar"></div>
             <h1 class="slide-title">Prevención</h1>
             <p class="slide-subtitle">Lecciones de Seguridad</p>
-            
-            <ul style="list-style: none;">
-                <li style="margin-bottom: 1.2rem; display: flex; gap: 10px; align-items: center;">
-                    <div style="color: var(--accent-green); font-weight: bold;">✔</div>
-                    <span><strong>MFA:</strong> Autenticación multifactor para toda conexión VPN remota.</span>
-                </li>
-                <li style="margin-bottom: 1.2rem; display: flex; gap: 10px; align-items: center;">
-                    <div style="color: var(--accent-green); font-weight: bold;">✔</div>
-                    <span><strong>Segmentación:</strong> Separación física y lógica entre IT y redes de control OT.</span>
-                </li>
-                <li style="margin-bottom: 1.2rem; display: flex; gap: 10px; align-items: center;">
-                    <div style="color: var(--accent-green); font-weight: bold;">✔</div>
-                    <span><strong>Monitoreo:</strong> Detección de anomalías en protocolos industriales (IEC 60870-5-104).</span>
-                </li>
-                <li style="margin-bottom: 1.2rem; display: flex; gap: 10px; align-items: center;">
-                    <div style="color: var(--accent-green); font-weight: bold;">✔</div>
-                    <span><strong>Plan de Respuesta:</strong> Simulacros de operación manual ante ciberemergencias.</span>
-                </li>
+
+            <ul>
+                <li><strong>MFA:</strong> Autenticación multifactor para toda conexión remota.</li>
+                <li><strong>Segmentación:</strong> Separación física entre IT y redes de control OT.</li>
+                <li><strong>Monitoreo:</strong> Detección de anomalías en protocolos industriales.</li>
+                <li><strong>Plan de Respuesta:</strong> Simulacros de operación manual.</li>
             </ul>
             <div class="slide-internal-num">06 / 07</div>
         </div>
 
         <!-- Diapositiva 7: Conclusiones -->
-        <div class="slide" id="slide-6">
+        <div class="slide">
             <div class="accent-bar"></div>
             <h1 class="slide-title">Conclusiones</h1>
             <p class="slide-subtitle">El Futuro de la Guerra Híbrida</p>
-            
-            <div style="margin-top: 2rem; padding: 3rem; background: rgba(59, 130, 246, 0.05); border-radius: 24px; text-align: center; border: 1px dashed var(--border);" class="index-item">
+
+            <div style="margin-top: 2rem; padding: 3rem; background: rgba(59, 130, 246, 0.05); border-radius: 24px; text-align: center; border: 1px dashed var(--border);"
+                class="index-item">
                 <p style="font-size: 1.5rem; font-style: italic; line-height: 1.4;">
-                    "La seguridad física de la población depende hoy de la robustez digital de su infraestructura crítica."
+                    "La seguridad física de la población depende hoy de la robustez digital de su infraestructura
+                    crítica."
                 </p>
                 <div style="margin-top: 2rem; font-weight: bold;">
                     UCRANIA 2015: UN ANTES Y UN DESPUÉS
@@ -489,52 +187,53 @@
 
     <div class="controls-wrapper">
         <button class="nav-btn" onclick="changeSlide(-1)">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
         </button>
-        
-        <div class="page-indicator" id="pageCounterFooter">1 / 7</div>
+
+        <div class="page-indicator" id="pageIndicator">1 / 7</div>
 
         <button class="nav-btn primary" onclick="changeSlide(1)">
             Siguiente
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
         </button>
     </div>
 
     <script>
-        let currentSlideIdx = 0;
-const slides = document.querySelectorAll('.slide');
-const progressBar = document.getElementById('progressBar');
-const pageFooter = document.getElementById('pageCounterFooter');
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
 
-function updateSlideUI() {
-    slides.forEach((s, i) => {
-        s.classList.toggle('active', i === currentSlideIdx);
-    });
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / slides.length) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${slides.length}`;
+        }
 
-    // Actualizar progreso
-    const percent = ((currentSlideIdx + 1) / slides.length) * 100;
-    progressBar.style.width = percent + '%';
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + slides.length) % slides.length;
+            updateUI();
+        }
 
-    // Actualizar contador footer
-    pageFooter.innerText = `${currentSlideIdx + 1} / ${slides.length}`;
-}
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
+        }
 
-function changeSlide(dir) {
-    currentSlideIdx = (currentSlideIdx + dir + slides.length) % slides.length;
-    updateSlideUI();
-}
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+        });
 
-function goToSlide(idx) {
-    currentSlideIdx = idx;
-    updateSlideUI();
-}
-
-document.addEventListener('keydown', (e) => {
-    if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
-    if (e.key === "ArrowLeft") changeSlide(-1);
-});
-
-updateSlideUI();
+        updateUI();
     </script>
 </body>
+
 </html>
