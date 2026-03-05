@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereum: Distribución Blockchain - Gómez & Ramírez</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="presentation-mode">
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html"
+                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon">C</div>
+                <div class="brand">
+                    <h1>Computación Distribuida</h1>
+                    <span>Análisis Técnico Ethereum</span>
+                </div>
+            </a>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">CURSO 2025/26</div>
+    </nav>
+
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="presentation-viewport">
+        <!-- Slide 1: Portada -->
+        <div class="slide active">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Distribución en la Blockchain</h1>
+            <p class="slide-subtitle">Análisis Técnico del Proyecto Ethereum</p>
+            <div class="authors-box">
+                <div class="author-tag">Raúl Gómez Téllez</div>
+                <div class="author-tag">Rubén Ramírez Peña</div>
+            </div>
+            <div class="slide-internal-num">01 / 10</div>
+        </div>
+
+        <!-- Slide 2: Índice -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Índice</h1>
+            <p class="slide-subtitle">Estructura de la Presentación</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div>
+                    <div class="index-item" onclick="goToSlide(3)">
+                        <div class="index-num">1</div>Génesis y Propuesta
+                    </div>
+                    <div class="index-item" onclick="goToSlide(4)">
+                        <div class="index-num">2</div>Arquitectura EVM
+                    </div>
+                    <div class="index-item" onclick="goToSlide(5)">
+                        <div class="index-num">3</div>Roadmap Evolutivo
+                    </div>
+                    <div class="index-item" onclick="goToSlide(6)">
+                        <div class="index-num">4</div>PoW vs. PoS
+                    </div>
+                </div>
+                <div>
+                    <div class="index-item" onclick="goToSlide(7)">
+                        <div class="index-num">5</div>Utilidad del Token
+                    </div>
+                    <div class="index-item" onclick="goToSlide(8)">
+                        <div class="index-num">6</div>Caso Práctico
+                    </div>
+                    <div class="index-item" onclick="goToSlide(9)">
+                        <div class="index-num">7</div>Conclusiones
+                    </div>
+                    <div class="index-item" onclick="goToSlide(10)">
+                        <div class="index-num">8</div>Preguntas
+                    </div>
+                </div>
+            </div>
+            <div class="slide-internal-num">02 / 10</div>
+        </div>
+
+        <!-- Slide 3: Génesis -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">01. Génesis y Propuesta</h1>
+            <p class="slide-subtitle">Superando la rigidez estructural</p>
+            <ul>
+                <li><strong>Visión de Nick Szabo:</strong> Materialización técnica de los contratos inteligentes (1994).
+                </li>
+                <li><strong>Generalización Lógica:</strong> Evolución del "Script" limitado de Bitcoin a la
+                    programabilidad universal.</li>
+                <li><strong>La Computadora Mundial:</strong> Infraestructura distribuida para la ejecución de lógica
+                    arbitraria <em>trustless</em>.</li>
+            </ul>
+            <div class="slide-internal-num">03 / 10</div>
+        </div>
+
+        <!-- Slide 4: Arquitectura EVM -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">02. Arquitectura de la EVM</h1>
+            <p class="slide-subtitle">Disección del motor de ejecución</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <p style="text-align: left; margin-bottom: 0.5rem;"><strong>Gestión de Recursos:</strong></p>
+                    <ul>
+                        <li><strong>Mecanismo de Gas:</strong> Coste proporcional a la complejidad computacional.</li>
+                        <li><strong>Merkle Patricia Trie:</strong> Resumen criptográfico del estado global.</li>
+                    </ul>
+                </div>
+                <div>
+                    <p style="text-align: left; margin-bottom: 0.5rem;"><strong>Características:</strong></p>
+                    <ul>
+                        <li><strong>Stack-based:</strong> Optimización de 256-bit.</li>
+                        <li><strong>Sandbox:</strong> Aislamiento total.</li>
+                        <li><strong>Determinismo:</strong> Ejecución idéntica.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="slide-internal-num">04 / 10</div>
+        </div>
+
+        <!-- Slide 5: Roadmap -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">03. Roadmap Evolutivo</h1>
+            <p class="slide-subtitle">Fases de desarrollo post-Merge</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 0.9rem;">
+                <div class="index-item" style="cursor: default;">
+                    <div class="index-num">1</div><strong>The Merge:</strong> Consenso PoS.
+                </div>
+                <div class="index-item" style="cursor: default;">
+                    <div class="index-num">2</div><strong>The Surge:</strong> Escalabilidad (Rollups).
+                </div>
+                <div class="index-item" style="cursor: default;">
+                    <div class="index-num">3</div><strong>The Scourge:</strong> Neutralidad y MEV.
+                </div>
+                <div class="index-item" style="cursor: default;">
+                    <div class="index-num">4</div><strong>The Verge:</strong> Verkle Trees (Nodos ligeros).
+                </div>
+                <div class="index-item" style="cursor: default;">
+                    <div class="index-num">5</div><strong>The Purge:</strong> Limpieza de deuda técnica.
+                </div>
+                <div class="index-item" style="cursor: default;">
+                    <div class="index-num">6</div><strong>The Splurge:</strong> Abstracción de cuentas.
+                </div>
+            </div>
+            <div class="slide-internal-num">05 / 10</div>
+        </div>
+
+        <!-- Slide 6: PoW vs PoS -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">04. PoW vs. PoS (Gasper)</h1>
+            <p class="slide-subtitle">Comparativa de mecanismos de consenso</p>
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 5px;">
+                <thead>
+                    <tr style="border-bottom: 2px solid var(--border);">
+                        <th style="padding: 8px; text-align: left;">Métrica</th>
+                        <th style="padding: 8px; text-align: left;">Proof of Work</th>
+                        <th style="padding: 8px; text-align: left;">Proof of Stake</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 8px;"><strong>Seguridad</strong></td>
+                        <td style="padding: 8px;">Gasto de Energía</td>
+                        <td style="padding: 8px;">Capital (Staking)</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 8px;"><strong>Finalidad</strong></td>
+                        <td style="padding: 8px;">Probabilística</td>
+                        <td style="padding: 8px;">Determinista</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px;"><strong>Consumo</strong></td>
+                        <td style="padding: 8px;">Elevado (~70 TWh)</td>
+                        <td style="padding: 8px;">Reducción 99.95%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="slide-internal-num">06 / 10</div>
+        </div>
+
+        <!-- Slide 7: Tokenomics -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">05. Utilidad del Token (ETH)</h1>
+            <p class="slide-subtitle">EIP-1559 y el Triple Rol</p>
+            <ul>
+                <li><strong>Mecanismo de Quema:</strong> Quema de tarifa base vinculada al uso de la red.</li>
+                <li><strong>Ultrasonic Money:</strong> Tendencia deflacionaria tras el paso a PoS.</li>
+                <li><strong>Roles:</strong> Activo de Capital (Staking), Commodity (Gas) y Valor (DeFi).</li>
+            </ul>
+            <div class="slide-internal-num">07 / 10</div>
+        </div>
+
+        <!-- Slide 8: Caso Práctico -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">06. Caso Práctico: Logística 4.0</h1>
+            <p class="slide-subtitle">Trazabilidad Farmacéutica IoT</p>
+            <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px;">
+                <ul>
+                    <li><strong>Validación Real:</strong> Los sensores IoT disparan eventos en la EVM.</li>
+                    <li><strong>Desintermediación:</strong> Pagos automáticos al cumplir hitos logísticos.</li>
+                    <li><strong>Auditoría Cero:</strong> La verdad reside en el consenso distribuido.</li>
+                </ul>
+                <div
+                    style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 15px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 0.8rem; font-style: italic;">
+                    Diagrama:<br>Origen -> Sensor -> Blockchain -> Destino
+                </div>
+            </div>
+            <div class="slide-internal-num">08 / 10</div>
+        </div>
+
+        <!-- Slide 9: Conclusiones -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Conclusiones</h1>
+            <p class="slide-subtitle">Infraestructura Global</p>
+            <p style="margin-bottom: 1rem;">Ethereum ha evolucionado de un experimento criptográfico a una
+                infraestructura financiera y computacional de grado institucional.</p>
+            <div style="display: flex; gap: 20px; justify-content: center;">
+                <div class="author-tag">Sostenibilidad</div>
+                <div class="author-tag">Seguridad</div>
+                <div class="author-tag">Escalabilidad</div>
+            </div>
+            <div class="slide-internal-num">09 / 10</div>
+        </div>
+
+        <!-- Slide 10: Q&A -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">¿Preguntas?</h1>
+            <p class="slide-subtitle">Gracias por su atención</p>
+            <div class="authors-box" style="margin-top: 2rem;">
+                <p style="color: var(--primary); font-size: 1.1rem; font-weight: bold; margin-bottom: 0.4rem;">Máster en
+                    Ingeniería Informática</p>
+                <div class="author-tag">Universidad de Jaén</div>
+            </div>
+            <div class="slide-internal-num">10 / 10</div>
+        </div>
+    </div>
+
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <div class="page-indicator" id="pageIndicator">1 / 10</div>
+        <button class="nav-btn primary" onclick="changeSlide(1)">
+            Siguiente
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const totalSlides = slides.length;
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / totalSlides) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${totalSlides}`;
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + totalSlides) % totalSlides;
+            updateUI();
+        }
+
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+        });
+
+        updateUI();
+    </script>
+</body>
+
+</html>
