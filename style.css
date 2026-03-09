@@ -36,6 +36,12 @@ body {
     flex-direction: column;
 }
 
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
 body.presentation-mode {
     overflow: hidden;
     height: 100vh;
