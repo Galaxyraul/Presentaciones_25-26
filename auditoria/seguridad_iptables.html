@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditoría de Seguridad: Configuración de IPTables</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="presentation-mode">
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html"
+                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon">A</div>
+                <div class="brand">
+                    <h1>Auditoría Informática</h1>
+                    <span>Configuración de IPTables</span>
+                </div>
+            </a>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">
+            CURSO 2025/26
+        </div>
+    </nav>
+
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="presentation-viewport">
+        <!-- Diapositiva 1: Portada -->
+        <div class="slide active">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Auditoría de Seguridad en Linux</h1>
+            <p class="slide-subtitle">Investigación sobre restricciones de acceso y configuración de IPTables</p>
+
+            <div class="authors-box">
+                <p
+                    style="color: var(--primary); font-weight: bold; font-size: 0.8rem; letter-spacing: 0.1em; margin-bottom: 1rem; text-transform: uppercase;">
+                    Grado en Ingeniería Informática | Asignatura: Auditoría de Sistemas</p>
+                <div class="author-tag">Raúl Gómez Téllez</div>
+                <div class="author-tag">Rubén Ramírez Peña</div>
+            </div>
+
+            <div class="slide-internal-num">01 / 11</div>
+        </div>
+
+        <!-- Diapositiva 2: Índice -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Índice</h1>
+            <p class="slide-subtitle">Estructura de la auditoría</p>
+
+            <div style="margin-top: 1rem;">
+                <div class="index-item" onclick="goToSlide(3)">
+                    <div class="index-num">1</div>
+                    <div><strong>Objetivos:</strong> Protección del Host y Mínimo Privilegio.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(4)">
+                    <div class="index-num">2</div>
+                    <div><strong>Fundamentos:</strong> Netfilter y arquitectura del Kernel.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(5)">
+                    <div class="index-num">3</div>
+                    <div><strong>Cadenas:</strong> Gestión de INPUT, OUTPUT y FORWARD.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(6)">
+                    <div class="index-num">4</div>
+                    <div><strong>Default Deny:</strong> Estrategia de seguridad por defecto.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(7)">
+                    <div class="index-num">5</div>
+                    <div><strong>Stateful Inspection:</strong> El módulo conntrack.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(8)">
+                    <div class="index-num">6</div>
+                    <div><strong>Caso Práctico:</strong> Servidor Web y acceso SSH.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(9)">
+                    <div class="index-num">7</div>
+                    <div><strong>Logs:</strong> Trazabilidad e identificación de ataques.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(10)">
+                    <div class="index-num">8</div>
+                    <div><strong>Buenas Prácticas:</strong> Persistencia y defensa en capas.</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">02 / 11</div>
+        </div>
+
+        <!-- Diapositiva 2: Objetivos -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Objetivo de la Auditoría</h1>
+            <p class="slide-subtitle">Protección del Host</p>
+
+            <div class="data-grid">
+                <div class="data-card">
+                    <p>Evaluar y aplicar metodologías de desarrollo seguro para mitigar riesgos en la infraestructura perimetral del sistema operativo.</p>
+                </div>
+            </div>
+
+            <ul style="margin-top: 2rem;">
+                <li>Reducción de la superficie de ataque.</li>
+                <li>Implementación del principio de <strong>Mínimo Privilegio</strong>.</li>
+                <li>Garantizar el cumplimiento de normativas de seguridad (ISO 27001).</li>
+                <li>Establecer trazas de auditoría mediante logs.</li>
+            </ul>
+            <div class="slide-internal-num">03 / 11</div>
+        </div>
+
+        <!-- Diapositiva 3: Fundamentos Técnicos -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Fundamentos: Netfilter</h1>
+            <p class="slide-subtitle">Framework del Kernel</p>
+            
+            <div style="line-height: 1.8; font-size: 1.1rem; color: var(--text-dim);">
+                <p>Netfilter permite:</p>
+                <ul>
+                    <li>Filtrado de paquetes.</li>
+                    <li>Traducción de direcciones de red (NAT).</li>
+                    <li>Manipulación de paquetes (Mangle).</li>
+                </ul>
+                <p style="margin-top: 1rem;"><strong>IPTables</strong> actúa como la herramienta de administración en el espacio de usuario.</p>
+            </div>
+
+            <div class="data-card" style="margin-top: 1.5rem;">
+                <p style="font-weight: bold; color: var(--primary);">Operación a nivel de Kernel (Capa 3 y 4 del modelo OSI)</p>
+            </div>
+
+            <div class="slide-internal-num">04 / 11</div>
+        </div>
+
+        <!-- Diapositiva 4: Cadenas de Tráfico -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Gestión del Tráfico: Cadenas</h1>
+            <p class="slide-subtitle">Estructura de filtrado</p>
+
+            <div class="data-grid">
+                <div class="data-card">
+                    <h3>INPUT</h3>
+                    <p>Paquetes destinados al sistema local.</p>
+                </div>
+                <div class="data-card">
+                    <h3>OUTPUT</h3>
+                    <p>Paquetes generados por el sistema.</p>
+                </div>
+            </div>
+
+            <div class="index-item" style="margin-top: 1.5rem;">
+                <div class="index-num">F</div>
+                <div><strong>FORWARD:</strong> Paquetes que pasan a través del sistema.</div>
+            </div>
+
+            <div class="slide-internal-num">05 / 11</div>
+        </div>
+
+        <!-- Diapositiva 5: Metodología Default Deny -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Metodología: Default Deny</h1>
+            <p class="slide-subtitle">Premisa de seguridad absoluta</p>
+
+            <p style="margin-bottom: 1rem;"><strong>Política por Defecto (DROP):</strong> Se descarta todo paquete que no coincida explícitamente.</p>
+            
+            <pre>
+iptables -P INPUT DROP
+iptables -P FORWARD DROP
+iptables -P OUTPUT DROP</pre>
+
+            <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-dim);">Garantiza que un servicio no sea visible por defecto.</p>
+
+            <div class="slide-internal-num">06 / 11</div>
+        </div>
+
+        <!-- Diapositiva 6: Inspección con Estado -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Stateful Inspection</h1>
+            <p class="slide-subtitle">Módulo conntrack</p>
+
+            <div style="line-height: 1.6;">
+                <ul>
+                    <li><strong>NEW:</strong> Conexión iniciada por el cliente.</li>
+                    <li><strong>ESTABLISHED:</strong> Sesión activa validada.</li>
+                    <li><strong>RELATED:</strong> Conexiones secundarias (FTP, ICMP).</li>
+                </ul>
+            </div>
+
+            <pre>
+iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT</pre>
+
+            <div class="slide-internal-num">07 / 11</div>
+        </div>
+
+        <!-- Diapositiva 7: Caso Práctico -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Caso Práctico: Web & SSH</h1>
+            <p class="slide-subtitle">Configuración en producción</p>
+
+            <pre>
+# Permitir loopback (interno)
+iptables -A INPUT -i lo -j ACCEPT
+
+# Abrir tráfico Web público
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+
+# Administración SSH restringida por IP
+iptables -A INPUT -p tcp -s 192.168.1.100 --dport 22 -j ACCEPT</pre>
+
+            <div class="slide-internal-num">08 / 11</div>
+        </div>
+
+        <!-- Diapositiva 8: Auditoría de Logs -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Trazabilidad y Logging</h1>
+            <p class="slide-subtitle">Registro de accesos</p>
+
+            <pre>
+iptables -A INPUT -m limit --limit 5/min -j LOG --log-prefix "FW_REJECT: "</pre>
+
+            <ul style="margin-top: 1.5rem;">
+                <li>Identificación de ataques de fuerza bruta.</li>
+                <li>Análisis forense tras incidentes.</li>
+                <li>Monitorización de políticas de acceso.</li>
+            </ul>
+
+            <div class="slide-internal-num">09 / 11</div>
+        </div>
+
+        <!-- Diapositiva 9: Buenas Prácticas -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Buenas Prácticas</h1>
+            <p class="slide-subtitle">Recomendaciones CIS</p>
+
+            <div class="data-grid">
+                <div class="data-card">
+                    <h3>Persistencia</h3>
+                    <p>iptables-persistent</p>
+                </div>
+                <div class="data-card">
+                    <h3>Defensa</h3>
+                    <p>Fail2Ban</p>
+                </div>
+            </div>
+
+            <ul style="margin-top: 1.5rem;">
+                <li>Auditorías periódicas (3-6 meses).</li>
+                <li>Comentarios en las reglas.</li>
+            </ul>
+
+            <div class="slide-internal-num">10 / 11</div>
+        </div>
+
+        <!-- Diapositiva 10: Conclusión -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Conclusiones</h1>
+            <p class="slide-subtitle">Resiliencia de Infraestructuras</p>
+
+            <div style="margin-top: 2rem; padding: 3rem; background: rgba(59, 130, 246, 0.05); border-radius: 24px; text-align: center; border: 1px dashed var(--border);"
+                class="index-item">
+                <p style="font-size: 1.5rem; font-style: italic; line-height: 1.4;">
+                    "La configuración correcta de un firewall es el pilar de la seguridad del host."
+                </p>
+                <div style="margin-top: 2rem; font-weight: bold; color: var(--primary);">
+                    ¿PREGUNTAS?
+                </div>
+            </div>
+            <div class="slide-internal-num">11 / 11</div>
+        </div>
+    </div>
+
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+
+        <div class="page-indicator" id="pageIndicator">1 / 11</div>
+
+        <button class="nav-btn primary" onclick="changeSlide(1)">
+            Siguiente
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / slides.length) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${slides.length}`;
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + slides.length) % slides.length;
+            updateUI();
+        }
+
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+        });
+
+        updateUI();
+    </script>
+</body>
+
+</html>
