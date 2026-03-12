@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clasificación por Ensembles - Inteligencia de Negocio</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="presentation-mode">
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html"
+                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon">E</div>
+                <div class="brand">
+                    <h1>Inteligencia de Negocio</h1>
+                    <span>Clasificación por Ensembles</span>
+                </div>
+            </a>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">
+            CURSO 2025/26
+        </div>
+    </nav>
+
+    <div id="progress" class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="presentation-viewport">
+        <!-- Slide 1: Portada -->
+        <div class="slide active">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Clasificación por Ensembles</h1>
+            <p class="slide-subtitle">La sabiduría de la multitud en el aprendizaje automático</p>
+
+            <div class="authors-box">
+                <p
+                    style="color: var(--primary); font-weight: bold; font-size: 0.8rem; letter-spacing: 0.1em; margin-bottom: 1rem; text-transform: uppercase;">
+                    Realizado por el Grupo 5:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="author-tag">Raúl Gómez Téllez</div>
+                    <div class="author-tag">Víctor Aguilar Méndez</div>
+                    <div class="author-tag">Rubén Ramírez Peña</div>
+                    <div class="author-tag">Jaime M. Cazalla</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">01 / 11</div>
+        </div>
+
+        <!-- Slide 2: Índice -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Contenido de la Sesión</h1>
+            <p class="slide-subtitle">Estructura de la Presentación</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div onclick="goToSlide(3)" class="index-item">
+                    <div class="index-num">1</div> Conceptos Base
+                </div>
+                <div onclick="goToSlide(4)" class="index-item">
+                    <div class="index-num">2</div> Tipología de Ensembles
+                </div>
+                <div onclick="goToSlide(5)" class="index-item">
+                    <div class="index-num">3</div> Bagging & Random Forest
+                </div>
+                <div onclick="goToSlide(6)" class="index-item">
+                    <div class="index-num">4</div> Boosting & Gradient Boosting
+                </div>
+                <div onclick="goToSlide(7)" class="index-item">
+                    <div class="index-num">5</div> Stacking & Meta-Learning
+                </div>
+                <div onclick="goToSlide(8)" class="index-item">
+                    <div class="index-num">6</div> Casos de Uso Reales
+                </div>
+                <div onclick="goToSlide(9)" class="index-item">
+                    <div class="index-num">7</div> Estado del Arte (SOTA)
+                </div>
+                <div onclick="goToSlide(10)" class="index-item">
+                    <div class="index-num">8</div> Compromiso Sesgo-Varianza
+                </div>
+            </div>
+            <div class="slide-internal-num">02 / 11</div>
+        </div>
+
+        <!-- Slide 3: Introducción -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">¿Qué son los Ensembles?</h1>
+            <p class="slide-subtitle">Combinando modelos para mayor precisión</p>
+            <ul>
+                <li><strong>Concepto:</strong> Técnica que combina múltiples modelos de aprendizaje para obtener un mejor rendimiento predictivo.</li>
+                <li><strong>Idea Base:</strong> Un conjunto de aprendices débiles puede formar un aprendiz fuerte.</li>
+                <li><strong>Estrategia:</strong> Promediar errores y capturar diferentes patrones de los datos.</li>
+            </ul>
+            <div class="slide-internal-num">03 / 11</div>
+        </div>
+
+        <!-- Slide 4: Tipos Principales -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Tipos de Ensembles</h1>
+            <p class="slide-subtitle">Tres enfoques fundamentales</p>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h3 style="font-size: 1.5rem;">Bagging</h3>
+                    <p>Paralelo: Reduce Varianza</p>
+                </div>
+                <div class="data-card">
+                    <h3 style="font-size: 1.5rem;">Boosting</h3>
+                    <p>Secuencial: Reduce Sesgo</p>
+                </div>
+                <div class="data-card" style="grid-column: span 2;">
+                    <h3 style="font-size: 1.5rem;">Stacking</h3>
+                    <p>Jerárquico: Combina modelos de diferente tipo</p>
+                </div>
+            </div>
+            <div class="slide-internal-num">04 / 11</div>
+        </div>
+
+        <!-- Slide 5: Bagging -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Bagging (Bootstrap Aggregating)</h1>
+            <p class="slide-subtitle">Enfoque en Paralelo</p>
+            <ul>
+                <li>Entrena múltiples versiones del mismo modelo con subconjuntos aleatorios.</li>
+                <li><strong>Random Forest:</strong> El ejemplo estrella, usando múltiples árboles de decisión.</li>
+                <li>Ideal para modelos con alta varianza (sobreajuste).</li>
+            </ul>
+            <div class="slide-internal-num">05 / 11</div>
+        </div>
+
+        <!-- Slide 6: Boosting -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Boosting</h1>
+            <p class="slide-subtitle">Enfoque Secuencial</p>
+            <ul>
+                <li>Cada nuevo modelo intenta corregir los errores cometidos por los anteriores.</li>
+                <li><strong>Modelos Clave:</strong> AdaBoost, Gradient Boosting, XGBoost, CatBoost.</li>
+                <li>Muy potente pero sensible al ruido y al sobreajuste si no se regula.</li>
+            </ul>
+            <div class="slide-internal-num">06 / 11</div>
+        </div>
+
+        <!-- Slide 7: Stacking -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Stacking</h1>
+            <p class="slide-subtitle">Meta-Aprendizaje</p>
+            <ul>
+                <li>Combina predicciones de modelos totalmente distintos (SVM, KNN, Redes Neuronales).</li>
+                <li>Un "meta-modelo" aprende a dar el peso adecuado a cada modelo base.</li>
+                <li>Arquitectura compleja: Modelos Base -> Meta-Modelo -> Predicción final.</li>
+            </ul>
+            <div class="slide-internal-num">07 / 11</div>
+        </div>
+
+        <!-- Slide 8: Casos de Uso Reales -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Casos de Uso Reales</h1>
+            <p class="slide-subtitle">Impacto en el Negocio</p>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h4 style="color: var(--accent-red);">Fraude</h4>
+                    <p>Seguridad Bancaria</p>
+                </div>
+                <div class="data-card">
+                    <h4 style="color: var(--accent-green);">Diagnóstico</h4>
+                    <p>Medicina Predictiva</p>
+                </div>
+                <div class="data-card">
+                    <h4 style="color: #f59e0b);">Churn</h4>
+                    <p>Retención de Clientes</p>
+                </div>
+                <div class="data-card">
+                    <h4 style="color: #3b82f6);">Riesgo</h4>
+                    <p>Scoring Crediticio</p>
+                </div>
+            </div>
+            <div class="slide-internal-num">08 / 11</div>
+        </div>
+
+        <!-- Slide 9: SOTA Ensembles -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Estado del Arte (SOTA)</h1>
+            <p class="slide-subtitle">Técnicas de vanguardia</p>
+            <ul>
+                <li><strong>TabPFN:</strong> El modelo definitivo para datos tabulares pequeños/medianos.</li>
+                <li><strong>Deep Ensembles:</strong> Uso de ensembles en redes neuronales profundas para incertidumbre.</li>
+                <li><strong>Kaggle Kings:</strong> Los ensembles de Boosting (XGBoost/LightGBM) dominan las competiciones.</li>
+            </ul>
+            <div class="slide-internal-num">09 / 11</div>
+        </div>
+
+        <!-- Slide 10: Bias-Variance Tradeoff -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Ventajas Técnicas</h1>
+            <p class="slide-subtitle">Compromiso Sesgo-Varianza</p>
+            <div class="data-card" style="text-align: left;">
+                <p>✓ Reduce la varianza sin aumentar mucho el sesgo (Bagging).</p>
+                <p>✓ Reduce el sesgo sin aumentar mucho la varianza (Boosting).</p>
+                <p>✓ Mayor robustez frente a valores atípicos y ruido en los datos.</p>
+            </div>
+            <div class="slide-internal-num">10 / 11</div>
+        </div>
+
+        <!-- Slide 11: Conclusión -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Conclusiones</h1>
+            <p class="slide-subtitle">Conocimiento Accionable</p>
+            <ul>
+                <li>Ningún modelo es perfecto, pero un conjunto de ellos se acerca.</li>
+                <li>Ensembles son el estándar de la industria para datos estructurados.</li>
+                <li>La clave es la diversidad entre los modelos del conjunto.</li>
+            </ul>
+            <div class="authors-box">
+                <p style="color: var(--primary); font-weight: bold; margin-bottom: 0.5rem;">Cierre de Sesión</p>
+                <div class="author-tag">Grupo 5 • 2026</div>
+            </div>
+            <div class="slide-internal-num">11 / 11</div>
+        </div>
+    </div>
+
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <div class="page-indicator" id="pageIndicator">1 / 11</div>
+        <button class="nav-btn primary" onclick="changeSlide(1)">
+            Siguiente
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const totalSlides = slides.length;
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / totalSlides) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${totalSlides}`;
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + totalSlides) % totalSlides;
+            updateUI();
+        }
+
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+        });
+
+        updateUI();
+    </script>
+</body>
+
+</html>
