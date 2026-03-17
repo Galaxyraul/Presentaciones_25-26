@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditoría de Seguridad: Modelado de Amenazas NIST</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="presentation-mode">
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html"
+                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon">A</div>
+                <div class="brand">
+                    <h1>Auditoría Informática</h1>
+                    <span>Modelado de Amenazas NIST</span>
+                </div>
+            </a>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">
+            CURSO 2025/26
+        </div>
+    </nav>
+
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="presentation-viewport">
+        <!-- Diapositiva 1: Portada -->
+        <div class="slide active">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Modelado de Amenazas Centrado en Datos bajo el Estándar NIST</h1>
+            <p class="slide-subtitle">Análisis de la Publicación Especial NIST SP 800-154 y su integración en la Gestión
+                de Riesgos.</p>
+
+            <div class="authors-box">
+                <p
+                    style="color: var(--primary); font-weight: bold; font-size: 0.8rem; letter-spacing: 0.1em; margin-bottom: 1rem; text-transform: uppercase;">
+                    Grado en Ingeniería Informática | Asignatura: Auditoría de Sistemas</p>
+                <div class="author-tag">Raúl Gómez Téllez</div>
+                <div class="author-tag">Rubén Ramírez Peña</div>
+            </div>
+
+            <div class="slide-internal-num">01 / 08</div>
+        </div>
+
+        <!-- Diapositiva 2: Índice -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Índice</h1>
+            <p class="slide-subtitle">Estructura de la presentación</p>
+
+            <div style="margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+                <div class="index-item" onclick="goToSlide(3)" style="margin-bottom: 0; padding: 0.8rem 1.2rem;">
+                    <div class="index-num">1</div>
+                    <div style="font-size: 0.9rem;"><strong>Introducción:</strong> Enfoque "Data-Centric".</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(4)" style="margin-bottom: 0; padding: 0.8rem 1.2rem;">
+                    <div class="index-num">2</div>
+                    <div style="font-size: 0.9rem;"><strong>Pilares:</strong> Fundamentos del Modelo.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(5)" style="margin-bottom: 0; padding: 0.8rem 1.2rem;">
+                    <div class="index-num">3</div>
+                    <div style="font-size: 0.9rem;"><strong>Metodología:</strong> Fases de Implementación.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(6)" style="margin-bottom: 0; padding: 0.8rem 1.2rem;">
+                    <div class="index-num">4</div>
+                    <div style="font-size: 0.9rem;"><strong>Análisis:</strong> Ventajas y Limitaciones.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(7)" style="margin-bottom: 0; padding: 0.8rem 1.2rem;">
+                    <div class="index-num">5</div>
+                    <div style="font-size: 0.9rem;"><strong>Caso Práctico:</strong> Smart Grids.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(8)" style="margin-bottom: 0; padding: 0.8rem 1.2rem;">
+                    <div class="index-num">6</div>
+                    <div style="font-size: 0.9rem;"><strong>Conclusión:</strong> Resumen Final.</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">02 / 08</div>
+        </div>
+
+        <!-- Diapositiva 2: Introducción y Filosofía del Modelo -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Introducción y Filosofía del Modelo</h1>
+            <p class="slide-subtitle">Enfoque "Data-Centric"</p>
+
+            <div class="data-grid" style="margin-top: 2rem;">
+                <div class="data-card">
+                    <h3>Concepto Central</h3>
+                    <p>Enfoque "Data-Centric" (Centrado en los Datos).</p>
+                </div>
+                <div class="data-card">
+                    <h3>Diferenciación</h3>
+                    <p>Frente a STRIDE o Attack Trees, NIST prioriza la protección del dato sobre el software/hardware.
+                    </p>
+                </div>
+            </div>
+
+            <div class="index-item" style="margin-top: 1.5rem;">
+                <div class="index-num">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                </div>
+                <div><strong>Marco Normativo:</strong> Relación directa con el NIST SP 800-37 (Risk Management Framework
+                    - RMF) para una seguridad continua.</div>
+            </div>
+
+            <div class="slide-internal-num">03 / 08</div>
+        </div>
+
+        <!-- Diapositiva 3: Los Cuatro Pilares Fundamentales -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Los Cuatro Pilares Fundamentales</h1>
+            <p class="slide-subtitle">Pilares del Modelo NIST</p>
+
+            <div style="margin-top: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="index-item" style="margin-bottom: 0;">
+                    <div class="index-num">1</div>
+                    <div><strong>Identificación de Activos:</strong> Determinación de qué datos son críticos para la
+                        misión.</div>
+                </div>
+                <div class="index-item" style="margin-bottom: 0;">
+                    <div class="index-num">2</div>
+                    <div><strong>Eventos de Amenaza:</strong> Qué acciones maliciosas o accidentales podrían ocurrir.
+                    </div>
+                </div>
+                <div class="index-item" style="margin-bottom: 0;">
+                    <div class="index-num">3</div>
+                    <div><strong>Vectores de Ataque:</strong> Estudio de las rutas y métodos de ejecución.</div>
+                </div>
+                <div class="index-item" style="margin-bottom: 0;">
+                    <div class="index-num">4</div>
+                    <div><strong>Evaluación de Controles:</strong> Análisis de brechas entre la seguridad actual y la
+                        necesaria.</div>
+                </div>
+            </div>
+
+            <div class="slide-internal-num">04 / 08</div>
+        </div>
+
+        <!-- Diapositiva 4: Metodología de Aplicación (Fases) -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Metodología de Aplicación</h1>
+            <p class="slide-subtitle">Fases de Implementación</p>
+
+            <div class="data-grid" style="margin-top: 1.5rem;">
+                <div class="data-card">
+                    <h3>Fase I: Caracterización</h3>
+                    <p>Uso de Diagramas de Flujo de Datos (DFD) y delimitación del sistema.</p>
+                </div>
+                <div class="data-card">
+                    <h3>Fase II: Selección de Eventos</h3>
+                    <p>Identificación de fuentes de amenaza (humanas, técnicas, ambientales).</p>
+                </div>
+                <div class="data-card">
+                    <h3>Fase III: Vulnerabilidades</h3>
+                    <p>Evaluación técnica de la infraestructura y cadena de suministro.</p>
+                </div>
+                <div class="data-card">
+                    <h3>Fase IV: Riesgo</h3>
+                    <p>Cálculo de Probabilidad vs. Impacto integral (Tríada CIA) sobre los activos.</p>
+                </div>
+            </div>
+
+            <div class="slide-internal-num">05 / 08</div>
+        </div>
+
+        <!-- Diapositiva 5: Análisis Crítico: Ventajas y Limitaciones -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Análisis Crítico</h1>
+            <p class="slide-subtitle">Ventajas y Limitaciones</p>
+
+            <div class="data-grid">
+                <div class="data-card" style="border-left: 4px solid var(--primary);">
+                    <h3 style="color: var(--primary);">Fortalezas</h3>
+                    <ul style="margin-top: 1rem; color: var(--text-dim); font-size: 0.95rem;">
+                        <li>Alineación con cumplimiento regulatorio (HIPAA, FISMA).</li>
+                        <li>Visión holística y lenguaje ejecutivo.</li>
+                    </ul>
+                </div>
+                <div class="data-card" style="border-left: 4px solid #ef4444;">
+                    <h3 style="color: #ef4444;">Desafíos</h3>
+                    <ul style="margin-top: 1rem; color: var(--text-dim); font-size: 0.95rem;">
+                        <li>Alta demanda de recursos y personal especializado.</li>
+                        <li>Complejidad de actualización en entornos dinámicos (DevOps/Cloud-Native).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-internal-num">06 / 08</div>
+        </div>
+
+        <!-- Diapositiva 6: Caso de Estudio: Red Eléctrica Inteligente -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Caso de Estudio: Red Eléctrica Inteligente</h1>
+            <p class="slide-subtitle">Aplicación en Smart Grids</p>
+
+            <div class="index-item" style="margin-top: 1.5rem;">
+                <div class="index-num">S</div>
+                <div><strong>Escenario:</strong> Telemetría y control de carga en una Smart Grid.</div>
+            </div>
+
+            <div class="index-item">
+                <div class="index-num">A</div>
+                <div><strong>Amenaza Detectada:</strong> Actor estatal hostil buscando manipular la frecuencia de red.
+                </div>
+            </div>
+
+            <div class="index-item">
+                <div class="index-num">P</div>
+                <div><strong>Solución Propuesta:</strong> Implementación de TLS avanzado y firmas digitales de comandos.
+                </div>
+            </div>
+
+            <div class="index-item">
+                <div class="index-num">R</div>
+                <div><strong>Resultado:</strong> Mitigación de un riesgo crítico mediante la priorización de integridad
+                    de datos.</div>
+            </div>
+
+            <div class="slide-internal-num">07 / 08</div>
+        </div>
+
+        <!-- Diapositiva 7: Conclusión y Recomendaciones -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Conclusión y Recomendaciones</h1>
+            <p class="slide-subtitle">Resumen final</p>
+
+            <div class="data-card" style="margin-top: 1.5rem;">
+                <p><strong>Resumen:</strong> El modelado NIST es una herramienta de resiliencia, no solo de
+                    cumplimiento.</p>
+            </div>
+
+            <div style="margin-top: 2rem; padding: 3rem; background: rgba(59, 130, 246, 0.05); border-radius: 24px; text-align: center; border: 1px dashed var(--border);"
+                class="index-item">
+                <p style="font-size: 1.5rem; font-style: italic; line-height: 1.4;">
+                    "La seguridad efectiva comienza por entender el valor y el flujo de la información."
+                </p>
+            </div>
+
+            <div style="margin-top: 3rem; text-align: center; font-weight: bold; color: var(--primary); font-size: 1.8rem;">
+                ¿PREGUNTAS?
+            </div>
+
+            <div class="slide-internal-num">08 / 08</div>
+        </div>
+
+    </div>
+
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+
+        <div class="page-indicator" id="pageIndicator">1 / 8</div>
+
+        <button class="nav-btn primary" onclick="changeSlide(1)">
+            Siguiente
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / slides.length) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${slides.length}`;
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + slides.length) % slides.length;
+            updateUI();
+        }
+
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+        });
+
+        updateUI();
+    </script>
+</body>
+
+</html>
