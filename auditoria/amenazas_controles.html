@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditoría de Seguridad: Amenazas y Controles</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* Estilos específicos para esta presentación si fuera necesario */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        .icon-box {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+            padding: 1rem;
+            border-radius: 12px;
+            display: inline-flex;
+            margin-bottom: 1rem;
+        }
+        .concept-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            padding: 1.5rem;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+        .concept-card:hover {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.05);
+            transform: translateY(-5px);
+        }
+        .tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--primary);
+            color: white;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+        .tag.preventivo { background: #22c55e; }
+        .tag.detectivo { background: #eab308; }
+        .tag.correctivo { background: #ef4444; }
+    </style>
+</head>
+
+<body class="presentation-mode">
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html"
+                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon">A</div>
+                <div class="brand">
+                    <h1>Auditoría Informática</h1>
+                    <span>Amenazas y Controles</span>
+                </div>
+            </a>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">
+            CURSO 2025/26
+        </div>
+    </nav>
+
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="presentation-viewport">
+        <!-- Diapositiva 1: Portada -->
+        <div class="slide active">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Amenazas y Controles en la Auditoría Informática</h1>
+            <p class="slide-subtitle">Gestión de Riesgos, Taxonomía de Amenazas y Marcos de Control</p>
+
+            <div class="authors-box">
+                <p
+                    style="color: var(--primary); font-weight: bold; font-size: 1.2rem; letter-spacing: 0.1em; margin-bottom: 1rem; text-transform: uppercase;">
+                    Autores:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="author-tag">Raúl Gómez Téllez</div>
+                    <div class="author-tag">Víctor Aguilar Méndez</div>
+                    <div class="author-tag">Rubén Ramírez Peña</div>
+                    <div class="author-tag">Jaime M. Cazalla</div>
+                </div>
+            </div>
+
+            <div class="slide-internal-num">01 / 14</div>
+        </div>
+
+        <!-- Diapositiva 2: Índice -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Índice de Contenidos</h1>
+            <p class="slide-subtitle">Estructura de la sesión</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+                <div class="index-item" onclick="goToSlide(3)">
+                    <div class="index-num">1</div>
+                    <div style="font-size: 0.9rem;">Fundamentos del Riesgo</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(4)">
+                    <div class="index-num">2</div>
+                    <div style="font-size: 0.9rem;">Taxonomía de Amenazas</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(6)">
+                    <div class="index-num">3</div>
+                    <div style="font-size: 0.9rem;">Marco de Controles</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(7)">
+                    <div class="index-num">4</div>
+                    <div style="font-size: 0.9rem;">Controles GITC</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(9)">
+                    <div class="index-num">5</div>
+                    <div style="font-size: 0.9rem;">Controles de Aplicación</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(10)">
+                    <div class="index-num">6</div>
+                    <div style="font-size: 0.9rem;">BCP/DRP y Gobierno</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(12)">
+                    <div class="index-num">7</div>
+                    <div style="font-size: 0.9rem;">Técnicas CAATs</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(13)">
+                    <div class="index-num">8</div>
+                    <div style="font-size: 0.9rem;">Preguntas</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(14)">
+                    <div class="index-num">9</div>
+                    <div style="font-size: 0.9rem;">Bibliografía</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">02 / 14</div>
+        </div>
+
+        <!-- Diapositiva 3: Fundamentos del Riesgo -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Fundamentos del Riesgo</h1>
+            <p class="slide-subtitle">El núcleo de la Auditoría de TI</p>
+
+            <div class="grid-2">
+                <div class="concept-card">
+                    <div class="icon-box">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <h3>Ecuación del Riesgo</h3>
+                    <p style="font-family: 'Fira Code', monospace; color: var(--primary); font-size: 1.1rem; margin: 1rem 0;">Riesgo = Activos × Amenazas × Vulnerabilidades</p>
+                    <p style="color: var(--text-dim); font-size: 0.9rem;">Análisis de la interdependencia entre lo que protegemos, quién nos ataca y nuestras debilidades.</p>
+                </div>
+                <div class="concept-card">
+                    <div class="icon-box">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <h3>Riesgo Inherente vs. Residual</h3>
+                    <p style="color: var(--text-dim); font-size: 0.9rem; margin-top: 0.5rem;"><strong>Inherente:</strong> Impacto sin ningún control aplicado.</p>
+                    <p style="color: var(--text-dim); font-size: 0.9rem;"><strong>Residual:</strong> Nivel de riesgo tras la aplicación de controles.</p>
+                    <p style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 0.5rem; font-weight: 600;">Objetivo: Validar si el riesgo residual ≤ Apetito de Riesgo.</p>
+                </div>
+            </div>
+
+            <div class="slide-internal-num">03 / 14</div>
+        </div>
+
+        <!-- Diapositiva 4: Taxonomía de Amenazas I -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Taxonomía de Amenazas I</h1>
+            <p class="slide-subtitle">Origen Humano y Social</p>
+
+            <ul style="margin-top: 0;">
+                <li style="display: block;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                        <span class="index-num">H</span>
+                        <strong>Amenazas Internas (Insider Threats)</strong>
+                    </div>
+                    <p style="margin-left: 3rem; color: var(--text-dim); font-size: 0.9rem;">Análisis del fraude, sabotaje y el error humano por falta de formación técnica o concienciación.</p>
+                </li>
+                <li style="display: block;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                        <span class="index-num">S</span>
+                        <strong>Ingeniería Social Avanzada</strong>
+                    </div>
+                    <p style="margin-left: 3rem; color: var(--text-dim); font-size: 0.9rem;">Business Email Compromise (BEC) y técnicas de Phishing dirigido (Whaling) a niveles ejecutivos.</p>
+                </li>
+                <li style="display: block;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                        <span class="index-num">P</span>
+                        <strong>La Gestión del Privilegio</strong>
+                    </div>
+                    <p style="margin-left: 3rem; color: var(--text-dim); font-size: 0.9rem;">Riesgo derivado de la "acumulación de permisos" excesivos en usuarios críticos y cuentas técnicas.</p>
+                </li>
+            </ul>
+
+            <div class="slide-internal-num">04 / 14</div>
+        </div>
+
+        <!-- Diapositiva 5: Taxonomía de Amenazas II -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Taxonomía de Amenazas II</h1>
+            <p class="slide-subtitle">Factores Técnicos y Externos</p>
+
+            <div class="data-grid">
+                <div class="data-card">
+                    <h3 style="font-size: 1.5rem;">APT</h3>
+                    <p>Amenazas Persistentes Avanzadas</p>
+                    <p style="text-transform: none; color: var(--text-main); font-size: 0.85rem; margin-top: 1rem;">Ciclo de vida de ataques dirigidos por actores estatales o crimen organizado para exfiltración de datos.</p>
+                </div>
+                <div class="data-card">
+                    <h3 style="font-size: 1.5rem;">Zero-Day</h3>
+                    <p>Vulnerabilidades de Día Cero</p>
+                    <p style="text-transform: none; color: var(--text-main); font-size: 0.85rem; margin-top: 1rem;">Riesgo crítico en la ventana de exposición antes de que exista un parche oficial disponible.</p>
+                </div>
+            </div>
+
+            <div class="index-item" style="margin-top: 1.5rem;">
+                <div class="index-num">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                </div>
+                <div><strong>Cadena de Suministro:</strong> Amenazas derivadas de proveedores de servicios en la nube (SaaS/PaaS) e integraciones de software de terceros.</div>
+            </div>
+
+            <div class="slide-internal-num">05 / 14</div>
+        </div>
+
+        <!-- Diapositiva 6: Marco Conceptual de Controles -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Marcos de Control</h1>
+            <p class="slide-subtitle">Defensa en Profundidad</p>
+
+            <div style="background: rgba(59, 130, 246, 0.05); padding: 1.5rem; border-radius: 20px; border: 1px dashed var(--primary); margin-bottom: 2rem;">
+                <p style="text-align: center; font-weight: 700;">Arquitectura de Seguridad: Capas superpuestas donde el fallo de un componente no comprometa el sistema completo.</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="index-item" style="flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+                    <span class="tag preventivo">Preventivos</span>
+                    <p style="font-size: 0.9rem;">Cifrado de datos, Firewalls de nueva generación (NGFW), Políticas robustas de contraseñas.</p>
+                </div>
+                <div class="index-item" style="flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+                    <span class="tag detectivo">Detectivos</span>
+                    <p style="font-size: 0.9rem;">Sistemas de Gestión de Eventos e Información de Seguridad (SIEM) y monitorización de logs.</p>
+                </div>
+                <div class="index-item" style="flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+                    <span class="tag correctivo">Correctivos</span>
+                    <p style="font-size: 0.9rem;">Planes de respuesta ante incidentes (IRP), procesos de restauración y copias de seguridad.</p>
+                </div>
+            </div>
+
+            <div class="slide-internal-num">06 / 14</div>
+        </div>
+
+        <!-- Diapositiva 7: GITC - Acceso -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h2 class="slide-subtitle">Controles Generales de TI (GITC)</h2>
+            <h1 class="slide-title">Gestión de Accesos</h1>
+
+            <div class="data-grid">
+                <div class="concept-card">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                        <h3 style="color: var(--primary);">IAM</h3>
+                    </div>
+                    <p style="font-size: 0.9rem;">Gestión de Identidad y Acceso. Ciclo de vida completo: Alta, Baja y Modificación (Joiner, Mover, Leaver).</p>
+                </div>
+                <div class="concept-card">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        <h3 style="color: var(--primary);">Mínimo Privilegio</h3>
+                    </div>
+                    <p style="font-size: 0.9rem;">Restricción de acceso basada estrictamente en la necesidad operativa del puesto de trabajo.</p>
+                </div>
+            </div>
+
+            <div class="index-item" style="margin-top: 1.5rem; border-left: 4px solid var(--accent-red);">
+                <div><strong>Segregación de Funciones (SoD):</strong> Evitar que una misma persona pueda ejecutar y autorizar transacciones críticas simultáneamente.</div>
+            </div>
+
+            <div class="slide-internal-num">07 / 14</div>
+        </div>
+
+        <!-- Diapositiva 8: GITC - Cambios -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h2 class="slide-subtitle">Controles Generales de TI (GITC)</h2>
+            <h1 class="slide-title">Cambios y Desarrollo</h1>
+
+            <div class="list-step">
+                <div class="step-num">1</div>
+                <div>
+                    <strong>Ciclo de Vida de Desarrollo Seguro (S-SDLC)</strong>
+                    <p style="color: var(--text-dim); font-size: 0.85rem;">Integración de controles de seguridad desde la fase inicial de diseño (Security by Design).</p>
+                </div>
+            </div>
+
+            <div class="list-step">
+                <div class="step-num">2</div>
+                <div>
+                    <strong>Separación de Entornos</strong>
+                    <p style="color: var(--text-dim); font-size: 0.85rem;">División mandatoria entre Desarrollo, Pruebas (QA) y Producción para evitar cambios accidentales.</p>
+                </div>
+            </div>
+
+            <div class="list-step">
+                <div class="step-num">3</div>
+                <div>
+                    <strong>Auditoría de Cambios</strong>
+                    <p style="color: var(--text-dim); font-size: 0.85rem;">Trazabilidad total de las modificaciones en el código fuente y en las configuraciones de infraestructura (IaC).</p>
+                </div>
+            </div>
+
+            <div class="slide-internal-num">08 / 14</div>
+        </div>
+
+        <!-- Diapositiva 9: Controles de Aplicación -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Controles de Aplicación</h1>
+            <p class="slide-subtitle">Integridad del Procesamiento</p>
+
+            <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                <div class="index-item">
+                    <div class="index-num">E</div>
+                    <div><strong>Entrada:</strong> Validaciones de tipo, rango y formato para asegurar la calidad y exactitud del dato.</div>
+                </div>
+                <div class="index-item">
+                    <div class="index-num">P</div>
+                    <div><strong>Procesamiento:</strong> Totales de control, verificación de secuencia y gestión de excepciones.</div>
+                </div>
+                <div class="index-item">
+                    <div class="index-num">S</div>
+                    <div><strong>Salida:</strong> Conciliación de reportes y distribución segura de la información generada.</div>
+                </div>
+            </div>
+
+            <div class="slide-internal-num">09 / 14</div>
+        </div>
+
+        <!-- Diapositiva 10: BCP/DRP -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Continuidad y Resiliencia</h1>
+            <p class="slide-subtitle">BCP / DRP</p>
+
+            <div class="data-grid">
+                <div class="data-card">
+                    <h3 style="font-size: 1.5rem;">BIA</h3>
+                    <p>Business Impact Analysis</p>
+                    <p style="text-transform: none; color: var(--text-main); font-size: 0.85rem; margin-top: 1rem;">Determinación de Tiempos Críticos: <strong>RTO</strong> (Cuánto tardamos) y <strong>RPO</strong> (Qué datos perdemos).</p>
+                </div>
+                <div class="data-card">
+                    <h3 style="font-size: 1.5rem;">Backups</h3>
+                    <p>Estrategias de Respaldo</p>
+                    <p style="text-transform: none; color: var(--text-main); font-size: 0.85rem; margin-top: 1rem;">Auditoría de integridad y pruebas de restauración periódicas (Pruebas de Desastre).</p>
+                </div>
+            </div>
+
+            <div class="index-item" style="margin-top: 1.5rem; background: rgba(34, 197, 94, 0.05); border-color: var(--accent-green);">
+                <div><strong>Resiliencia Operativa:</strong> Capacidad de la infraestructura para mantener niveles de servicio aceptables ante fallos críticos simultáneos.</div>
+            </div>
+
+            <div class="slide-internal-num">10 / 14</div>
+        </div>
+
+        <!-- Diapositiva 11: Gobierno de TI (COBIT) -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Gobierno de TI</h1>
+            <p class="slide-subtitle">Marco de Control COBIT 2019</p>
+
+            <div class="grid-2">
+                <div class="concept-card">
+                    <h3 style="color: var(--primary); font-size: 1.2rem; margin-bottom: 0.5rem;">EDM vs PBRM</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Diferenciación entre Evaluar, Dirigir y Monitorear (Gobierno) frente a Planificar, Construir, Ejecutar y Monitorear (Gestión).</p>
+                </div>
+                <div class="concept-card">
+                    <h3 style="color: var(--primary); font-size: 1.2rem; margin-bottom: 0.5rem;">Métricas (KRI/KPI)</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">Uso de Indicadores Clave de Riesgo y Desempeño para medir la eficacia de los controles implementados.</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem; text-align: center; padding: 1.5rem; background: rgba(255, 255, 255, 0.02); border-radius: 16px;">
+                <p><strong>Alineamiento Estratégico:</strong> El objetivo final es asegurar que TI soporte directamente los objetivos de negocio de la organización.</p>
+            </div>
+
+            <div class="slide-internal-num">11 / 14</div>
+        </div>
+
+        <!-- Diapositiva 12: CAATs -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Técnicas Asistidas</h1>
+            <p class="slide-subtitle">CAATs: Computer Assisted Audit Techniques</p>
+
+            <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                <div class="index-item">
+                    <div class="index-num">1</div>
+                    <div><strong>Auditoría Continua:</strong> Módulos que monitorizan transacciones en tiempo real dentro de los sistemas productivos.</div>
+                </div>
+                <div class="index-item">
+                    <div class="index-num">2</div>
+                    <div><strong>Data Analytics:</strong> Análisis de datos masivos para identificar anomalías, duplicidades y patrones de fraude.</div>
+                </div>
+                <div class="index-item">
+                    <div class="index-num">3</div>
+                    <div><strong>Pruebas de Recorrido:</strong> Validación de la eficacia operativa siguiendo una transacción de extremo a extremo (Walkthroughs).</div>
+                </div>
+            </div>
+
+            <div class="slide-internal-num">12 / 14</div>
+        </div>
+
+        <!-- Diapositiva 13: Preguntas -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">¿Preguntas?</h1>
+            <p class="slide-subtitle">Sesión de debate y resolución de dudas</p>
+
+            <div style="margin-top: 3rem; padding: 4rem; background: rgba(59, 130, 246, 0.05); border-radius: 32px; text-align: center; border: 1px dashed var(--primary);">
+                <p style="font-size: 1.8rem; font-weight: 800; color: var(--text-main);">¿Alguna duda sobre los controles o amenazas expuestos?</p>
+                <p style="margin-top: 2rem; color: var(--text-dim);">Estamos a su disposición para aclarar cualquier concepto.</p>
+            </div>
+
+            <div style="margin-top: 3rem; text-align: center;">
+                <p style="font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; color: var(--primary);">Gracias por su atención</p>
+            </div>
+
+            <div class="slide-internal-num">13 / 14</div>
+        </div>
+
+        <!-- Diapositiva 14: Bibliografía -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Fuentes Bibliográficas</h1>
+            <p class="slide-subtitle">Referencias recomendadas</p>
+
+            <div style="font-size: 0.9rem; color: var(--text-dim);">
+                <p style="margin-bottom: 1.2rem;"><strong>ISACA. (2022).</strong> <em>ITAF 4th Edition: A Professional Practices Framework for IT Audit.</em> (Estándar para diseño y ejecución).</p>
+                <p style="margin-bottom: 1.2rem;"><strong>Senft, Gallegos & Manson. (2021).</strong> <em>Information Technology Control and Audit.</em> CRC Press. (Referencia académica sobre riesgo).</p>
+                <p style="margin-bottom: 1.2rem;"><strong>S. Hacking (2020).</strong> <em>Auditing IT Infrastructures for Compliance.</em> Jones & Bartlett Learning. (Evaluación técnica de infraestructuras).</p>
+            </div>
+
+            <div class="slide-internal-num">14 / 14</div>
+        </div>
+
+    </div>
+
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+
+        <div class="page-indicator" id="pageIndicator">1 / 14</div>
+
+        <button class="nav-btn primary" onclick="changeSlide(1)">
+            Siguiente
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / slides.length) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${slides.length}`;
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + slides.length) % slides.length;
+            updateUI();
+        }
+
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+        });
+
+        updateUI();
+    </script>
+</body>
+
+</html>
