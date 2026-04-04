@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Técnicas de Agrupamiento - Inteligencia de Negocio</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="presentation-mode">
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html"
+                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon">C</div>
+                <div class="brand">
+                    <h1>Inteligencia de Negocio</h1>
+                    <span>Técnicas de Agrupamiento</span>
+                </div>
+            </a>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">
+            CURSO 2025/26
+        </div>
+    </nav>
+
+    <div id="progress" class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="presentation-viewport">
+        <!-- Slide 1: Portada -->
+        <div class="slide active">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Técnicas de Agrupamiento</h1>
+            <p class="slide-subtitle">Basado en Modelos vs. Basado en Rejillas</p>
+
+            <div class="authors-box">
+                <p
+                    style="color: var(--primary); font-weight: bold; font-size: 0.8rem; letter-spacing: 0.1em; margin-bottom: 1rem; text-transform: uppercase;">
+                    Realizado por el Grupo 5:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="author-tag">Raúl Gómez Téllez</div>
+                    <div class="author-tag">Víctor Aguilar Méndez</div>
+                    <div class="author-tag">Rubén Ramírez Peña</div>
+                    <div class="author-tag">Jaime M. Cazalla</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">01 / 10</div>
+        </div>
+
+        <!-- Slide 2: Índice -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Contenido de la Sesión</h1>
+            <p class="slide-subtitle">Estructura de la Presentación</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div onclick="goToSlide(3)" class="index-item">
+                    <div class="index-num">1</div> Introducción al Clustering
+                </div>
+                <div onclick="goToSlide(4)" class="index-item">
+                    <div class="index-num">2</div> Enfoque Basado en Modelos
+                </div>
+                <div onclick="goToSlide(5)" class="index-item">
+                    <div class="index-num">3</div> Modelos: Ventajas e Inc.
+                </div>
+                <div onclick="goToSlide(6)" class="index-item">
+                    <div class="index-num">4</div> Enfoque Basado en Rejillas
+                </div>
+                <div onclick="goToSlide(7)" class="index-item">
+                    <div class="index-num">5</div> Rejillas: Ventajas e Inc.
+                </div>
+                <div onclick="goToSlide(8)" class="index-item">
+                    <div class="index-num">6</div> Comparativa Directa
+                </div>
+                <div onclick="goToSlide(9)" class="index-item">
+                    <div class="index-num">7</div> Algoritmos Destacados
+                </div>
+                <div onclick="goToSlide(10)" class="index-item">
+                    <div class="index-num">8</div> Conclusiones
+                </div>
+            </div>
+            <div class="slide-internal-num">02 / 10</div>
+        </div>
+
+        <!-- Slide 3: Introducción -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">¿Qué es el Clustering?</h1>
+            <p class="slide-subtitle">Minería de Datos y Descubrimiento</p>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h3>Objetivo</h3>
+                    <p>Agrupar objetos similares en una misma categoría o "cluster".</p>
+                </div>
+                <div class="data-card">
+                    <h3>Estructura</h3>
+                    <p>Encontrar patrones ocultos sin etiquetas previas (No Supervisado).</p>
+                </div>
+            </div>
+            <ul style="margin-top: 2rem;">
+                <li><strong>Cohesión:</strong> Objetos en el mismo cluster son muy parecidos.</li>
+                <li><strong>Separación:</strong> Diferentes clusters son muy distintos entre sí.</li>
+            </ul>
+            <div class="slide-internal-num">03 / 10</div>
+        </div>
+
+        <!-- Slide 4: Basado en Modelos -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Basado en Modelos</h1>
+            <p class="slide-subtitle">Ajuste Estadístico y Probabilístico</p>
+            <div class="data-card" style="margin-bottom: 1.5rem;">
+                <p style="text-transform: none; font-size: 1.1rem; color: var(--text-main);">Este enfoque asume que los datos siguen una distribución de probabilidad subyacente.</p>
+            </div>
+            <div class="grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                <div class="data-card">
+                    <h4 style="color: var(--primary);">EM</h4>
+                    <p>Mezclas Gaussianas</p>
+                </div>
+                <div class="data-card">
+                    <h4 style="color: var(--primary);">SOM</h4>
+                    <p>Mapas Auto-organizados</p>
+                </div>
+                <div class="data-card">
+                    <h4 style="color: var(--primary);">COBWEB</h4>
+                    <p>Clustering Conceptual</p>
+                </div>
+            </div>
+            <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-dim);">Busca optimizar el ajuste entre el modelo matemático y los datos reales observados.</p>
+            <div class="slide-internal-num">04 / 10</div>
+        </div>
+
+        <!-- Slide 5: Modelos: PROS / CONS -->
+        <div class="slide">
+            <div class="accent-bar" style="background: var(--accent-green);"></div>
+            <h1 class="slide-title">Análisis: Modelos</h1>
+            <p class="slide-subtitle">Ventajas e Inconvenientes</p>
+            <div class="data-grid">
+                <div class="data-card" style="border-left: 4px solid var(--accent-green);">
+                    <h4 style="color: var(--accent-green); margin-bottom: 0.5rem;">Ventajas</h4>
+                    <ul style="border:none; background:transparent; padding:0;">
+                        <li style="border:none; padding:5px; background:transparent;">Sólida base matemática.</li>
+                        <li style="border:none; padding:5px; background:transparent;">Maneja bien el ruido.</li>
+                        <li style="border:none; padding:5px; background:transparent;">Describe clusters formalmente.</li>
+                    </ul>
+                </div>
+                <div class="data-card" style="border-left: 4px solid var(--accent-red);">
+                    <h4 style="color: var(--accent-red); margin-bottom: 0.5rem;">Desventajas</h4>
+                    <ul style="border:none; background:transparent; padding:0;">
+                        <li style="border:none; padding:5px; background:transparent;">Lento con datos masivos.</li>
+                        <li style="border:none; padding:5px; background:transparent;">Asume distribuciones fijas.</li>
+                        <li style="border:none; padding:5px; background:transparent;">Sensible a valores iniciales.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="slide-internal-num">05 / 10</div>
+        </div>
+
+        <!-- Slide 6: Basado en Rejillas -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Basado en Rejillas</h1>
+            <p class="slide-subtitle">Espacio Discretizado (Grid-Based)</p>
+            <div class="data-card" style="margin-bottom: 1.5rem;">
+                <p style="text-transform: none; font-size: 1.1rem; color: var(--text-main);">Divide el espacio de objetos en un número finito de celdas que forman una rejilla.</p>
+            </div>
+            <div class="grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                <div class="data-card">
+                    <h4 style="color: var(--primary);">STING</h4>
+                    <p>Estadístico Jerárquico</p>
+                </div>
+                <div class="data-card">
+                    <h4 style="color: var(--primary);">WaveCluster</h4>
+                    <p>Transformada Wavelet</p>
+                </div>
+                <div class="data-card">
+                    <h4 style="color: var(--primary);">CLIQUE</h4>
+                    <p>Densidad + Rejillas</p>
+                </div>
+            </div>
+            <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-dim);">El proceso es independiente del número de registros (N), solo depende de la resolución de la rejilla.</p>
+            <div class="slide-internal-num">06 / 10</div>
+        </div>
+
+        <!-- Slide 7: Rejillas: PROS / CONS -->
+        <div class="slide">
+            <div class="accent-bar" style="background: var(--accent-green);"></div>
+            <h1 class="slide-title">Análisis: Rejillas</h1>
+            <p class="slide-subtitle">Ventajas e Inconvenientes</p>
+            <div class="data-grid">
+                <div class="data-card" style="border-left: 4px solid var(--accent-green);">
+                    <h4 style="color: var(--accent-green); margin-bottom: 0.5rem;">Ventajas</h4>
+                    <ul style="border:none; background:transparent; padding:0;">
+                        <li style="border:none; padding:5px; background:transparent;">Velocidad computacional alta.</li>
+                        <li style="border:none; padding:5px; background:transparent;">Escalabilidad horizontal.</li>
+                        <li style="border:none; padding:5px; background:transparent;">Permite multi-resolución.</li>
+                    </ul>
+                </div>
+                <div class="data-card" style="border-left: 4px solid var(--accent-red);">
+                    <h4 style="color: var(--accent-red); margin-bottom: 0.5rem;">Desventajas</h4>
+                    <ul style="border:none; background:transparent; padding:0;">
+                        <li style="border:none; padding:5px; background:transparent;">Depende del tamaño de celda.</li>
+                        <li style="border:none; padding:5px; background:transparent;">Fronteras rígidas (rectangulares).</li>
+                        <li style="border:none; padding:5px; background:transparent;">Problema de dimensionalidad.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="slide-internal-num">07 / 10</div>
+        </div>
+
+        <!-- Slide 8: Comparativa -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Comparativa</h1>
+            <p class="slide-subtitle">Diferencias Fundamentales</p>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; color: var(--text-main);">
+                <thead>
+                    <tr style="border-bottom: 2px solid var(--primary);">
+                        <th style="padding: 15px; text-align: left;">Criterio</th>
+                        <th style="padding: 15px; text-align: left;">Modelos</th>
+                        <th style="padding: 15px; text-align: left;">Rejillas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid var(--border-light);">
+                        <td style="padding: 15px; font-weight: bold; color: var(--primary);">Velocidad</td>
+                        <td style="padding: 15px;">Media / Baja</td>
+                        <td style="padding: 15px;">Muy Alta</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border-light);">
+                        <td style="padding: 15px; font-weight: bold; color: var(--primary);">Complejidad</td>
+                        <td style="padding: 15px;">O(N) o mayor</td>
+                        <td style="padding: 15px;">Independiente de N</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border-light);">
+                        <td style="padding: 15px; font-weight: bold; color: var(--primary);">Flexibilidad</td>
+                        <td style="padding: 15px;">Alta (distribuciones)</td>
+                        <td style="padding: 15px;">Baja (rejilla rígida)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="slide-internal-num">08 / 10</div>
+        </div>
+
+        <!-- Slide 9: Algoritmos Detalle -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Algoritmos Clave</h1>
+            <p class="slide-subtitle">Ejemplos Relevantes</p>
+            <div class="data-grid">
+                <div class="data-card" style="text-align: left;">
+                    <h4 style="color: var(--primary);">EM (Expectation-Maximization)</h4>
+                    <p style="text-transform: none; letter-spacing: 0;">Un proceso iterativo que encuentra los parámetros de máxima verosimilitud de modelos estadísticos.</p>
+                </div>
+                <div class="data-card" style="text-align: left;">
+                    <h4 style="color: var(--primary);">CLIQUE</h4>
+                    <p style="text-transform: none; letter-spacing: 0;">Identifica clusters en subespacios de alta dimensionalidad combinando densidad y rejillas.</p>
+                </div>
+            </div>
+            <div class="slide-internal-num">09 / 10</div>
+        </div>
+
+        <!-- Slide 10: Conclusiones -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Conclusiones</h1>
+            <p class="slide-subtitle">Resumen y Cierre</p>
+            <ul>
+                <li>Los <strong>modelos</strong> son ideales para datos con distribuciones conocidas.</li>
+                <li>Las <strong>rejillas</strong> brillan por su eficiencia en Big Data.</li>
+                <li>La elección depende del volumen de datos y precisión requerida.</li>
+            </ul>
+            <div class="authors-box">
+                <p style="color: var(--primary); font-weight: bold; margin-bottom: 0.5rem;">Cierre de Sesión</p>
+                <div class="author-tag">Grupo 5 • Inteligencia de Negocio</div>
+            </div>
+            <div class="slide-internal-num">10 / 10</div>
+        </div>
+    </div>
+
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <div class="page-indicator" id="pageIndicator">1 / 10</div>
+        <button class="nav-btn primary" onclick="changeSlide(1)">
+            Siguiente
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const totalSlides = slides.length;
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / totalSlides) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${totalSlides}`;
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + totalSlides) % totalSlides;
+            updateUI();
+        }
+
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+        });
+
+        updateUI();
+    </script>
+</body>
+
+</html>
