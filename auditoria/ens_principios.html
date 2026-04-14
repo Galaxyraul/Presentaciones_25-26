@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Principios Básicos del ENS - Auditoría Informática</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .hero-ens {
+            background: linear-gradient(rgba(2, 6, 23, 0.85), rgba(2, 6, 23, 0.85)), url('assets/ens_hero.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .principle-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            padding: 1.5rem;
+            border-radius: 20px;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .principle-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .principle-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .lifecycle-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .lifecycle-step {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            padding: 1.2rem;
+            border-radius: 16px;
+            text-align: center;
+            position: relative;
+        }
+
+        .lifecycle-step::after {
+            content: '→';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .lifecycle-step:last-child::after {
+            content: '';
+        }
+
+        .defense-layer {
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            width: fit-content;
+            background: rgba(59, 130, 246, 0.05);
+        }
+    </style>
+</head>
+
+<body class="presentation-mode">
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html"
+                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon">A</div>
+                <div class="brand">
+                    <h1>Auditoría Informática</h1>
+                    <span>Principios Básicos ENS</span>
+                </div>
+            </a>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">
+            CURSO 2025/26
+        </div>
+    </nav>
+
+    <div id="progress" class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="presentation-viewport">
+        <!-- Slide 1: Portada -->
+        <div class="slide active hero-ens">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Principios Básicos del ENS</h1>
+            <p class="slide-subtitle">Esquema Nacional de Seguridad | RD 311/2022</p>
+
+            <div class="authors-box">
+                <p style="color: var(--primary); font-weight: bold; font-size: 0.8rem; letter-spacing: 0.1em; margin-bottom: 1rem; text-transform: uppercase;">
+                    Realizado por:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="author-tag">Raúl Gómez Téllez</div>
+                    <div class="author-tag">Víctor Aguilar Méndez</div>
+                    <div class="author-tag">Rubén Ramírez Peña</div>
+                    <div class="author-tag">Jaime M. Cazalla</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">01 / 10</div>
+        </div>
+
+        <!-- Slide 2: Índice -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Índice de Contenidos</h1>
+            <p class="slide-subtitle">Fundamentos del RD 311/2022</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div onclick="goToSlide(3)" class="index-item"><div class="index-num">1</div> Contexto Normativo</div>
+                <div onclick="goToSlide(4)" class="index-item"><div class="index-num">2</div> Proceso Integral</div>
+                <div onclick="goToSlide(5)" class="index-item"><div class="index-num">3</div> Gestión Basada en Riesgos</div>
+                <div onclick="goToSlide(6)" class="index-item"><div class="index-num">4</div> Prevención y Respuesta</div>
+                <div onclick="goToSlide(7)" class="index-item"><div class="index-num">5</div> Vigilancia Continua</div>
+                <div onclick="goToSlide(8)" class="index-item"><div class="index-num">6</div> Reevaluación Periódica</div>
+                <div onclick="goToSlide(9)" class="index-item"><div class="index-num">7</div> Líneas de Defensa</div>
+                <div onclick="goToSlide(10)" class="index-item"><div class="index-num">8</div> Conclusiones</div>
+            </div>
+            <div class="slide-internal-num">02 / 10</div>
+        </div>
+
+        <!-- Slide 3: Contexto -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">El Marco ENS</h1>
+            <p class="slide-subtitle">Real Decreto 311/2022</p>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h3>Objetivo</h3>
+                    <p>Crear condiciones de confianza en el uso de los medios electrónicos.</p>
+                </div>
+                <div class="data-card">
+                    <h3>Alcance</h3>
+                    <p>Todo el Sector Público y sus proveedores tecnológicos.</p>
+                </div>
+            </div>
+            <div class="index-item" style="margin-top: 1.5rem;">
+                <div class="index-num">!</div>
+                <div>Actualiza el modelo de 2010 para abordar ciberamenazas modernas y la directiva NIS2.</div>
+            </div>
+            <div class="slide-internal-num">03 / 10</div>
+        </div>
+
+        <!-- Slide 4: Proceso Integral -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">1. Proceso Integral</h1>
+            <p class="slide-subtitle">Más allá de lo técnico</p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                <div class="principle-card">
+                    <div class="principle-icon">👥</div>
+                    <h4>Recursos Humanos</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);">Formación y concienciación.</p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-icon">⚙️</div>
+                    <h4>Técnico</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);">Medidas de seguridad físicas y lógicas.</p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-icon">⚖️</div>
+                    <h4>Organizativo</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);">Políticas y normativas internas.</p>
+                </div>
+            </div>
+            <div class="data-card" style="margin-top: 1.5rem;">
+                <p>La seguridad es una cadena: es tan fuerte como su eslabón más débil.</p>
+            </div>
+            <div class="slide-internal-num">04 / 10</div>
+        </div>
+
+        <!-- Slide 5: Gestión de Riesgos -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">2. Gestión de Riesgos</h1>
+            <p class="slide-subtitle">Proporcionalidad y Eficacia</p>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h4 style="color: var(--primary);">Análisis de Riesgos</h4>
+                    <p>Identificar amenazas y valorar su impacto potencial sobre los activos.</p>
+                </div>
+                <div class="data-card">
+                    <h4 style="color: var(--primary);">Selección de Medidas</h4>
+                    <p>Implementar las salvaguardas mínimas exigidas por el ENS según la categoría del sistema.</p>
+                </div>
+            </div>
+            <p style="margin-top: 1.5rem; color: var(--text-dim);">Este proceso debe ser <strong>continuo</strong> y permanentemente actualizado para reflejar cambios en el entorno.</p>
+            <div class="slide-internal-num">05 / 10</div>
+        </div>
+
+        <!-- Slide 6: Prevención, Detección y Respuesta -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">3. Ciclo de Seguridad</h1>
+            <p class="slide-subtitle">Prevención, Detección y Respuesta</p>
+            <div class="lifecycle-container">
+                <div class="lifecycle-step" style="border-top: 4px solid var(--accent-green);">
+                    <strong>Prevención</strong>
+                    <p style="font-size: 0.75rem;">Minimizar la superficie de ataque.</p>
+                </div>
+                <div class="lifecycle-step" style="border-top: 4px solid #f59e0b;">
+                    <strong>Detección</strong>
+                    <p style="font-size: 0.75rem;">Identificar incidentes rápidamente.</p>
+                </div>
+                <div class="lifecycle-step" style="border-top: 4px solid var(--accent-red);">
+                    <strong>Respuesta</strong>
+                    <p style="font-size: 0.75rem;">Contención y Recuperación.</p>
+                </div>
+            </div>
+            <p style="margin-top: 2rem; color: var(--text-dim); font-style: italic; text-align: center;">"Asumimos que la prevención puede fallar, por lo que la detección y respuesta son críticas."</p>
+            <div class="slide-internal-num">06 / 10</div>
+        </div>
+
+        <!-- Slide 7: Vigilancia Continua -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">4. Vigilancia Continua</h1>
+            <p class="slide-subtitle">Monitorización Activa</p>
+            <div class="data-grid">
+                <div class="data-card" style="text-align: left;">
+                    <ul style="border:none; background:transparent; padding:0;">
+                        <li style="border:none; background:transparent;">Detección de actividades anómalas.</li>
+                        <li style="border:none; background:transparent;">Gestión de vulnerabilidades.</li>
+                        <li style="border:none; background:transparent;">Análisis de logs y tráfico.</li>
+                    </ul>
+                </div>
+                <div style="display: flex; justify-items: center; align-items: center;">
+                    <div style="width: 100%; text-align: center;">
+                        <span style="font-size: 4rem; display: block;">🔍</span>
+                        <strong style="color: var(--primary);">Visibilidad Total</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-internal-num">07 / 10</div>
+        </div>
+
+        <!-- Slide 8: Reevaluación Periódica -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">5. Reevaluación Periódica</h1>
+            <p class="slide-subtitle">Mejora Continua</p>
+            <div class="step-card">
+                <p>Las medidas de seguridad deben revisarse regularmente para asegurar que sigan siendo efectivas frente a la evolución de las amenazas.</p>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                <div class="data-card">
+                    <h4>Auditorías</h4>
+                    <p>Verificación técnica y formal de cumplimiento.</p>
+                </div>
+                <div class="data-card">
+                    <h4>Revisiones</h4>
+                    <p>Ajustes basados en la experiencia e incidentes previos.</p>
+                </div>
+            </div>
+            <div class="slide-internal-num">08 / 10</div>
+        </div>
+
+        <!-- Slide 9: Líneas de Defensa -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Líneas de Defensa</h1>
+            <p class="slide-subtitle">Defensa en Profundidad</p>
+            <div style="text-align: center; margin-top: 1rem;">
+                <div class="defense-layer">
+                    <div style="border: 2px solid var(--primary); border-radius: 50%; padding: 1.5rem;">
+                        <div style="background: var(--primary); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">Activo</div>
+                    </div>
+                </div>
+                <p style="margin-top: 1rem; color: var(--text-dim);">Estructurar la seguridad en capas para que el fallo de una medida no comprometa todo el sistema.</p>
+            </div>
+            <div class="slide-internal-num">09 / 10</div>
+        </div>
+
+        <!-- Slide 10: Conclusiones -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Conclusiones</h1>
+            <p class="slide-subtitle">Seguridad como Estado de Ánimo</p>
+            <ul>
+                <li>El ENS no es un checklist, es un <strong>proceso dinámico</strong>.</li>
+                <li>La gestión basada en riesgos permite optimizar recursos.</li>
+                <li>La vigilancia y reevaluación garantizan la resiliencia a largo plazo.</li>
+            </ul>
+            <div class="authors-box">
+                <p style="color: var(--primary); font-weight: bold; margin-bottom: 0.5rem;">¿Dudas o Preguntas?</p>
+                <div class="author-tag">Grupo 5 • Auditoría Informática</div>
+            </div>
+            <div class="slide-internal-num">10 / 10</div>
+        </div>
+    </div>
+
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <div class="page-indicator" id="pageIndicator">1 / 10</div>
+        <button class="nav-btn primary" onclick="changeSlide(1)">
+            Siguiente
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const totalSlides = slides.length;
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / totalSlides) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${totalSlides}`;
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + totalSlides) % totalSlides;
+            updateUI();
+        }
+
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+        });
+
+        updateUI();
+    </script>
+</body>
+
+</html>
