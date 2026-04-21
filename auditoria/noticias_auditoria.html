@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noticias Semanales - Auditoría Informática</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .hero-news {
+            background: radial-gradient(circle at top left, #1e293b, #020617),
+                        linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
+            position: relative;
+        }
+
+        .hero-news::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233b82f6' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2v-4h4v-2H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+
+        .news-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            padding: 2rem;
+            border-radius: 24px;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .news-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .news-tag {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            width: fit-content;
+            margin-bottom: 1rem;
+        }
+
+        .source-link {
+            font-size: 0.85rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 1rem;
+        }
+
+        .source-link:hover {
+            text-decoration: underline;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .impact-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            font-size: 0.9rem;
+            border-left: 4px solid var(--primary);
+        }
+    </style>
+</head>
+
+<body class="presentation-mode">
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon">A</div>
+                <div class="brand">
+                    <h1>Auditoría Informática</h1>
+                    <span>Actualidad Semanal</span>
+                </div>
+            </a>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">
+            ABRIL 2026
+        </div>
+    </nav>
+
+    <div id="progress" class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="presentation-viewport">
+        <!-- Slide 1: Portada -->
+        <div class="slide active hero-news">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Noticias de la Semana</h1>
+            <p class="slide-subtitle">Auditoría y Ciberseguridad | 14 - 21 Abril 2026</p>
+
+            <div class="authors-box">
+                <p style="color: var(--primary); font-weight: bold; font-size: 0.8rem; letter-spacing: 0.1em; margin-bottom: 1rem; text-transform: uppercase;">
+                    Realizado por:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="author-tag">Raúl Gómez Téllez</div>
+                    <div class="author-tag">Víctor Aguilar Méndez</div>
+                    <div class="author-tag">Rubén Ramírez Peña</div>
+                    <div class="author-tag">Jaime M. Cazalla</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">01 / 07</div>
+        </div>
+
+        <!-- Slide 2: Índice -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Temas Clave</h1>
+            <p class="slide-subtitle">Selección de Actualidad</p>
+            <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+                <div onclick="goToSlide(3)" class="index-item"><div class="index-num">1</div> IA Act: Primeras Inspecciones de Auditoría en la UE</div>
+                <div onclick="goToSlide(4)" class="index-item"><div class="index-num">2</div> DORA: El Sprint Final hacia la Resiliencia Operativa</div>
+                <div onclick="goToSlide(5)" class="index-item"><div class="index-num">3</div> Vulnerabilidad en Cadena de Suministro: Caso Sisense 2.0</div>
+                <div onclick="goToSlide(6)" class="index-item"><div class="index-num">4</div> Criptografía Poscuántica en el Sector Financiero</div>
+                <div onclick="goToSlide(7)" class="index-item"><div class="index-num">5</div> Bibliografía y Fuentes</div>
+            </div>
+            <div class="slide-internal-num">02 / 07</div>
+        </div>
+
+        <!-- Slide 3: IA Act -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">1. Inspecciones IA Act</h1>
+            <p class="slide-subtitle">Regulación y Transparencia</p>
+            <div class="news-card">
+                <div style="text-align: center;">
+                    <span style="font-size: 5rem;">🤖</span>
+                </div>
+                <div>
+                    <div class="news-tag">Regulación</div>
+                    <h3>La UE inicia auditorías sorpresa a sistemas de IA de "alto riesgo"</h3>
+                    <p style="margin-top: 10px; font-size: 0.95rem; line-height: 1.5;">La Oficina Europea de IA ha lanzado esta semana las primeras rondas de verificación técnica para asegurar que las empresas cumplen con los requisitos de gobernanza de datos y supervisión humana.</p>
+                    <div class="impact-badge" style="margin-top: 1rem;">
+                        <strong>Impacto:</strong> Asegura la trazabilidad y ética en algoritmos predictivos.
+                    </div>
+                </div>
+            </div>
+            <div class="slide-internal-num">03 / 07</div>
+        </div>
+
+        <!-- Slide 4: DORA -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">2. Sprint DORA</h1>
+            <p class="slide-subtitle">Resiliencia Financiera</p>
+            <div class="grid-2">
+                <div class="data-card">
+                    <h4 style="color: var(--primary);">Pruebas TLPT</h4>
+                    <p style="text-transform: none; letter-spacing: 0;">Aumento del 40% en la demanda de auditorías de penetración basadas en amenazas (Threat-Led Penetration Testing).</p>
+                </div>
+                <div class="data-card">
+                    <h4 style="color: var(--primary);">Cumplimiento</h4>
+                    <p style="text-transform: none; letter-spacing: 0;">Las entidades financieras deben certificar su resiliencia ante incidentes críticos antes del cierre del semestre.</p>
+                </div>
+            </div>
+            <div class="index-item" style="margin-top: 1.5rem;">
+                <div class="index-num">!</div>
+                <div>El foco de la auditoría se desplaza de la prevención simple a la capacidad de recuperación y continuidad del servicio.</div>
+            </div>
+            <div class="slide-internal-num">04 / 07</div>
+        </div>
+
+        <!-- Slide 5: Cadena de Suministro -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">3. Cadena de Suministro</h1>
+            <p class="slide-subtitle">Riesgos Críticos (Supply Chain)</p>
+            <div class="news-card" style="grid-template-columns: 2fr 1fr;">
+                <div>
+                    <div class="news-tag" style="background: var(--accent-red);">Alerta de Seguridad</div>
+                    <h3>Evolución de ataques a proveedores SaaS</h3>
+                    <p style="margin-top: 10px; font-size: 0.95rem; line-height: 1.5;">Nuevos informes revelan que los auditores están encontrando brechas críticas en la gestión de credenciales de terceros, similar al incidente histórico de Sisense, pero escalado por IA ofensiva.</p>
+                </div>
+                <div style="text-align: center;">
+                    <span style="font-size: 5rem;">⛓️</span>
+                </div>
+            </div>
+            <div class="data-card" style="margin-top: 1.5rem; text-align: left;">
+                <p style="color: var(--text-main); font-size: 1rem; text-transform: none;">Recomendación: Auditoría continua de APIs y revisión de contratos de nivel de seguridad (SLAs).</p>
+            </div>
+            <div class="slide-internal-num">05 / 07</div>
+        </div>
+
+        <!-- Slide 6: PQC -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">4. Era Poscuántica</h1>
+            <p class="slide-subtitle">Infraestructura Crítica</p>
+            <div class="news-card">
+                <div style="text-align: center;">
+                    <span style="font-size: 5rem;">⚛️</span>
+                </div>
+                <div>
+                    <div class="news-tag" style="background: var(--accent-green);">Innovación</div>
+                    <h3>Primeras certificaciones de cifrado PQC</h3>
+                    <p style="margin-top: 10px; font-size: 0.95rem; line-height: 1.5;">Grandes bancos centrales han completado esta semana sus primeras auditorías de infraestructura para la migración a algoritmos resistentes a la computación cuántica.</p>
+                    <div class="impact-badge" style="margin-top: 1rem; border-color: var(--accent-green);">
+                        <strong>Estado:</strong> Protegiendo datos bajo la premisa "Cosecha ahora, descifra después".
+                    </div>
+                </div>
+            </div>
+            <div class="slide-internal-num">06 / 07</div>
+        </div>
+
+        <!-- Slide 7: Bibliografía -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Bibliografía</h1>
+            <p class="slide-subtitle">Fuentes Consultadas</p>
+            <ul style="font-size: 0.85rem;">
+                <li>
+                    <div>
+                        <strong>European AI Office:</strong> Guías de cumplimiento y registros de inspección (Abril 2026).
+                        <br><a href="https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" target="_blank" class="source-link">Ver marco regulador →</a>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <strong>ComputerWeekly / CISA:</strong> "Trends in AI-driven Supply Chain Attacks" e incidentes SaaS.
+                        <br><a href="https://www.cisa.gov/news-events/alerts/2024/04/11/compromise-sisense-customer-data-platform" target="_blank" class="source-link">Informe de seguridad →</a>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <strong>ESMA / DORA Compliance Hub:</strong> Actualización sobre resiliencia operativa y pruebas TLPT.
+                        <br><a href="https://www.esma.europa.eu/digital-operational-resilience-act-dora" target="_blank" class="source-link">Guía de implementación →</a>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <strong>NIST Post-Quantum Cryptography:</strong> Roadmap de estándares y auditorías de migración PQC.
+                        <br><a href="https://csrc.nist.gov/projects/post-quantum-cryptography" target="_blank" class="source-link">Documentación técnica →</a>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <strong>ESET WeLiveSecurity / Batallé:</strong> Tendencias globales de ciberseguridad y auditoría continua.
+                        <br><a href="https://www.welivesecurity.com/es/" target="_blank" class="source-link">Últimas noticias →</a>
+                    </div>
+                </li>
+            </ul>
+            <div class="authors-box">
+                <p style="color: var(--primary); font-weight: bold; margin-bottom: 0.5rem;">Actualidad en Auditoría Informática</p>
+                <div class="author-tag">Grupo 4 • 2025/26</div>
+            </div>
+            <div class="slide-internal-num">07 / 07</div>
+        </div>
+    </div>
+
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <div class="page-indicator" id="pageIndicator">1 / 07</div>
+        <button class="nav-btn primary" onclick="changeSlide(1)">
+            Siguiente
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const totalSlides = slides.length;
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / totalSlides) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${totalSlides}`;
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + totalSlides) % totalSlides;
+            updateUI();
+        }
+
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+        });
+
+        updateUI();
+    </script>
+</body>
+
+</html>
