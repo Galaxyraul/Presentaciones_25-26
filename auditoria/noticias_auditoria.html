@@ -51,7 +51,20 @@
             font-weight: 800;
             text-transform: uppercase;
             width: fit-content;
-            margin-bottom: 1rem;
+        }
+
+        .news-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.2rem;
+        }
+
+        .news-date {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         .source-link {
@@ -154,9 +167,12 @@
                     <span style="font-size: 5rem;">🤖</span>
                 </div>
                 <div>
-                    <div class="news-tag">Regulación</div>
-                    <h3>La UE inicia auditorías sorpresa a sistemas de IA de "alto riesgo"</h3>
-                    <p style="margin-top: 10px; font-size: 0.95rem; line-height: 1.5;">La Oficina Europea de IA ha lanzado esta semana las primeras rondas de verificación técnica para asegurar que las empresas cumplen con los requisitos de gobernanza de datos y supervisión humana.</p>
+                    <div class="news-meta">
+                        <div class="news-tag">Regulación</div>
+                        <span class="news-date">17 ABR 2024</span>
+                    </div>
+                    <h3>La UE comienza a auditar los algoritmos jefe</h3>
+                    <p style="margin-top: 10px; font-size: 0.95rem; line-height: 1.5;">Empieza la fiscalización de algoritmos que deciden despidos o contrataciones, con multas millonarias por sesgos detectados en la auditoría de IA.</p>
                     <div class="impact-badge" style="margin-top: 1rem;">
                         <strong>Impacto:</strong> Asegura la trazabilidad y ética en algoritmos predictivos.
                     </div>
@@ -169,7 +185,10 @@
         <div class="slide">
             <div class="accent-bar"></div>
             <h1 class="slide-title">2. Sprint DORA</h1>
-            <p class="slide-subtitle">Resiliencia Financiera</p>
+            <div class="news-meta">
+                <div class="news-tag">Resiliencia</div>
+                <span class="news-date">17 ENE 2025</span>
+            </div>
             <div class="grid-2">
                 <div class="data-card">
                     <h4 style="color: var(--primary);">Pruebas TLPT</h4>
@@ -194,7 +213,10 @@
             <p class="slide-subtitle">Vulnerabilidades en CDN</p>
             <div class="news-card" style="grid-template-columns: 2fr 1fr;">
                 <div>
-                    <div class="news-tag" style="background: var(--accent-red);">Incidente Crítico</div>
+                    <div class="news-meta">
+                        <div class="news-tag" style="background: var(--accent-red);">Incidente Crítico</div>
+                        <span class="news-date">12 ABR 2024</span>
+                    </div>
                     <h3>Hackeo a Vercel: Robo de datos y riesgos en CDN</h3>
                     <p style="margin-top: 10px; font-size: 0.95rem; line-height: 1.5;">Recientes análisis confirman ataques dirigidos a infraestructuras de red CDN, comprometiendo la entrega de contenido y la integridad de los datos de miles de servicios dependientes.</p>
                 </div>
@@ -218,8 +240,11 @@
                     <span style="font-size: 5rem;">⚛️</span>
                 </div>
                 <div>
-                    <div class="news-tag" style="background: var(--accent-green);">Innovación</div>
-                    <h3>Primeras certificaciones de cifrado PQC</h3>
+                    <div class="news-meta">
+                        <div class="news-tag" style="background: var(--accent-green);">Innovación</div>
+                        <span class="news-date">15 DIC 2025</span>
+                    </div>
+                    <h3>Criptografía PQC: El White Paper de Mastercard</h3>
                     <p style="margin-top: 10px; font-size: 0.95rem; line-height: 1.5;">Grandes bancos centrales han completado esta semana sus primeras auditorías de infraestructura para la migración a algoritmos resistentes a la computación cuántica.</p>
                     <div class="impact-badge" style="margin-top: 1rem; border-color: var(--accent-green);">
                         <strong>Estado:</strong> Protegiendo datos bajo la premisa "Cosecha ahora, descifra después".
@@ -237,25 +262,25 @@
             <ul style="font-size: 0.85rem;">
                 <li>
                     <div>
-                        <strong>Empresas.de:</strong> "La UE comienza a auditar los algoritmos jefe: multas por sesgos en la contratación."
+                        <strong>Empresas.de (17/04/2024):</strong> "La UE comienza a auditar los algoritmos jefe: multas por sesgos en la contratación."
                         <br><a href="https://murcia.empresas.de/la-ue-comienza-a-auditar-los-algoritmos-jefe-multas-millonarias-por-sesgos-en-la-contratacion-mediante-ia/" target="_blank" class="source-link">Ver noticia completa →</a>
                     </div>
                 </li>
                 <li>
                     <div>
-                        <strong>Digital Chiefs:</strong> "TLPT bajo DORA: Cómo los CIO superan la prueba de ciberresiliencia."
+                        <strong>Digital Chiefs (17/01/2025):</strong> "TLPT bajo DORA: Cómo los CIO superan la prueba de ciberresiliencia."
                         <br><a href="https://www.digital-chiefs.de/es/tlpt-bajo-dora-como-los-cio-superan-la-prueba-de-ciberresiliencia/" target="_blank" class="source-link">Análisis técnico →</a>
                     </div>
                 </li>
                 <li>
                     <div>
-                        <strong>RedesZone:</strong> "Hackeo al CDN de Vercel y robo de datos: Riesgos en servicios críticos."
+                        <strong>RedesZone (12/04/2024):</strong> "Hackeo al CDN de Vercel y robo de datos: Riesgos en servicios críticos."
                         <br><a href="https://www.redeszone.net/noticias/seguridad/hackean-cdn-vercel-robo-datos/" target="_blank" class="source-link">Detalles del ataque →</a>
                     </div>
                 </li>
                 <li>
                     <div>
-                        <strong>El Lado del Mal:</strong> "El White Paper de Mastercard que urge a la transición cuántica."
+                        <strong>El Lado del Mal (15/12/2025):</strong> "El White Paper de Mastercard que urge a la transición cuántica."
                         <br><a href="https://www.elladodelmal.com/2025/12/el-white-paper-de-mastercard-que-urge.html" target="_blank" class="source-link">Blog de Chema Alonso →</a>
                     </div>
                 </li>
