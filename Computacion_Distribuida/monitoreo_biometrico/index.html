@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoreo Biométrico en eSports - Computación Distribuida</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --bg-dark: #020617;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --accent-gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+            --border-light: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .presentation-viewport {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            padding: 4rem 10%;
+            background: radial-gradient(circle at center, #111827 0%, var(--bg-dark) 100%);
+            flex-direction: column;
+            justify-content: center;
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(1.02); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .slide-content {
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .slide-title {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .slide-subtitle {
+            font-size: clamp(1rem, 2vw, 1.6rem);
+            color: var(--text-dim);
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .visual-container {
+            position: relative;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 242, 255, 0.1);
+            border: 1px solid var(--border-light);
+            background: rgba(255,255,255,0.01);
+        }
+
+        .visual-container img {
+            width: 100%;
+            height: auto;
+            max-height: 70vh;
+            display: block;
+            transition: transform 0.8s ease;
+        }
+
+        .visual-container:hover img {
+            transform: scale(1.05);
+        }
+
+        .stats-list {
+            list-style: none;
+        }
+
+        .stats-list li {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem 2rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            border: 1px solid var(--border-light);
+            font-size: clamp(1rem, 1.5vw, 1.3rem);
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .stats-list li::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 3px;
+            box-shadow: 0 0 15px var(--primary);
+            flex-shrink: 0;
+        }
+
+        .authors-box {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 4rem;
+        }
+
+        .author-tag {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem 2.5rem;
+            border-radius: 100px;
+            border: 1px solid var(--border-light);
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .uja-logo {
+            position: absolute;
+            top: 3rem;
+            right: 4rem;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .uja-logo span {
+            font-size: 0.9rem;
+            text-align: right;
+            font-weight: 600;
+            color: var(--text-dim);
+            line-height: 1.2;
+        }
+
+        .logo-circle {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: var(--bg-dark);
+            box-shadow: 0 0 25px var(--primary);
+        }
+
+        /* Diapositivas especiales */
+        .slide-portada {
+            text-align: center;
+            background: linear-gradient(rgba(2, 6, 23, 0.6), rgba(2, 6, 23, 0.9)), url('assets/portada.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slide-portada .slide-title {
+            font-size: clamp(3rem, 10vw, 7.5rem);
+        }
+
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.05);
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-gradient);
+            width: 0%;
+            transition: width 0.4s ease;
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        .controls-wrapper {
+            position: fixed;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2.5rem;
+            border-radius: 100px;
+            border: 1px solid var(--border-light);
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+            z-index: 2000;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-light);
+            color: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn.primary {
+            background: var(--accent-gradient);
+            width: auto;
+            padding: 0 2rem;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: white;
+        }
+
+        .page-indicator {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-dim);
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .icon-box {
+            display: flex;
+            gap: 40px;
+            margin-top: 3rem;
+        }
+
+        .icon-item {
+            text-align: center;
+            background: rgba(255,255,255,0.03);
+            padding: 1.5rem 2rem;
+            border-radius: 24px;
+            border: 1px solid var(--border-light);
+            flex: 1;
+        }
+
+        .icon-item svg {
+            width: 56px;
+            height: 56px;
+            margin-bottom: 0.8rem;
+            color: var(--primary);
+        }
+
+        /* MODO IMPRESIÓN PDF - MANTENIENDO EL TEMA OSCURO */
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+            html, body {
+                overflow: visible !important;
+                height: auto !important;
+                width: 100% !important;
+                background: #020617 !important; /* Mantenemos el fondo oscuro */
+                color: #f8fafc !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .presentation-viewport {
+                height: auto !important;
+                display: block !important;
+                overflow: visible !important;
+                position: relative !important;
+                background: #020617 !important;
+            }
+            .slide {
+                display: block !important;
+                position: relative !important;
+                width: 100% !important;
+                height: 100vh !important;
+                min-height: 210mm !important;
+                page-break-after: always !important;
+                break-after: page !important;
+                padding: 2cm !important;
+                background: radial-gradient(circle at center, #111827 0%, #020617 100%) !important;
+                color: #f8fafc !important;
+                animation: none !important;
+                top: auto !important;
+                left: auto !important;
+                border: none !important;
+                opacity: 1 !important;
+                -webkit-print-color-adjust: exact !important;
+            }
+            .slide-portada {
+                background: linear-gradient(rgba(2, 6, 23, 0.6), rgba(2, 6, 23, 0.9)), url('assets/portada.png') !important;
+                background-size: cover !important;
+                background-position: center !important;
+                -webkit-print-color-adjust: exact !important;
+            }
+            .slide-title {
+                background: linear-gradient(135deg, #00f2ff, #7000ff) !important;
+                -webkit-background-clip: text !important;
+                -webkit-text-fill-color: transparent !important;
+                color: #00f2ff !important; /* Fallback */
+            }
+            .slide-subtitle { color: #94a3b8 !important; }
+            .visual-container {
+                box-shadow: 0 20px 40px rgba(0,0,0,0.5) !important;
+                border: 1px solid rgba(255,255,255,0.1) !important;
+                break-inside: avoid !important;
+            }
+            .controls-wrapper, .progress-container, .nav-btn {
+                display: none !important;
+            }
+            .author-tag, .stats-list li {
+                background: rgba(255,255,255,0.05) !important;
+                border: 1px solid rgba(255,255,255,0.1) !important;
+                color: #00f2ff !important;
+                font-size: 1.2rem !important; /* También más grande en impresión */
+            }
+            .logo-circle {
+                background: #00f2ff !important;
+                color: #020617 !important;
+                box-shadow: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="presentation-viewport">
+        <!-- Slide 1: Portada -->
+        <div class="slide slide-portada active">
+            <div class="uja-logo">
+                <span>UNIVERSIDAD DE JAÉN<br>Escuela Politécnica Superior</span>
+                <div class="logo-circle">UJA</div>
+            </div>
+            <div class="slide-content" style="text-align: center;">
+                <h1 class="slide-title">Monitoreo Biométrico</h1>
+                <p class="slide-subtitle">Análisis de Estrés y Fatiga en eSports y Ajedrez de Competición</p>
+                <div class="authors-box">
+                    <div class="author-tag">Raúl Gómez Téllez</div>
+                    <div class="author-tag">Víctor Aguilar Méndez</div>
+                    <div class="author-tag">Rubén Ramírez Peña</div>
+                    <div class="author-tag">Jaime M. Cazalla</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Índice -->
+        <div class="slide">
+            <div class="slide-content">
+                <h1 class="slide-title">Contenido de la Sesión</h1>
+                <p class="slide-subtitle">Hoja de ruta de la investigación</p>
+                <div class="content-grid" style="grid-template-columns: 1fr 1fr; gap: 3rem;">
+                    <ul class="stats-list">
+                        <li><strong>I. El Problema:</strong> Estrés y rendimiento (Yerkes-Dodson).</li>
+                        <li><strong>II. Biomarcadores:</strong> Análisis de HRV, EDA y Eye-tracking.</li>
+                        <li><strong>III. Validación Hormonal:</strong> El papel del Cortisol.</li>
+                    </ul>
+                    <ul class="stats-list">
+                        <li><strong>IV. Infraestructura:</strong> Arquitectura Edge-to-Cloud.</li>
+                        <li><strong>V. Aplicación:</strong> Paneles de control y flujo del Coach.</li>
+                        <li><strong>VI. Conclusiones:</strong> Hacia un entrenamiento basado en datos.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: El Desafío -->
+        <div class="slide">
+            <div class="slide-content">
+                <div class="content-grid">
+                    <div>
+                        <h1 class="slide-title">El Desafío: Estrés Invisible</h1>
+                        <p class="slide-subtitle">La fina línea entre el éxito y el colapso</p>
+                        <ul class="stats-list">
+                            <li><strong>Ley de Yerkes-Dodson:</strong> Relación empírica entre excitación y rendimiento.</li>
+                            <li><strong>Flow State:</strong> Nivel óptimo de arousal para el máximo desempeño.</li>
+                            <li><strong>Burnout:</strong> El punto de quiebre donde el estrés destruye la ejecución.</li>
+                        </ul>
+                        <div class="icon-box">
+                            <div class="icon-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                <p>Burnout</p>
+                            </div>
+                            <div class="icon-item" style="border-color: #00ff88; color: #00ff88;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                                <p>Flow State</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="visual-container">
+                        <img src="assets/yerkes_dodson.png" alt="Curva de Yerkes-Dodson">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: HRV -->
+        <div class="slide">
+            <div class="slide-content">
+                <div class="content-grid">
+                    <div class="visual-container">
+                        <img src="assets/hrv.png" alt="Tacograma HRV">
+                    </div>
+                    <div>
+                        <h1 class="slide-title">HRV: El Latido Científico</h1>
+                        <p class="slide-subtitle">Variabilidad de la Frecuencia Cardíaca</p>
+                        <ul class="stats-list">
+                            <li><strong>Baja HRV:</strong> Ritmo constante, señal de fatiga y estrés simpático.</li>
+                            <li><strong>Alta HRV:</strong> Ritmo variable, indicador de resiliencia y recuperación.</li>
+                            <li><strong>Intervalos R-R:</strong> Análisis del tiempo entre latidos para detectar el estado del SNA.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: EDA -->
+        <div class="slide">
+            <div class="slide-content">
+                <div class="content-grid">
+                    <div>
+                        <h1 class="slide-title">EDA: Respuesta Galvánica</h1>
+                        <p class="slide-subtitle">Conductancia de la piel y sudoración</p>
+                        <ul class="stats-list">
+                            <li><strong>SCL (Tonic):</strong> Nivel base que evoluciona lentamente con el estado de alerta.</li>
+                            <li><strong>SCR (Phasic):</strong> Picos rápidos o "bursts" ante eventos críticos del juego.</li>
+                            <li><strong>Validación:</strong> Correlación directa con la activación emocional y estrés agudo.</li>
+                        </ul>
+                    </div>
+                    <div class="visual-container">
+                        <img src="assets/eda.png" alt="Señal EDA">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Eye-tracking -->
+        <div class="slide">
+            <div class="slide-content">
+                <div class="content-grid">
+                    <div class="visual-container">
+                        <img src="assets/eye_tracking.png" alt="Eye-tracking Heatmap">
+                    </div>
+                    <div>
+                        <h1 class="slide-title">Eye-tracking</h1>
+                        <p class="slide-subtitle">Fatiga del Sistema Nervioso Central</p>
+                        <ul class="stats-list">
+                            <li><strong>Visión de Túnel:</strong> Bajo estrés, la mirada se ancla en el centro.</li>
+                            <li><strong>Pérdida Periférica:</strong> Incapacidad de procesar el minimapa o información lateral.</li>
+                            <li><strong>Fatiga Ocular:</strong> Cambios en la frecuencia de parpadeo y fijación.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Cortisol -->
+        <div class="slide">
+            <div class="slide-content">
+                <div class="content-grid">
+                    <div>
+                        <h1 class="slide-title">Cortisol en Sudor</h1>
+                        <p class="slide-subtitle">Validación de la tecnología EnLiSense CORTI</p>
+                        <ul class="stats-list">
+                            <li><strong>Eje HPA:</strong> Regulación hormonal de la respuesta al estrés.</li>
+                            <li><strong>Innovación:</strong> Monitoreo no invasivo mediante sensores electroquímicos.</li>
+                            <li><strong>Correlación:</strong> 0.92 R² entre niveles en sangre y sudor.</li>
+                        </ul>
+                    </div>
+                    <div class="visual-container">
+                        <img src="assets/corti.png" alt="Sensor Corti">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Hardware -->
+        <div class="slide">
+            <div class="slide-content">
+                <h1 class="slide-title" style="text-align: center;">Selección de Hardware</h1>
+                <p class="slide-subtitle" style="text-align: center;">Precisión Grado Médico vs. Consumo</p>
+                <div class="content-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="visual-container">
+                        <img src="assets/radar.png" alt="Gráfico de Radar">
+                    </div>
+                    <div class="visual-container">
+                        <img src="assets/hardware.png" alt="Hardware Photos">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Arquitectura -->
+        <div class="slide">
+            <div class="slide-content">
+                <div class="content-grid">
+                    <div>
+                        <h1 class="slide-title">Arquitectura Edge-to-Cloud</h1>
+                        <p class="slide-subtitle">Infraestructura de Computación Distribuida</p>
+                        <ul class="stats-list">
+                            <li><strong>Edge:</strong> Procesamiento local en Raspberry Pi 4.</li>
+                            <li><strong>MQTT:</strong> Protocolo ligero para transporte de telemetría.</li>
+                            <li><strong>InfluxDB:</strong> Base de datos de series temporales optimizada.</li>
+                        </ul>
+                    </div>
+                    <div class="visual-container">
+                        <img src="assets/architecture.png" alt="Diagrama Arquitectura">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Grafana -->
+        <div class="slide">
+            <div class="slide-content">
+                <div class="content-grid">
+                    <div class="visual-container">
+                        <img src="assets/grafana.png" alt="Panel Grafana">
+                    </div>
+                    <div>
+                        <h1 class="slide-title">Visualización Real-Time</h1>
+                        <p class="slide-subtitle">Paneles de Control para Toma de Decisiones</p>
+                        <ul class="stats-list">
+                            <li><strong>Gauges:</strong> Indicadores visuales de estrés instantáneo.</li>
+                            <li><strong>Líneas Temporales:</strong> Análisis de fatiga acumulada por sesión.</li>
+                            <li><strong>Alertas:</strong> Umbrales críticos para rotación de jugadores.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Integración -->
+        <div class="slide">
+            <div class="slide-content">
+                <div class="content-grid">
+                    <div>
+                        <h1 class="slide-title">Flujo de Trabajo</h1>
+                        <p class="slide-subtitle">La figura del Analista de Rendimiento</p>
+                        <ul class="stats-list">
+                            <li><strong>Feedback Inmediato:</strong> Ajustes tácticos basados en biometría.</li>
+                            <li><strong>Prevención:</strong> Detección temprana de sobreentrenamiento.</li>
+                            <li><strong>Optimización:</strong> Personalización de rutinas de descanso.</li>
+                        </ul>
+                    </div>
+                    <div class="visual-container">
+                        <img src="assets/coach.png" alt="Coach con Tablet">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Conclusiones -->
+        <div class="slide">
+            <div class="slide-content">
+                <div class="content-grid">
+                    <div>
+                        <h1 class="slide-title">Conclusiones</h1>
+                        <p class="slide-subtitle">Hacia la profesionalización total</p>
+                        <ul class="stats-list">
+                            <li><strong>Monitorización Holística:</strong> La combinación de biometría y hormonas ofrece la imagen completa.</li>
+                            <li><strong>Prevención vs. Reacción:</strong> El sistema permite detectar el burnout antes de que ocurra.</li>
+                            <li><strong>Futuro:</strong> Integración de modelos de ML para predecir picos de rendimiento.</li>
+                        </ul>
+                    </div>
+                    <div class="visual-container">
+                        <img src="assets/conclusion_summary.png" alt="Resumen Conclusiones">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="page-indicator" id="pageIndicator">1 / 12</div>
+        <button class="nav-btn primary" onclick="changeSlide(1)">
+            SIGUIENTE
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+    </div>
+
+    <script>
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const totalSlides = slides.length;
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / totalSlides) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${totalSlides}`;
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + totalSlides) % totalSlides;
+            updateUI();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+        });
+
+        updateUI();
+    </script>
+</body>
+
+</html>
