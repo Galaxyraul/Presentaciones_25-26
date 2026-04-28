@@ -129,10 +129,30 @@
                     <div class="author-tag">Jaime M. Cazalla</div>
                 </div>
             </div>
-            <div class="slide-internal-num">01 / 06</div>
+            <div class="slide-internal-num">01 / 10</div>
         </div>
 
-        <!-- Slide 2: Definición y Propósito -->
+        <!-- Slide 2: Índice (NUEVO) -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Índice de Contenidos</h1>
+            <p class="slide-subtitle">Estructura de la Presentación</p>
+            <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem;">
+                <div>
+                    <div class="index-item" onclick="changeSlide(2)"><div class="index-num">1</div> Definición y Propósito</div>
+                    <div class="index-item" onclick="changeSlide(3)"><div class="index-num">2</div> Clasificación por Naturaleza</div>
+                    <div class="index-item" onclick="changeSlide(4)"><div class="index-num">3</div> Clasificación por Función</div>
+                </div>
+                <div>
+                    <div class="index-item" onclick="changeSlide(5)"><div class="index-num">4</div> Controles Complementarios</div>
+                    <div class="index-item" onclick="changeSlide(6)"><div class="index-num">5</div> Automáticos vs. Manuales</div>
+                    <div class="index-item" onclick="changeSlide(9)"><div class="index-num">6</div> Bibliografía y Cierre</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">02 / 10</div>
+        </div>
+
+        <!-- Slide 3: Definición y Propósito -->
         <div class="slide">
             <div class="accent-bar"></div>
             <h1 class="slide-title">¿Qué es un Control?</h1>
@@ -161,10 +181,10 @@
                     <p style="font-size: 0.8rem; color: var(--text-dim);">Optimización de procesos operativos.</p>
                 </div>
             </div>
-            <div class="slide-internal-num">02 / 06</div>
+            <div class="slide-internal-num">03 / 10</div>
         </div>
 
-        <!-- Slide 3: Clasificación por Naturaleza -->
+        <!-- Slide 4: Clasificación por Naturaleza -->
         <div class="slide">
             <div class="accent-bar"></div>
             <h1 class="slide-title">Clasificación por Naturaleza</h1>
@@ -190,10 +210,10 @@
                     <p style="font-size: 0.85rem; color: var(--text-dim); margin-top: 0.5rem;">Cámaras, alarmas, blindaje, controles de temperatura y protección contra incendios.</p>
                 </div>
             </div>
-            <div class="slide-internal-num">03 / 06</div>
+            <div class="slide-internal-num">04 / 10</div>
         </div>
 
-        <!-- Slide 4: Clasificación por Función -->
+        <!-- Slide 5: Clasificación por Función -->
         <div class="slide">
             <div class="accent-bar"></div>
             <h1 class="slide-title">Clasificación por Función</h1>
@@ -202,17 +222,17 @@
             <ul style="margin-top: 0;">
                 <li style="border-left: 5px solid var(--accent-green);">
                     <div style="flex: 1;">
-                        <strong>Preventivos:</strong> Evitan que el evento no deseado ocurra (e.g. Bloqueo de puertos, formación).
+                        <strong>Preventivos:</strong> Actúan antes del error. (e.g. Cifrado, control de accesos, formación, segregación de funciones).
                     </div>
                 </li>
                 <li style="border-left: 5px solid #eab308;">
                     <div style="flex: 1;">
-                        <strong>Detectivos:</strong> Identifican el evento una vez ha ocurrido (e.g. Alarmas, revisión de logs, SIEM).
+                        <strong>Detectivos:</strong> Actúan durante o tras el error. (e.g. Conciliaciones, inventarios, logs, SIEM, alarmas).
                     </div>
                 </li>
                 <li style="border-left: 5px solid var(--accent-red);">
                     <div style="flex: 1;">
-                        <strong>Correctivos:</strong> Minimizan el impacto y restauran la normalidad (e.g. Backups, planes de contingencia).
+                        <strong>Correctivos:</strong> Actúan tras la detección. (e.g. Planes de recuperación, backups, seguros, parches).
                     </div>
                 </li>
             </ul>
@@ -222,10 +242,35 @@
                     Estrategia Ideal: Un balance entre las tres capas para lograr Resiliencia.
                 </p>
             </div>
-            <div class="slide-internal-num">04 / 06</div>
+            <div class="slide-internal-num">05 / 10</div>
         </div>
 
-        <!-- Slide 5: Automáticos vs Manuales -->
+        <!-- Slide 6: Controles Complementarios (NUEVO) -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Controles Complementarios</h1>
+            <p class="slide-subtitle">Ampliando el marco de control</p>
+            <div class="grid-3">
+                <div class="control-type-card">
+                    <div class="icon-circle">📢</div>
+                    <h3>Disuasorios</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);">Reducen la probabilidad de ataque mediante el aviso de consecuencias (carteles, avisos legales, políticas de sanciones).</p>
+                </div>
+                <div class="control-type-card">
+                    <div class="icon-circle">⚖️</div>
+                    <h3>Compensatorios</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);">Suplen deficiencias de otros controles principales que no pueden implementarse por coste o limitaciones técnicas.</p>
+                </div>
+                <div class="control-type-card">
+                    <div class="icon-circle">📋</div>
+                    <h3>Directivos</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);">Guían la acción hacia los objetivos de seguridad deseados (manuales de procesos, reglamentos internos).</p>
+                </div>
+            </div>
+            <div class="slide-internal-num">06 / 10</div>
+        </div>
+
+        <!-- Slide 7: Automáticos vs Manuales -->
         <div class="slide">
             <div class="accent-bar"></div>
             <h1 class="slide-title">Automáticos vs. Manuales</h1>
@@ -262,10 +307,10 @@
                 <div class="index-num">💡</div>
                 <div><strong>Controles Híbridos:</strong> Automatización de la ejecución con supervisión manual de las excepciones.</div>
             </div>
-            <div class="slide-internal-num">05 / 06</div>
+            <div class="slide-internal-num">07 / 10</div>
         </div>
 
-        <!-- Slide 6: Conclusión y Auditoría -->
+        <!-- Slide 8: Evaluación de Controles -->
         <div class="slide">
             <div class="accent-bar"></div>
             <h1 class="slide-title">Evaluación de Controles</h1>
@@ -273,22 +318,81 @@
 
             <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
                 <div class="concept-card" style="background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 20px;">
-                    <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Diseño</h3>
-                    <p style="font-size: 0.9rem;">¿Es el control adecuado para mitigar el riesgo identificado? (Pruebas de Diseño - ToD)</p>
+                    <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Diseño (ToD)</h3>
+                    <p style="font-size: 0.9rem;">¿Es el control adecuado para mitigar el riesgo identificado? Se evalúa si la lógica es correcta antes de su uso.</p>
                 </div>
                 <div class="concept-card" style="background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 20px;">
-                    <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Eficacia Operativa</h3>
-                    <p style="font-size: 0.9rem;">¿Funciona el control de manera consistente a lo largo del tiempo? (Pruebas de Eficacia - ToE)</p>
+                    <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Eficacia (ToE)</h3>
+                    <p style="font-size: 0.9rem;">¿Funciona el control de manera consistente a lo largo del tiempo? Se verifica su ejecución real mediante muestras.</p>
                 </div>
             </div>
 
-            <div style="margin-top: 3rem; text-align: center;">
+            <div style="margin-top: 2rem; text-align: center;">
                 <p style="font-size: 1.1rem; color: var(--text-dim);">"Un control mal diseñado es un riesgo oculto."</p>
-                <div class="view-btn" style="margin: 2rem auto 0; width: fit-content; pointer-events: none; opacity: 0.8;">
-                    Final de la Presentación
+            </div>
+            <div class="slide-internal-num">08 / 10</div>
+        </div>
+
+        <!-- Slide 9: Conclusión -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Conclusión</h1>
+            <p class="slide-subtitle">Resumen y Mejores Prácticas</p>
+            
+            <div class="stat-box" style="margin-bottom: 2rem;">
+                <p style="font-size: 1.1rem; color: var(--text-main); line-height: 1.6;">
+                    La seguridad no depende de un único control, sino de la <strong>defensa en profundidad</strong>. Un sistema robusto combina capas preventivas, detectivas y correctivas bajo supervisión constante.
+                </p>
+            </div>
+
+            <ul style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; border: none; background: transparent;">
+                <li style="background: rgba(34, 197, 94, 0.05); border-color: rgba(34, 197, 94, 0.2);">Equilibrio entre coste y riesgo.</li>
+                <li style="background: rgba(59, 130, 246, 0.05); border-color: rgba(59, 130, 246, 0.2);">Priorizar automatización.</li>
+                <li style="background: rgba(245, 158, 11, 0.05); border-color: rgba(245, 158, 11, 0.2);">Revisión periódica (Auditoría).</li>
+                <li style="background: rgba(168, 85, 247, 0.05); border-color: rgba(168, 85, 247, 0.2);">Cultura de seguridad sólida.</li>
+            </ul>
+            <div class="slide-internal-num">09 / 10</div>
+        </div>
+
+        <!-- Slide 10: Bibliografía (NUEVO) -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Bibliografía</h1>
+            <p class="slide-subtitle">Fuentes y Referencias</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+                <div class="index-item" style="background: rgba(255,255,255,0.02);">
+                    <div class="index-num" style="background: #eab308;">1</div>
+                    <div>
+                        <strong>ISACA (2024).</strong> <em>COBIT 2019 Framework: Governance and Management Objectives.</em> Una guía esencial para el control de TI.
+                    </div>
+                </div>
+                <div class="index-item" style="background: rgba(255,255,255,0.02);">
+                    <div class="index-num" style="background: #3b82f6;">2</div>
+                    <div>
+                        <strong>ISO/IEC 27001:2022.</strong> <em>Information security, cybersecurity and privacy protection.</em> Estándar internacional de controles.
+                    </div>
+                </div>
+                <div class="index-item" style="background: rgba(255,255,255,0.02);">
+                    <div class="index-num" style="background: #22c55e;">3</div>
+                    <div>
+                        <strong>Piattini, M., & Del Peso, E. (2001).</strong> <em>Auditoría informática: un enfoque práctico.</em> Editorial Rama. Referencia académica clásica.
+                    </div>
+                </div>
+                <div class="index-item" style="background: rgba(255,255,255,0.02);">
+                    <div class="index-num" style="background: #ef4444;">4</div>
+                    <div>
+                        <strong>NIST SP 800-53 Rev. 5.</strong> <em>Security and Privacy Controls for Information Systems.</em> Catálogo detallado de controles técnicos.
+                    </div>
                 </div>
             </div>
-            <div class="slide-internal-num">06 / 06</div>
+
+            <div style="margin-top: 2rem; text-align: center;">
+                <div class="view-btn" style="margin: 0 auto; width: fit-content; pointer-events: none; opacity: 0.8;">
+                    Gracias por su atención
+                </div>
+            </div>
+            <div class="slide-internal-num">10 / 10</div>
         </div>
 
     </div>
@@ -301,7 +405,7 @@
             </svg>
         </button>
 
-        <div class="page-indicator" id="pageIndicator">1 / 6</div>
+        <div class="page-indicator" id="pageIndicator">1 / 10</div>
 
         <button class="nav-btn primary" onclick="changeSlide(1)">
             Siguiente
@@ -326,8 +430,12 @@
             pageIndicator.innerText = `${currentIdx + 1} / ${totalSlides}`;
         }
 
-        function changeSlide(dir) {
-            currentIdx = (currentIdx + dir + totalSlides) % totalSlides;
+        function changeSlide(dirOrIdx) {
+            if (typeof dirOrIdx === 'number' && Math.abs(dirOrIdx) === 1) {
+                currentIdx = (currentIdx + dirOrIdx + totalSlides) % totalSlides;
+            } else {
+                currentIdx = dirOrIdx;
+            }
             updateUI();
         }
 
