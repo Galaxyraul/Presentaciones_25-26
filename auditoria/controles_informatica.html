@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clasificación de Controles - Auditoría Informática</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .control-type-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            padding: 1.5rem;
+            border-radius: 24px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .control-type-card:hover {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.05);
+            transform: translateY(-8px);
+        }
+
+        .icon-circle {
+            width: 50px;
+            height: 50px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: var(--primary);
+        }
+
+        .tag-nature {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .tag-adm { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .tag-tec { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+        .tag-fis { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+            margin-top: 1rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 1rem;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .comparison-table td {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 1.2rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .comparison-table tr td:first-child { border-radius: 16px 0 0 16px; border-right: none; }
+        .comparison-table tr td:last-child { border-radius: 0 16px 16px 0; border-left: none; }
+        
+        .stat-box {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1));
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body class="presentation-mode">
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html"
+                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon">A</div>
+                <div class="brand">
+                    <h1>Auditoría Informática</h1>
+                    <span>Controles en TI</span>
+                </div>
+            </a>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">
+            CURSO 2025/26
+        </div>
+    </nav>
+
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="presentation-viewport">
+        <!-- Slide 1: Portada -->
+        <div class="slide active">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Controles en la Auditoría Informática</h1>
+            <p class="slide-subtitle">Clasificación, Implementación y Eficacia Operativa</p>
+
+            <div class="authors-box">
+                <p style="color: var(--primary); font-weight: bold; font-size: 0.9rem; letter-spacing: 0.1em; margin-bottom: 1rem; text-transform: uppercase;">
+                    Equipo de Auditoría:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="author-tag">Raúl Gómez Téllez</div>
+                    <div class="author-tag">Víctor Aguilar Méndez</div>
+                    <div class="author-tag">Rubén Ramírez Peña</div>
+                    <div class="author-tag">Jaime M. Cazalla</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">01 / 06</div>
+        </div>
+
+        <!-- Slide 2: Definición y Propósito -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">¿Qué es un Control?</h1>
+            <p class="slide-subtitle">El pilar de la mitigación de riesgos</p>
+            
+            <div class="stat-box" style="margin-bottom: 2rem;">
+                <p style="font-size: 1.2rem; font-style: italic; color: var(--text-main);">
+                    "Cualquier medida, política, dispositivo o procedimiento que modifique el riesgo, reduciendo su probabilidad o su impacto."
+                </p>
+            </div>
+
+            <div class="grid-3">
+                <div class="index-item" style="flex-direction: column; text-align: center;">
+                    <div class="index-num">1</div>
+                    <strong>Salvaguarda</strong>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);">Protección directa del activo.</p>
+                </div>
+                <div class="index-item" style="flex-direction: column; text-align: center;">
+                    <div class="index-num">2</div>
+                    <strong>Cumplimiento</strong>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);">Alineación con normas y leyes.</p>
+                </div>
+                <div class="index-item" style="flex-direction: column; text-align: center;">
+                    <div class="index-num">3</div>
+                    <strong>Eficiencia</strong>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);">Optimización de procesos operativos.</p>
+                </div>
+            </div>
+            <div class="slide-internal-num">02 / 06</div>
+        </div>
+
+        <!-- Slide 3: Clasificación por Naturaleza -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Clasificación por Naturaleza</h1>
+            <p class="slide-subtitle">¿Cómo se implementa el control?</p>
+
+            <div class="grid-3">
+                <div class="control-type-card">
+                    <span class="tag-nature tag-adm">Administrativos</span>
+                    <div class="icon-circle">📜</div>
+                    <h3>Políticas y Normas</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-dim); margin-top: 0.5rem;">Estrategias, planes de formación, acuerdos de confidencialidad y segregación de funciones.</p>
+                </div>
+                <div class="control-type-card">
+                    <span class="tag-nature tag-tec">Técnicos (Lógicos)</span>
+                    <div class="icon-circle">💻</div>
+                    <h3>Software y Hardware</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-dim); margin-top: 0.5rem;">Firewalls, cifrado, MFA, IDS/IPS, logs de auditoría y controles de acceso biométrico.</p>
+                </div>
+                <div class="control-type-card">
+                    <span class="tag-nature tag-fis">Físicos</span>
+                    <div class="icon-circle">🔒</div>
+                    <h3>Infraestructura</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-dim); margin-top: 0.5rem;">Cámaras, alarmas, blindaje, controles de temperatura y protección contra incendios.</p>
+                </div>
+            </div>
+            <div class="slide-internal-num">03 / 06</div>
+        </div>
+
+        <!-- Slide 4: Clasificación por Función -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Clasificación por Función</h1>
+            <p class="slide-subtitle">¿Cuándo actúa el control?</p>
+
+            <ul style="margin-top: 0;">
+                <li style="border-left: 5px solid var(--accent-green);">
+                    <div style="flex: 1;">
+                        <strong>Preventivos:</strong> Evitan que el evento no deseado ocurra (e.g. Bloqueo de puertos, formación).
+                    </div>
+                </li>
+                <li style="border-left: 5px solid #eab308;">
+                    <div style="flex: 1;">
+                        <strong>Detectivos:</strong> Identifican el evento una vez ha ocurrido (e.g. Alarmas, revisión de logs, SIEM).
+                    </div>
+                </li>
+                <li style="border-left: 5px solid var(--accent-red);">
+                    <div style="flex: 1;">
+                        <strong>Correctivos:</strong> Minimizan el impacto y restauran la normalidad (e.g. Backups, planes de contingencia).
+                    </div>
+                </li>
+            </ul>
+
+            <div class="data-card" style="margin-top: 1.5rem; border-style: dashed; background: transparent;">
+                <p style="text-transform: none; color: var(--primary); font-weight: 700;">
+                    Estrategia Ideal: Un balance entre las tres capas para lograr Resiliencia.
+                </p>
+            </div>
+            <div class="slide-internal-num">04 / 06</div>
+        </div>
+
+        <!-- Slide 5: Automáticos vs Manuales -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Automáticos vs. Manuales</h1>
+            <p class="slide-subtitle">Fiabilidad y Supervisión</p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Característica</th>
+                        <th>Manuales</th>
+                        <th>Automáticos (Sistemas)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Ejecución</strong></td>
+                        <td>Intervención humana directa</td>
+                        <td>Integrados en el software/proceso</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Riesgo</strong></td>
+                        <td>Error humano, fatiga, bypass</td>
+                        <td>Fallo de lógica, configuración</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Auditoría</strong></td>
+                        <td>Evidencia física/firmas</td>
+                        <td>Logs de sistema, configuraciones</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="index-item" style="margin-top: 1.5rem;">
+                <div class="index-num">💡</div>
+                <div><strong>Controles Híbridos:</strong> Automatización de la ejecución con supervisión manual de las excepciones.</div>
+            </div>
+            <div class="slide-internal-num">05 / 06</div>
+        </div>
+
+        <!-- Slide 6: Conclusión y Auditoría -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Evaluación de Controles</h1>
+            <p class="slide-subtitle">La mirada del Auditor</p>
+
+            <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div class="concept-card" style="background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 20px;">
+                    <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Diseño</h3>
+                    <p style="font-size: 0.9rem;">¿Es el control adecuado para mitigar el riesgo identificado? (Pruebas de Diseño - ToD)</p>
+                </div>
+                <div class="concept-card" style="background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 20px;">
+                    <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Eficacia Operativa</h3>
+                    <p style="font-size: 0.9rem;">¿Funciona el control de manera consistente a lo largo del tiempo? (Pruebas de Eficacia - ToE)</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; text-align: center;">
+                <p style="font-size: 1.1rem; color: var(--text-dim);">"Un control mal diseñado es un riesgo oculto."</p>
+                <div class="view-btn" style="margin: 2rem auto 0; width: fit-content; pointer-events: none; opacity: 0.8;">
+                    Final de la Presentación
+                </div>
+            </div>
+            <div class="slide-internal-num">06 / 06</div>
+        </div>
+
+    </div>
+
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+
+        <div class="page-indicator" id="pageIndicator">1 / 6</div>
+
+        <button class="nav-btn primary" onclick="changeSlide(1)">
+            Siguiente
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const totalSlides = slides.length;
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / totalSlides) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${totalSlides}`;
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + totalSlides) % totalSlides;
+            updateUI();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+        });
+
+        updateUI();
+    </script>
+</body>
+
+</html>
