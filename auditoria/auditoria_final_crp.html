@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditoría Informática: CRP Computers</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .hero-img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 1rem;
+            border-radius: 24px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-light);
+            transition: var(--transition);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid var(--border-light);
+        }
+
+        .stat-card h3 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .risk-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .risk-table th,
+        .risk-table td {
+            padding: 10px;
+            border: 1px solid var(--border-light);
+            text-align: left;
+        }
+
+        .risk-table th {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--primary);
+        }
+
+        .badge-red {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--accent-red);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .badge-yellow {
+            background: rgba(234, 179, 8, 0.2);
+            color: #eab308;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .split-slide {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .biblio-list li::before {
+            content: "📚";
+        }
+    </style>
+</head>
+
+<body class="presentation-mode">
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html"
+                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon">C</div>
+                <div class="brand">
+                    <h1>Auditoría Informática</h1>
+                    <span>CRP Computers - Auditoría Final</span>
+                </div>
+            </a>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">
+            MÁSTER INGENIERÍA INFORMÁTICA | UJA
+        </div>
+    </nav>
+
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="presentation-viewport">
+        <!-- Diapositiva 1: Portada -->
+        <div class="slide active">
+            <img src="media/cover_v2.png" alt="Audit Cover" class="hero-img">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Auditoría y Seguridad de SI</h1>
+            <p class="slide-subtitle">Caso Práctico: CRP Computers</p>
+
+            <div class="authors-box">
+                <div
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; max-width: 600px; margin: 0 auto;">
+                    <div class="author-tag">Raúl Gómez Téllez</div>
+                    <div class="author-tag">Rubén Ramírez Peña</div>
+                    <div class="author-tag">Víctor Aguilar Méndez</div>
+                    <div class="author-tag">Jaime M. Cazalla Chica</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">01 / 13</div>
+        </div>
+
+        <!-- Diapositiva 2: Índice -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Índice de la Sesión</h1>
+            <p class="slide-subtitle">Estructura de la Auditoría (15 min)</p>
+
+            <div style="margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+                <div class="index-item" onclick="goToSlide(3)">
+                    <div class="index-num">1</div>
+                    <div><strong>Contexto:</strong> Empresa y Entorno.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(6)">
+                    <div class="index-num">2</div>
+                    <div><strong>Alcance:</strong> Límites del análisis.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(7)">
+                    <div class="index-num">3</div>
+                    <div><strong>Activos:</strong> Identificación y Valoración.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(9)">
+                    <div class="index-num">4</div>
+                    <div><strong>Riesgos:</strong> Mapa y Análisis.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(11)">
+                    <div class="index-num">5</div>
+                    <div><strong>Controles:</strong> Plan de Acción.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(13)">
+                    <div class="index-num">6</div>
+                    <div><strong>Conclusiones:</strong> Resumen final.</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">02 / 13</div>
+        </div>
+
+        <!-- Diapositiva 3: Perfil de la Empresa -->
+        <div class="slide">
+            <div class="split-slide">
+                <div>
+                    <div class="accent-bar"></div>
+                    <h1 class="slide-title">CRP Computers</h1>
+                    <p class="slide-subtitle">Perfil Organizacional</p>
+                    <ul>
+                        <li><strong>Actividad:</strong> Montaje, venta y reparación de equipos.</li>
+                        <li><strong>Ubicación:</strong> Pol. Los Olivares (Jaén).</li>
+                        <li><strong>Modelo:</strong> 65% Tienda Física / 35% Online.</li>
+                        <li><strong>Clientes:</strong> 3500 usuarios registrados.</li>
+                    </ul>
+                </div>
+                <img src="media/workshop.png" alt="Workshop"
+                    style="border-radius: 24px; border: 1px solid var(--border-light);">
+            </div>
+            <div class="slide-internal-num">03 / 13</div>
+        </div>
+
+        <!-- Diapositiva 4: Estructura Humana -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Estructura de la Plantilla</h1>
+            <p class="slide-subtitle">12 Profesionales / 5 Departamentos</p>
+
+            <div class="data-grid">
+                <div class="data-card">
+                    <h3>01</h3>
+                    <p>Dirección y Estrategia</p>
+                </div>
+                <div class="data-card">
+                    <h3>02</h3>
+                    <p>Sistemas y TI (Administradores)</p>
+                </div>
+                <div class="data-card">
+                    <h3>04</h3>
+                    <p>Operaciones (Taller y Almacén)</p>
+                </div>
+                <div class="data-card">
+                    <h3>02</h3>
+                    <p>Ventas y Comercial</p>
+                </div>
+            </div>
+            <div class="slide-internal-num">04 / 13</div>
+        </div>
+
+        <!-- Diapositiva 5: Entorno Operacional -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Infraestructura Crítica</h1>
+            <p class="slide-subtitle">Vectores de Riesgo Tecnológico</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>SPOF</h3>
+                    <p>Único Servidor Físico centralizado</p>
+                </div>
+                <div class="stat-card">
+                    <h3>WIFI</h3>
+                    <p>Red única sin segmentación lógica</p>
+                </div>
+                <div class="stat-card" style="border-color: var(--accent-red);">
+                    <h3>5/año</h3>
+                    <p>Promedio de cortes eléctricos</p>
+                </div>
+            </div>
+
+            <pre style="margin-top: 2rem;">Hardware: i5 11ª Gen | 16GB RAM | SSD 512GB | Panda Advanced</pre>
+            <div class="slide-internal-num">05 / 13</div>
+        </div>
+
+        <!-- Diapositiva 6: Alcance de la Auditoría -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Alcance de la Auditoría</h1>
+            <p class="slide-subtitle">Límites y Exclusiones</p>
+
+            <div class="data-grid">
+                <div class="data-card" style="text-align: left;">
+                    <h4 style="color: var(--primary);">INCLUIDO</h4>
+                    <p style="text-transform: none; font-size: 0.9rem; margin-top: 10px;">
+                        • Nave industrial y Sala Servidores<br>
+                        • WIFI y Fibra DIGI<br>
+                        • Base de Datos de 3500 clientes<br>
+                        • Equipos en reparación (Taller)
+                    </p>
+                </div>
+                <div class="data-card" style="text-align: left;">
+                    <h4 style="color: var(--accent-red);">EXCLUIDO</h4>
+                    <p style="text-transform: none; font-size: 0.9rem; margin-top: 10px;">
+                        • Infraestructura interna del ISP<br>
+                        • Dispositivos personales (BYOD)<br>
+                        • Auditoría legal/financiera externa
+                    </p>
+                </div>
+            </div>
+            <div class="slide-internal-num">06 / 13</div>
+        </div>
+
+        <!-- Diapositiva 7: Clasificación de Activos -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Activos de Información</h1>
+            <p class="slide-subtitle">Sesión 2: Identificación y Valoración</p>
+
+            <div style="display: flex; gap: 1rem;">
+                <div class="index-item" style="flex: 1;">
+                    <div class="index-num">DAT</div>
+                    <div><strong>Datos:</strong> Clientes, Facturación, Reparaciones.</div>
+                </div>
+                <div class="index-item" style="flex: 1;">
+                    <div class="index-num">SIS</div>
+                    <div><strong>Sistemas:</strong> Servidor, E-commerce, Red WIFI.</div>
+                </div>
+                <div class="index-item" style="flex: 1;">
+                    <div class="index-num">PER</div>
+                    <div><strong>Personal:</strong> Director, SysAdmins, Técnicos.</div>
+                </div>
+            </div>
+
+            <div class="data-card"
+                style="margin-top: 1.5rem; text-align: left; border-left: 5px solid var(--accent-red);">
+                <p style="color: var(--text-main); font-weight: bold; text-transform: none;">CRITICAL ASSETS:</p>
+                <p style="text-transform: none;">Base de datos de clientes (DAT-1) y Servidor Central (SIS-1) valorados
+                    con Magnitud de Daño <strong>MUY ALTA</strong>.</p>
+            </div>
+            <div class="slide-internal-num">07 / 13</div>
+        </div>
+
+        <!-- Diapositiva 8: Mapa de Riesgos -->
+        <div class="slide">
+            <div class="split-slide">
+                <div>
+                    <div class="accent-bar"></div>
+                    <h1 class="slide-title">Mapa de Riesgos</h1>
+                    <p class="slide-subtitle">Sesión 3: Amenazas y Vulnerabilidades</p>
+                    <table class="risk-table">
+                        <tr>
+                            <th>Amenaza</th>
+                            <th>Activo</th>
+                            <th>Prob.</th>
+                        </tr>
+                        <tr>
+                            <td>Infección Malware</td>
+                            <td>Servidor / PCs</td>
+                            <td>Alta</td>
+                        </tr>
+                        <tr>
+                            <td>Corte Eléctrico</td>
+                            <td>Servidor</td>
+                            <td>Alta</td>
+                        </tr>
+                        <tr>
+                            <td>Robo de Datos</td>
+                            <td>BD Clientes</td>
+                            <td>Media</td>
+                        </tr>
+                        <tr>
+                            <td>Acceso No Autor.</td>
+                            <td>WIFI</td>
+                            <td>Media</td>
+                        </tr>
+                    </table>
+                </div>
+                <img src="media/risk.png" alt="Risk Map" style="border-radius: 24px;">
+            </div>
+            <div class="slide-internal-num">08 / 13</div>
+        </div>
+
+        <!-- Diapositiva 9: Análisis de Riesgo Intrínseco -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Análisis de Riesgo</h1>
+            <p class="slide-subtitle">Sesión 4: Ranking de Prioridades</p>
+
+            <div style="margin-top: 1rem;">
+                <div class="index-item">
+                    <div class="index-num">10</div>
+                    <div><strong>Servidor Físico (Corte Suministro):</strong> Prioridad Máxima. <span
+                            class="badge-red">URGENTE</span></div>
+                </div>
+                <div class="index-item">
+                    <div class="index-num">8</div>
+                    <div><strong>BD Clientes (Acceso Indebido):</strong> <span class="badge-red">CRÍTICO</span></div>
+                </div>
+                <div class="index-item">
+                    <div class="index-num">6</div>
+                    <div><strong>Equipos Taller (Pérdida Datos Cliente):</strong> <span class="badge-yellow">ALTO</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-internal-num">09 / 13</div>
+        </div>
+
+        <!-- Diapositiva 10: Tratamiento del Riesgo -->
+        <div class="slide">
+            <div class="split-slide">
+                <div>
+                    <div class="accent-bar"></div>
+                    <h1 class="slide-title">Tratamiento del Riesgo</h1>
+                    <p class="slide-subtitle">Decisiones Estratégicas</p>
+
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 0.5rem; margin-top: 1rem;">
+                        <div class="index-item" style="padding: 0.8rem; margin-bottom: 0;">
+                            <div class="index-num" style="background: var(--accent-green);">M</div>
+                            <div style="font-size: 0.85rem;"><strong>Mitigar:</strong> SAI para cortes luz y Backups.
+                            </div>
+                        </div>
+                        <div class="index-item" style="padding: 0.8rem; margin-bottom: 0;">
+                            <div class="index-num" style="background: var(--primary);">P</div>
+                            <div style="font-size: 0.85rem;"><strong>Prevenir:</strong> Segmentación WIFI y Firewall.
+                            </div>
+                        </div>
+                        <div class="index-item" style="padding: 0.8rem; margin-bottom: 0;">
+                            <div class="index-num" style="background: #eab308;">T</div>
+                            <div style="font-size: 0.85rem;"><strong>Transferir:</strong> Seguro Ciber-riesgo DIGI.
+                            </div>
+                        </div>
+                        <div class="index-item" style="padding: 0.8rem; margin-bottom: 0;">
+                            <div class="index-num" style="background: var(--accent-red);">A</div>
+                            <div style="font-size: 0.85rem;"><strong>Aceptar:</strong> Riesgos residuales mínimos.</div>
+                        </div>
+                    </div>
+                </div>
+                <img src="media/treatment.png" alt="Risk Treatment Diagram"
+                    style="border-radius: 24px; border: 1px solid var(--border-light); width: 100%;">
+            </div>
+            <div class="slide-internal-num">10 / 13</div>
+        </div>
+
+        <!-- Diapositiva 11: Propuesta de Controles -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Plan de Acción</h1>
+            <p class="slide-subtitle">Sesión 5: Controles ISO 27002</p>
+
+            <div class="data-grid">
+                <div class="data-card" style="text-align: left;">
+                    <h4 style="color: var(--primary);">Control C-01: Energía</h4>
+                    <p style="text-transform: none; font-size: 0.85rem; margin-top: 5px;">
+                        Instalación de UPS de 3000VA para el servidor central y equipos críticos.
+                    </p>
+                </div>
+                <div class="data-card" style="text-align: left;">
+                    <h4 style="color: var(--primary);">Control C-02: Copias</h4>
+                    <p style="text-transform: none; font-size: 0.85rem; margin-top: 5px;">
+                        Implementación de política de backups automatizados diarios y almacenamiento off-site.
+                    </p>
+                </div>
+                <div class="data-card" style="text-align: left;">
+                    <h4 style="color: var(--primary);">Control C-03: Red</h4>
+                    <p style="text-transform: none; font-size: 0.85rem; margin-top: 5px;">
+                        Creación de VLANs separadas para Administración, Taller y Clientes (Tienda).
+                    </p>
+                </div>
+                <div class="data-card" style="text-align: left;">
+                    <h4 style="color: var(--primary);">Control C-04: Formación</h4>
+                    <p style="text-transform: none; font-size: 0.85rem; margin-top: 5px;">
+                        Plan de concienciación en ciberseguridad para todo el personal (Phishing, RGPD).
+                    </p>
+                </div>
+            </div>
+            <div class="slide-internal-num">11 / 13</div>
+        </div>
+
+        <!-- Diapositiva 12: Conclusiones -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Conclusiones</h1>
+            <p class="slide-subtitle">Resumen de la Auditoría</p>
+
+            <ul>
+                <li>CRP Computers presenta una alta dependencia de un único servidor (SPOF).</li>
+                <li>La infraestructura WIFI actual es el vector de ataque más probable.</li>
+                <li>La implementación de controles básicos (SAI, Backups, Segmentación) reduciría el riesgo residual en
+                    un 70%.</li>
+                <li>Es vital formalizar políticas de seguridad y cumplimiento de RGPD.</li>
+            </ul>
+            <div class="slide-internal-num">12 / 13</div>
+        </div>
+
+        <!-- Diapositiva 13: Bibliografía -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Bibliografía</h1>
+            <p class="slide-subtitle">Referencias y Metodologías</p>
+
+            <ul class="biblio-list">
+                <li><strong>Metodología MAGERIT v3:</strong> Análisis y Gestión de Riesgos (CSAE).</li>
+                <li><strong>ISO/IEC 27001:2022:</strong> Requisitos para SGSI.</li>
+                <li><strong>ISO/IEC 27002:2022:</strong> Guía de Controles de Seguridad.</li>
+                <li><strong>Reglamento General de Protección de Datos (RGPD):</strong> UE 2016/679.</li>
+                <li><strong>Material de Clase:</strong> Auditoría de SI (UJA).</li>
+            </ul>
+
+            <div
+                style="margin-top: 2rem; text-align: center; font-weight: bold; color: var(--primary); font-size: 2.2rem;">
+                ¿DUDAS O PREGUNTAS?
+            </div>
+            <div class="slide-internal-num">13 / 13</div>
+        </div>
+
+    </div>
+
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+
+        <div class="page-indicator" id="pageIndicator">1 / 13</div>
+
+        <button class="nav-btn primary" onclick="changeSlide(1)">
+            Siguiente
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / slides.length) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${slides.length}`;
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + slides.length) % slides.length;
+            updateUI();
+        }
+
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+        });
+
+        updateUI();
+    </script>
+</body>
+
+</html>
