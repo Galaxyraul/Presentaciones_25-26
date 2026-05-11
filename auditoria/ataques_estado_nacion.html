@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ataques Estado-Nación - Auditoría Informática</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .hero-img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 24px;
+            border: 1px solid var(--border-light);
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .actor-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .actor-card {
+            background: rgba(255,255,255,0.03);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            text-align: center;
+            transition: var(--transition);
+        }
+        .actor-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            background: rgba(59,130,246,0.1);
+        }
+        .actor-card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+        .timeline-item {
+            padding: 1rem 2rem;
+            border-left: 2px solid var(--primary);
+            position: relative;
+            margin-bottom: 1rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: 0 16px 16px 0;
+        }
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -9px;
+            top: 50%;
+            width: 16px;
+            height: 16px;
+            background: var(--primary);
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+        .badge-apt {
+            background: var(--accent-red);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body class="presentation-mode">
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html"
+                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon">A</div>
+                <div class="brand">
+                    <h1>Auditoría Informática</h1>
+                    <span>Ataques Estado-Nación</span>
+                </div>
+            </a>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">
+            MÁSTER INGENIERÍA INFORMÁTICA | UJA
+        </div>
+    </nav>
+
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="presentation-viewport">
+        <!-- Slide 1: Portada -->
+        <div class="slide active">
+            <img src="media/state_warfare.png" alt="Cyber Warfare" class="hero-img">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Ataques Cibernéticos Estado-Nación</h1>
+            <p class="slide-subtitle">El Ciberespacio como Quinto Dominio de Guerra</p>
+
+            <div class="authors-box">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; max-width: 600px; margin: 0 auto;">
+                    <div class="author-tag">Raúl Gómez Téllez</div>
+                    <div class="author-tag">Rubén Ramírez Peña</div>
+                    <div class="author-tag">Víctor Aguilar Méndez</div>
+                    <div class="author-tag">Jaime M. Cazalla Chica</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">01 / 10</div>
+        </div>
+
+        <!-- Slide 2: Índice -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Estructura de la Sesión</h1>
+            <p class="slide-subtitle">Geopolítica y Seguridad Digital</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="index-item" onclick="goToSlide(3)">
+                    <div class="index-num">1</div>
+                    <div><strong>Concepto:</strong> APT y actores estatales.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(4)">
+                    <div class="index-num">2</div>
+                    <div><strong>Actores:</strong> Principales potencias y grupos.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(5)">
+                    <div class="index-num">3</div>
+                    <div><strong>Casos:</strong> De Stuxnet a SolarWinds.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(8)">
+                    <div class="index-num">4</div>
+                    <div><strong>Auditoría:</strong> Desafíos de atribución y defensa.</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">02 / 10</div>
+        </div>
+
+
+        <!-- Slide 3: ¿Qué es un Ataque Estado-Nación? -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Definición y Características</h1>
+            <p class="slide-subtitle">Amenazas Persistentes Avanzadas (APT)</p>
+            
+            <ul>
+                <li><strong>Recursos Ilimitados:</strong> Financiación estatal y laboratorios dedicados.</li>
+                <li><strong>Objetivos Estratégicos:</strong> Espionaje, sabotaje o influencia política.</li>
+                <li><strong>Persistencia:</strong> Capacidad de permanecer ocultos años en la red.</li>
+                <li><strong>Sofisticación:</strong> Uso de vulnerabilidades Zero-Day (0-day).</li>
+            </ul>
+
+            <div class="data-card" style="margin-top: 2rem; border-left: 5px solid var(--accent-red);">
+                <p style="text-transform: none; color: var(--text-main);">"No buscan un beneficio económico inmediato, sino una ventaja geopolítica a largo plazo."</p>
+            </div>
+            <div class="slide-internal-num">03 / 10</div>
+        </div>
+
+        <!-- Slide 4: Principales Actores Geopolíticos -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">El Mapa de Amenazas</h1>
+            <p class="slide-subtitle">Principales Grupos APT por Región</p>
+
+            <div class="actor-grid">
+                <div class="actor-card">
+                    <h3>RUSIA</h3>
+                    <p style="font-size: 0.8rem;">Fancy Bear (APT28)<br>Cozy Bear (APT29)</p>
+                    <span class="badge-apt">Sabotaje</span>
+                </div>
+                <div class="actor-card">
+                    <h3>CHINA</h3>
+                    <p style="font-size: 0.8rem;">Comment Crew (APT1)<br>Wicked Panda (APT41)</p>
+                    <span class="badge-apt">Prop. Intelectual</span>
+                </div>
+                <div class="actor-card">
+                    <h3>IRÁN / COREA N.</h3>
+                    <p style="font-size: 0.8rem;">Lazarus Group<br>OilRig (APT34)</p>
+                    <span class="badge-apt">Financiero/Destructivo</span>
+                </div>
+            </div>
+            <div class="slide-internal-num">04 / 10</div>
+        </div>
+
+        <!-- Slide 5: Caso 1 - Stuxnet -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Caso 1: Stuxnet (2010)</h1>
+            <p class="slide-subtitle">El Primer Arma Digital de Destrucción Masiva</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div>
+                    <p><strong>Objetivo:</strong> Programa nuclear de Irán (Natanz).</p>
+                    <p><strong>Vector:</strong> USB malicioso (Air-gapped bypass).</p>
+                    <p><strong>Efecto:</strong> Sabotaje físico de centrifugadoras mediante manipulación de PLCs Siemens.</p>
+                </div>
+                <div class="data-card" style="background: rgba(59,130,246,0.1);">
+                    <h4 style="color: var(--primary);">Impacto en Auditoría</h4>
+                    <p style="text-transform: none; font-size: 0.85rem;">Demostró que el software puede destruir hardware crítico. Obligó a replantear la seguridad en entornos industriales (OT).</p>
+                </div>
+            </div>
+            <div class="slide-internal-num">05 / 10</div>
+        </div>
+
+        <!-- Slide 6: Caso 2 - NotPetya -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Caso 2: NotPetya (2017)</h1>
+            <p class="slide-subtitle">El Ciberataque más costoso de la historia</p>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <strong>Origen:</strong> Disfrazado de Ransomware, pero diseñado para destruir datos.
+                </div>
+                <div class="timeline-item">
+                    <strong>Vector:</strong> Actualización maliciosa de software contable ucraniano (MeDoc).
+                </div>
+                <div class="timeline-item">
+                    <strong>Daño:</strong> +10.000 millones USD en pérdidas globales (Maersk, Merck, FedEx).
+                </div>
+            </div>
+            <div class="slide-internal-num">06 / 10</div>
+        </div>
+
+        <!-- Slide 7: Caso 3 - SolarWinds -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Caso 3: SolarWinds (2020)</h1>
+            <p class="slide-subtitle">Ataque a la Cadena de Suministro (Supply Chain)</p>
+
+            <div style="background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 16px; border-left: 4px solid var(--primary);">
+                <p><strong>Operación:</strong> Inserción de un backdoor (Sunburst) en el proceso de compilación de Orion Platform.</p>
+                <p><strong>Alcance:</strong> 18.000 organizaciones afectadas, incluyendo el Tesoro de EE.UU. y agencias de inteligencia.</p>
+                <p><strong>Lección:</strong> "Confianza Cero" (Zero Trust). No podemos confiar ciegamente en las actualizaciones de proveedores.</p>
+            </div>
+            <div class="slide-internal-num">07 / 10</div>
+        </div>
+
+        <!-- Slide 8: Auditoría y Desafíos de Atribución -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Desafíos para el Auditor</h1>
+            <p class="slide-subtitle">¿Cómo auditar lo invisible?</p>
+
+            <div class="data-grid">
+                <div class="data-card">
+                    <h4 style="color: var(--accent-red);">Atribución</h4>
+                    <p style="text-transform: none;">Dificultad técnica para probar quién está detrás (uso de "Falsas Banderas").</p>
+                </div>
+                <div class="data-card">
+                    <h4 style="color: var(--primary);">Sigilo</h4>
+                    <p style="text-transform: none;">Uso de técnicas "Living off the Land" (herramientas legítimas del sistema).</p>
+                </div>
+                <div class="data-card">
+                    <h4 style="color: var(--accent-green);">Resiliencia</h4>
+                    <p style="text-transform: none;">Pasar de un enfoque de "Prevención" a uno de "Detección y Respuesta".</p>
+                </div>
+            </div>
+            <div class="slide-internal-num">08 / 10</div>
+        </div>
+
+        <!-- Slide 9: Conclusiones -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Conclusiones</h1>
+            <p class="slide-subtitle">Hacia una Resiliencia Nacional Digital</p>
+
+            <ul style="font-size: 1.2rem;">
+                <li>La ciberseguridad es ahora un pilar de la <strong>Seguridad Nacional</strong>.</li>
+                <li>La cooperación público-privada es esencial para compartir inteligencia de amenazas.</li>
+                <li>La auditoría debe ser continua y basada en escenarios de compromiso real.</li>
+            </ul>
+
+            <div style="margin-top: 2rem; text-align: center; font-weight: 800; font-size: 2rem; color: var(--primary);">
+                EL FUTURO ES HÍBRIDO
+            </div>
+            <div class="slide-internal-num">09 / 10</div>
+        </div>
+
+        <!-- Slide 10: Bibliografía -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Bibliografía</h1>
+            <p class="slide-subtitle">Referencias y Fuentes Consultadas</p>
+
+            <ul class="biblio-list" style="font-size: 0.9rem;">
+                <li><strong>MITRE ATT&CK:</strong> Framework global de tácticas y técnicas de adversarios estatales.</li>
+                <li><strong>Kaspersky GReAT:</strong> Informes técnicos sobre operaciones de APT28 (Fancy Bear).</li>
+                <li><strong>Mandiant M-Trends:</strong> Análisis detallado del compromiso a la cadena de suministro de SolarWinds.</li>
+                <li><strong>Kim Zetter (2014):</strong> "Countdown to Zero Day: Stuxnet and the Launch of the World's First Digital Weapon".</li>
+                <li><strong>ENISA (European Union Agency for Cybersecurity):</strong> Threat Landscape for State-Sponsored Actors.</li>
+            </ul>
+
+            <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(59, 130, 246, 0.05); border-radius: 16px; border: 1px solid var(--border-light);">
+                <p style="text-align: center; color: var(--text-dim);">Material elaborado para la asignatura de Auditoría de SI - Universidad de Jaén (2026)</p>
+            </div>
+            <div class="slide-internal-num">10 / 10</div>
+        </div>
+    </div>
+
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+
+        <div class="page-indicator" id="pageIndicator">1 / 10</div>
+
+        <button class="nav-btn primary" onclick="changeSlide(1)">
+            Siguiente
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / slides.length) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${slides.length}`;
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + slides.length) % slides.length;
+            updateUI();
+        }
+
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+        });
+
+        updateUI();
+    </script>
+</body>
+
+</html>
