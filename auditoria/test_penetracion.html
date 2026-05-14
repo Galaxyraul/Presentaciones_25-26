@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Penetración - Auditoría Informática</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .hero-img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 24px;
+            border: 1px solid var(--border-light);
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .phase-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .phase-card {
+            background: rgba(255,255,255,0.03);
+            padding: 1rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            text-align: center;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 150px;
+        }
+        .phase-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            background: rgba(59,130,246,0.1);
+        }
+        .phase-num {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        .phase-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .box-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .box-card {
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-light);
+            text-align: center;
+        }
+        .box-card.black { background: rgba(0,0,0,0.3); border-left: 4px solid #333; }
+        .box-card.gray { background: rgba(128,128,128,0.1); border-left: 4px solid #888; }
+        .box-card.white { background: rgba(255,255,255,0.05); border-left: 4px solid #fff; }
+        
+        .tool-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(59,130,246,0.2);
+            color: var(--primary);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 4px;
+            border: 1px solid rgba(59,130,246,0.3);
+        }
+    </style>
+</head>
+
+<body class="presentation-mode">
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html"
+                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon">A</div>
+                <div class="brand">
+                    <h1>Auditoría Informática</h1>
+                    <span>Test de Penetración</span>
+                </div>
+            </a>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">
+            MÁSTER INGENIERÍA INFORMÁTICA | UJA
+        </div>
+    </nav>
+
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="presentation-viewport">
+        <!-- Slide 1: Portada -->
+        <div class="slide active">
+            <img src="media/pentest_hero.png" alt="Penetration Testing" class="hero-img">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Test de Penetración</h1>
+            <p class="slide-subtitle">Simulación de Ataques y Evaluación de Seguridad Técnica</p>
+
+            <div class="authors-box">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; max-width: 600px; margin: 0 auto;">
+                    <div class="author-tag">Raúl Gómez Téllez</div>
+                    <div class="author-tag">Rubén Ramírez Peña</div>
+                    <div class="author-tag">Víctor Aguilar Méndez</div>
+                    <div class="author-tag">Jaime M. Cazalla Chica</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">01 / 10</div>
+        </div>
+
+        <!-- Slide 2: Índice -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Estructura de la Sesión</h1>
+            <p class="slide-subtitle">Metodología y Ejecución</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="index-item" onclick="goToSlide(3)">
+                    <div class="index-num">1</div>
+                    <div><strong>Concepto:</strong> ¿Qué es un Pentest?</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(4)">
+                    <div class="index-num">2</div>
+                    <div><strong>Tipos:</strong> Black, Gray y White Box.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(5)">
+                    <div class="index-num">3</div>
+                    <div><strong>Metodologías:</strong> OWASP, NIST y PTES.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(6)">
+                    <div class="index-num">4</div>
+                    <div><strong>Fases:</strong> Del reconocimiento al reporte.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(8)">
+                    <div class="index-num">5</div>
+                    <div><strong>Herramientas:</strong> El arsenal del auditor.</div>
+                </div>
+                <div class="index-item" onclick="goToSlide(9)">
+                    <div class="index-num">6</div>
+                    <div><strong>Conclusión:</strong> Valor estratégico.</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">02 / 10</div>
+        </div>
+
+        <!-- Slide 3: ¿Qué es un Test de Penetración? -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Concepto y Objetivos</h1>
+            <p class="slide-subtitle">Auditoría Ofensiva</p>
+            
+            <ul>
+                <li><strong>Definición:</strong> Ataque simulado autorizado sobre un sistema para encontrar debilidades.</li>
+                <li><strong>Objetivo Principal:</strong> Determinar el impacto real de una vulnerabilidad.</li>
+                <li><strong>Diferencia con Scan:</strong> El Pentest explota la vulnerabilidad; el escaneo solo la identifica.</li>
+                <li><strong>Resultado:</strong> Un informe detallado con evidencias y recomendaciones de mitigación.</li>
+            </ul>
+
+            <div class="data-card" style="margin-top: 2rem; border-left: 5px solid var(--primary);">
+                <p style="text-transform: none; color: var(--text-main);">"Para defenderse de un hacker, hay que pensar y actuar como un hacker."</p>
+            </div>
+            <div class="slide-internal-num">03 / 10</div>
+        </div>
+
+        <!-- Slide 4: Tipos de Pentest -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Enfoques de Prueba</h1>
+            <p class="slide-subtitle">Nivel de Conocimiento del Sistema</p>
+
+            <div class="box-grid">
+                <div class="box-card black">
+                    <h3 style="color: #fff;">Black Box</h3>
+                    <p style="font-size: 0.8rem; margin-top: 10px;">Cero conocimiento previo. Simula un atacante externo real.</p>
+                </div>
+                <div class="box-card gray">
+                    <h3 style="color: var(--text-dim);">Gray Box</h3>
+                    <p style="font-size: 0.8rem; margin-top: 10px;">Conocimiento parcial. Simula un usuario o empleado descontento.</p>
+                </div>
+                <div class="box-card white">
+                    <h3 style="color: var(--text-main);">White Box</h3>
+                    <p style="font-size: 0.8rem; margin-top: 10px;">Conocimiento total. Auditoría de código y arquitectura interna.</p>
+                </div>
+            </div>
+            
+            <p style="margin-top: 2rem; font-size: 0.9rem; color: var(--text-dim); text-align: center;">
+                La elección depende del presupuesto, tiempo y objetivo de la auditoría.
+            </p>
+            <div class="slide-internal-num">04 / 10</div>
+        </div>
+
+        <!-- Slide 5: Metodologías Estándar -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Metodologías</h1>
+            <p class="slide-subtitle">Marcos de Trabajo Reconocidos</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div class="data-card" style="text-align: left;">
+                    <h4 style="color: var(--primary);">OWASP</h4>
+                    <p style="text-transform: none; font-size: 0.85rem; margin-top: 5px;">El estándar de oro para aplicaciones web. Enfoque en el Top 10 de vulnerabilidades.</p>
+                </div>
+                <div class="data-card" style="text-align: left;">
+                    <h4 style="color: var(--accent-green);">NIST SP 800-115</h4>
+                    <p style="text-transform: none; font-size: 0.85rem; margin-top: 5px;">Guía federal de EE.UU. para pruebas y exámenes de seguridad técnica.</p>
+                </div>
+                <div class="data-card" style="text-align: left;">
+                    <h4 style="color: var(--accent-red);">PTES</h4>
+                    <p style="text-transform: none; font-size: 0.85rem; margin-top: 5px;">Penetration Testing Execution Standard. Cubre todo el ciclo de vida del pentest.</p>
+                </div>
+                <div class="data-card" style="text-align: left;">
+                    <h4 style="color: #f59e0b;">OSSTMM</h4>
+                    <p style="text-transform: none; font-size: 0.85rem; margin-top: 5px;">Manual de Metodología de Pruebas de Seguridad de Código Abierto.</p>
+                </div>
+            </div>
+            <div class="slide-internal-num">05 / 10</div>
+        </div>
+
+        <!-- Slide 6: Fases del Pentest (1-3) -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Fases del Pentest</h1>
+            <p class="slide-subtitle">Proceso de Ejecución (I)</p>
+
+            <div class="list-step">
+                <div class="step-num">1</div>
+                <div>
+                    <strong>Reconocimiento (OSINT):</strong> Recolección de información pública, dominios, correos, infraestructuras.
+                </div>
+            </div>
+            <div class="list-step">
+                <div class="step-num">2</div>
+                <div>
+                    <strong>Escaneo y Análisis:</strong> Identificación de puertos abiertos, servicios y búsqueda de vulnerabilidades conocidas.
+                </div>
+            </div>
+            <div class="list-step">
+                <div class="step-num">3</div>
+                <div>
+                    <strong>Explotación:</strong> El "hackeo" propiamente dicho. Uso de exploits para ganar acceso al sistema.
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">06 / 10</div>
+        </div>
+
+        <!-- Slide 7: Fases del Pentest (4-5) -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Fases del Pentest</h1>
+            <p class="slide-subtitle">Proceso de Ejecución (II)</p>
+
+            <div class="list-step">
+                <div class="step-num" style="background: rgba(34, 197, 94, 0.1); color: var(--accent-green); border-color: rgba(34, 197, 94, 0.2);">4</div>
+                <div>
+                    <strong>Post-Explotación:</strong> Mantener el acceso, escalar privilegios y "pivotar" (moverse lateralmente) a otros sistemas de la red.
+                </div>
+            </div>
+            <div class="list-step">
+                <div class="step-num" style="background: rgba(59, 130, 246, 0.1); color: var(--primary); border-color: rgba(59, 130, 246, 0.2);">5</div>
+                <div>
+                    <strong>Reporte y Remediación:</strong> Fase CRÍTICA. Documentar fallos, riesgos y pasos para solucionar los problemas encontrados.
+                </div>
+            </div>
+
+            <div class="data-card" style="margin-top: 2rem; background: rgba(59,130,246,0.05);">
+                <p style="text-transform: none; font-style: italic;">"Un Pentest sin un buen reporte es simplemente un ataque vandalismo autorizado."</p>
+            </div>
+            <div class="slide-internal-num">07 / 10</div>
+        </div>
+
+        <!-- Slide 8: Herramientas -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">El Arsenal del Auditor</h1>
+            <p class="slide-subtitle">Software Esencial</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div>
+                    <h4 style="color: var(--primary); margin-bottom: 1rem;">Escaneo y Red</h4>
+                    <span class="tool-tag">Nmap</span>
+                    <span class="tool-tag">Wireshark</span>
+                    <span class="tool-tag">Masscan</span>
+                    <span class="tool-tag">Netcat</span>
+                </div>
+                <div>
+                    <h4 style="color: var(--accent-red); margin-bottom: 1rem;">Explotación</h4>
+                    <span class="tool-tag">Metasploit</span>
+                    <span class="tool-tag">SQLMap</span>
+                    <span class="tool-tag">BeEF</span>
+                    <span class="tool-tag">Searchsploit</span>
+                </div>
+                <div>
+                    <h4 style="color: var(--accent-green); margin-bottom: 1rem;">Web Apps</h4>
+                    <span class="tool-tag">Burp Suite</span>
+                    <span class="tool-tag">OWASP ZAP</span>
+                    <span class="tool-tag">FFUF</span>
+                    <span class="tool-tag">Dirsearch</span>
+                </div>
+                <div>
+                    <h4 style="color: #f59e0b; margin-bottom: 1rem;">Passwords</h4>
+                    <span class="tool-tag">John the Ripper</span>
+                    <span class="tool-tag">Hashcat</span>
+                    <span class="tool-tag">Hydra</span>
+                </div>
+            </div>
+            <div class="slide-internal-num">08 / 10</div>
+        </div>
+
+        <!-- Slide 9: Conclusiones y Preguntas -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Conclusiones</h1>
+            <p class="slide-subtitle">Valor para la Organización</p>
+
+            <ul style="font-size: 1.1rem;">
+                <li>Identifica riesgos antes de que sean explotados por criminales.</li>
+                <li>Valida la efectividad de los controles de seguridad existentes.</li>
+                <li>Cumplimiento normativo (GDPR, PCI-DSS, ENS).</li>
+                <li>Mejora la concienciación y la respuesta ante incidentes.</li>
+            </ul>
+
+            <div style="margin-top: 3rem; text-align: center;">
+                <h2 style="color: var(--primary); font-size: 2.5rem;">¿Preguntas?</h2>
+                <p style="color: var(--text-dim);">Dudas sobre metodologías, herramientas o ética.</p>
+            </div>
+            <div class="slide-internal-num">09 / 10</div>
+        </div>
+
+        <!-- Slide 10: Bibliografía -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Bibliografía</h1>
+            <p class="slide-subtitle">Fuentes y Referencias</p>
+
+            <ul class="biblio-list" style="font-size: 0.9rem;">
+                <li><strong>OWASP Foundation:</strong> Web Security Testing Guide (WSTG).</li>
+                <li><strong>NIST:</strong> Special Publication 800-115, Technical Guide to Information Security Testing.</li>
+                <li><strong>PTES:</strong> Penetration Testing Execution Standard (pentest-standard.org).</li>
+                <li><strong>Georgia Weidman:</strong> "Penetration Testing: A Hands-On Introduction to Hacking".</li>
+                <li><strong>The OSSTMM 3:</strong> Open Source Security Testing Methodology Manual.</li>
+            </ul>
+
+            <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(59, 130, 246, 0.05); border-radius: 16px; border: 1px solid var(--border-light);">
+                <p style="text-align: center; color: var(--text-dim);">Material elaborado para la asignatura de Auditoría de SI - Universidad de Jaén (2026)</p>
+            </div>
+            <div class="slide-internal-num">10 / 10</div>
+        </div>
+    </div>
+
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+
+        <div class="page-indicator" id="pageIndicator">1 / 10</div>
+
+        <button class="nav-btn primary" onclick="changeSlide(1)">
+            Siguiente
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / slides.length) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${slides.length}`;
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + slides.length) % slides.length;
+            updateUI();
+        }
+
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+        });
+
+        updateUI();
+    </script>
+</body>
+
+</html>
