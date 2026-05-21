@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprendizaje Federado: IA Descentralizada y Privacidad a Escala - Gómez & Ramírez</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* Estilos específicos y componentes interactivos premium */
+        :root {
+            --bg-color-dark: #020617;
+            --card-bg-dark: #0f172a;
+            --accent-blue: #3b82f6;
+            --accent-purple: #a855f7;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-red: #f43f5e;
+            --accent-amber: #f59e0b;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #1e293b;
+            --glass-bg-accent: rgba(15, 23, 42, 0.95);
+        }
+
+        /* Estilo general para la vista de presentación */
+        .presentation-viewport {
+            position: relative;
+            padding-bottom: 80px; /* Espacio para controles */
+        }
+
+        /* Slide layout premium */
+        .slide {
+            max-width: 1050px;
+            min-height: 620px;
+            padding: 2.5rem 3.5rem;
+            display: none;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        /* Grid layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            align-items: center;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        /* Tarjetas con efectos de cristal y hover */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1.2rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-blue);
+            background: rgba(30, 41, 59, 0.5);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15);
+        }
+
+        .glass-card h4 {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .glass-card p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+
+        /* Badges de tecnología */
+        .tech-badge {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .tech-badge.amber {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--accent-amber);
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+
+        .tech-badge.purple {
+            background: rgba(168, 85, 247, 0.1);
+            color: var(--accent-purple);
+            border-color: rgba(168, 85, 247, 0.2);
+        }
+
+        .tech-badge.green {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        /* Botón de Notas del Ponente */
+        .notes-toggle-btn {
+            background: var(--card-bg);
+            color: var(--text-dim);
+            border: 1px solid var(--border-light);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            font-size: 0.85rem;
+        }
+
+        .notes-toggle-btn:hover, .notes-toggle-btn.active {
+            color: white;
+            border-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+        }
+
+        /* Panel Lateral/Inferior del Ponente */
+        .speaker-notes-panel {
+            position: fixed;
+            bottom: -320px;
+            left: 0;
+            width: 100%;
+            height: 300px;
+            background: var(--glass-bg-accent);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            z-index: 2200;
+            transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .speaker-notes-panel.open {
+            bottom: 0;
+        }
+
+        .notes-header {
+            padding: 0.8rem 2rem;
+            background: rgba(2, 6, 23, 0.5);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notes-title {
+            font-weight: 800;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notes-timer-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stopwatch-display {
+            font-family: 'Fira Code', monospace;
+            background: #020617;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: var(--accent-green);
+        }
+
+        .stopwatch-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-light);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .stopwatch-btn:hover {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+
+        .notes-content-body {
+            flex: 1;
+            padding: 1.2rem 2rem;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 2rem;
+        }
+
+        .notes-script-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+            text-align: justify;
+        }
+
+        .notes-sidebar-info {
+            border-left: 1px solid var(--border);
+            padding-left: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .notes-close-btn {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 50%;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notes-close-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Estilos de pestañas interactivas (Diapositiva 4) */
+        .tabs-header {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: var(--accent-blue);
+            border-bottom-color: var(--accent-blue);
+        }
+
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Estilos del comparador interactivo (Diapositiva 3) */
+        .comparator-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 1rem;
+        }
+
+        .comp-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            color: var(--text-dim);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .comp-btn.active {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .comp-view {
+            display: none;
+            min-height: 220px;
+            border-radius: 16px;
+            border: 1px dashed var(--border);
+            background: rgba(2, 6, 23, 0.4);
+            padding: 1.2rem;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .comp-view.active {
+            display: block;
+        }
+
+        /* SVG animado y gráficos */
+        .network-svg {
+            width: 100%;
+            height: 200px;
+            background: transparent;
+        }
+
+        .node {
+            fill: var(--card-bg-dark);
+            stroke: var(--accent-blue);
+            stroke-width: 2.5;
+            transition: var(--transition);
+        }
+
+        .node.center-node {
+            stroke: var(--accent-purple);
+            stroke-width: 3.5;
+            fill: #020617;
+        }
+
+        .node:hover {
+            fill: var(--accent-blue);
+            cursor: pointer;
+        }
+
+        .data-stream {
+            stroke-dasharray: 8;
+            animation: dash 5s linear infinite;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -80;
+            }
+        }
+
+        /* Matriz de las 7V */
+        .grid-7v {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+        }
+
+        .card-7v {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            transition: var(--transition);
+        }
+
+        .card-7v:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent-cyan);
+            transform: scale(1.02);
+        }
+
+        .v-title {
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .v-desc {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            line-height: 1.3;
+        }
+
+        /* Layer stack styling (Diapositiva 7) */
+        .stack-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .stack-layer {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-light);
+            border-left: 6px solid var(--accent-blue);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .stack-layer::after {
+            content: "➔";
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            transition: var(--transition);
+            opacity: 0.5;
+        }
+
+        .stack-layer:hover {
+            background: rgba(59, 130, 246, 0.05);
+            border-color: var(--accent-blue);
+            transform: translateX(8px);
+        }
+
+        .stack-layer:hover::after {
+            opacity: 1;
+            color: var(--accent-blue);
+            transform: translateY(-50%) translateX(5px);
+        }
+
+        .stack-layer.purple { border-left-color: var(--accent-purple); }
+        .stack-layer.green { border-left-color: var(--accent-green); }
+
+        .stack-layer-title {
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: white;
+            margin-bottom: 3px;
+        }
+
+        .stack-layer-desc {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        /* Diapositiva 8: Panel Ataques vs Defensas */
+        .sec-column {
+            border-radius: 16px;
+            padding: 1.5rem;
+            background: rgba(2, 6, 23, 0.3);
+            border: 1px solid var(--border-light);
+        }
+
+        .sec-column.attacks {
+            border-left: 4px solid var(--accent-red);
+        }
+
+        .sec-column.defenses {
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .sec-item {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .sec-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .sec-item-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .sec-item-desc {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            line-height: 1.35;
+        }
+
+        .bullet-point {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.88rem;
+            line-height: 1.4;
+        }
+
+        .bullet-point::before {
+            content: "✓";
+            color: var(--accent-green);
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .bullet-point.warning::before {
+            content: "⚠";
+            color: var(--accent-amber);
+        }
+
+        /* Curvas de convergencia matemática */
+        .math-formula {
+            font-family: 'Fira Code', 'Courier New', monospace;
+            background: #020617;
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 6px;
+            color: var(--accent-cyan);
+            font-size: 0.8rem;
+            display: inline-block;
+            margin: 4px 0;
+        }
+
+        /* Estilo general para responsive */
+        @media (max-width: 900px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            .slide {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="presentation-mode">
+
+    <!-- Barra de Navegación -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon" style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));">F</div>
+                <div class="brand">
+                    <h1>Computación Distribuida</h1>
+                    <span>Aprendizaje Federado</span>
+                </div>
+            </a>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <!-- Botón del Ponente -->
+            <button id="notesToggleBtn" class="notes-toggle-btn" onclick="toggleSpeakerNotes()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                Guion del Ponente
+            </button>
+            <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">CURSO 2025/26</div>
+        </div>
+    </nav>
+
+    <!-- Barra de Progreso Superior -->
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar" style="background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple)); box-shadow: 0 0 15px var(--accent-blue);"></div>
+    </div>
+
+    <!-- Contenedor Principal de las Diapositivas -->
+    <div class="presentation-viewport">
+
+        <!-- DIAPOSITIVA 1: PORTADA -->
+        <div class="slide active">
+            <div class="accent-bar" style="background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));"></div>
+            <h1 class="slide-title" style="background: linear-gradient(to right, #ffffff, var(--accent-blue), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Aprendizaje Federado</h1>
+            <p class="slide-subtitle" style="color: var(--accent-blue); letter-spacing: 0.15em;">Inteligencia Artificial Descentralizada y Privacidad a Escala</p>
+            
+            <div class="grid-2">
+                <div style="text-align: left; padding-right: 1.5rem;">
+                    <p style="color: var(--text-dim); font-size: 1rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                        Un paradigma disruptivo que traslada el entrenamiento del modelo hacia la periferia en lugar de recolectar masivamente información cruda, resolviendo dilemas de soberanía regulatoria y cuellos de botella de infraestructura.
+                    </p>
+                    <div class="authors-box" style="margin-top: 1rem; padding-top: 1.5rem; text-align: left;">
+                        <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 0.5rem;">Autores de la Presentación:</div>
+                        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                            <div class="author-tag" style="font-size: 0.95rem; background: rgba(255, 255, 255, 0.03); padding: 5px 12px; border-radius: 8px; border: 1px solid var(--border-light);">Raúl Gómez Téllez</div>
+                            <div class="author-tag" style="font-size: 0.95rem; background: rgba(255, 255, 255, 0.03); padding: 5px 12px; border-radius: 8px; border: 1px solid var(--border-light);">Rubén Ramírez Peña</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 260px;">
+                    <!-- Diagrama SVG Simplificado Central vs. Federado -->
+                    <svg class="network-svg" viewBox="0 0 400 200">
+                        <defs>
+                            <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#3b82f6" />
+                                <stop offset="100%" stop-color="#1d4ed8" />
+                            </linearGradient>
+                            <linearGradient id="grad-purple" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#a855f7" />
+                                <stop offset="100%" stop-color="#6b21a8" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Central Coordinator Node -->
+                        <circle cx="200" cy="100" r="18" fill="url(#grad-purple)" />
+                        <text x="200" y="104" fill="white" font-size="10" font-weight="900" text-anchor="middle">COORD</text>
+                        
+                        <!-- Local Nodes -->
+                        <g>
+                            <circle cx="70" cy="50" r="10" class="node" />
+                            <line x1="80" y1="58" x2="185" y2="92" stroke="var(--border-light)" stroke-width="1.5" />
+                            <circle cx="70" cy="50" r="3" fill="var(--accent-green)" />
+                        </g>
+                        <g>
+                            <circle cx="70" cy="150" r="10" class="node" />
+                            <line x1="80" y1="142" x2="185" y2="108" stroke="var(--border-light)" stroke-width="1.5" />
+                            <circle cx="70" cy="150" r="3" fill="var(--accent-green)" />
+                        </g>
+                        <g>
+                            <circle cx="330" cy="50" r="10" class="node" />
+                            <line x1="320" y1="58" x2="215" y2="92" stroke="var(--border-light)" stroke-width="1.5" />
+                            <circle cx="330" cy="50" r="3" fill="var(--accent-green)" />
+                        </g>
+                        <g>
+                            <circle cx="330" cy="150" r="10" class="node" />
+                            <line x1="320" y1="142" x2="215" y2="108" stroke="var(--border-light)" stroke-width="1.5" />
+                            <circle cx="330" cy="150" r="3" fill="var(--accent-green)" />
+                        </g>
+                        
+                        <!-- Flow representations -->
+                        <path d="M 70 50 Q 135 71 200 100" fill="none" stroke="var(--accent-cyan)" stroke-width="2" class="data-stream" />
+                        <path d="M 330 150 Q 265 129 200 100" fill="none" stroke="var(--accent-cyan)" stroke-width="2" class="data-stream" />
+                        
+                        <text x="200" y="180" fill="var(--text-dim)" font-size="10" text-anchor="middle">Datos Locales Privados (Green) | Parámetros a la Nube (Cyan)</text>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">01 / 11</div>
+        </div>
+
+        <!-- DIAPOSITIVA 2: ÍNDICE -->
+        <div class="slide">
+            <div class="accent-bar" style="background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));"></div>
+            <h1 class="slide-title">Índice</h1>
+            <p class="slide-subtitle">Estructura Analítica de la Presentación</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 1rem;">
+                <div>
+                    <div class="index-item" onclick="goToSlide(3)">
+                        <div class="index-num">1</div>
+                        <div>
+                            <strong style="color: white; font-size: 0.95rem;">Génesis y Crisis Centralizada</strong>
+                            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 2px;">Límites de infraestructura, fallas y regulación GDPR.</p>
+                        </div>
+                    </div>
+                    <div class="index-item" onclick="goToSlide(4)">
+                        <div class="index-num">2</div>
+                        <div>
+                            <strong style="color: white; font-size: 0.95rem;">Ciclo Operativo y las 7V</strong>
+                            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 2px;">Flujo coordinador-cliente e impacto en dimensiones.</p>
+                        </div>
+                    </div>
+                    <div class="index-item" onclick="goToSlide(5)">
+                        <div class="index-num">3</div>
+                        <div>
+                            <strong style="color: white; font-size: 0.95rem;">Arquitecturas y Partición</strong>
+                            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 2px;">Federación Horizontal, Vertical (PSI/PSU) y Transferencia.</p>
+                        </div>
+                    </div>
+                    <div class="index-item" onclick="goToSlide(6)">
+                        <div class="index-num">4</div>
+                        <div>
+                            <strong style="color: white; font-size: 0.95rem;">Optimización y Agregación</strong>
+                            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 2px;">Comparativa algorítmica: FedAvg, FedProx y SCAFFOLD.</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="index-item" onclick="goToSlide(7)">
+                        <div class="index-num">5</div>
+                        <div>
+                            <strong style="color: white; font-size: 0.95rem;">Integración con Big Data</strong>
+                            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 2px;">Frameworks (Flower, Flare, FATE) y ecosistema Apache.</p>
+                        </div>
+                    </div>
+                    <div class="index-item" onclick="goToSlide(6)">
+                        <div class="index-num">6</div>
+                        <div>
+                            <strong style="color: white; font-size: 0.95rem;">Seguridad y Salvaguardas</strong>
+                            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 2px;">Ataques de envenenamiento y defensas (DP vs. MPC).</p>
+                        </div>
+                    </div>
+                    <div class="index-item" onclick="goToSlide(9)">
+                        <div class="index-num">7</div>
+                        <div>
+                            <strong style="color: white; font-size: 0.95rem;">Sinergias NWDAF e Impacto</strong>
+                            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 2px;">Implementación en núcleos 5G-A/6G y casos en medicina.</p>
+                        </div>
+                    </div>
+                    <div class="index-item" onclick="goToSlide(10)">
+                        <div class="index-num">8</div>
+                        <div>
+                            <strong style="color: white; font-size: 0.95rem;">Fronteras y Conclusiones</strong>
+                            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 2px;">FedLLM (LoRA), PFL (FUELS) y One-Shot (YOCO).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">02 / 11</div>
+        </div>
+
+        <!-- DIAPOSITIVA 3: INTRODUCCIÓN Y CRISIS CENTRALIZADA -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-blue);"></div>
+            <h1 class="slide-title">01. Crisis del Enfoque Centralizado</h1>
+            <p class="slide-subtitle">Limitaciones Estructurales y la Respuesta Federada</p>
+            
+            <div class="grid-2">
+                <div>
+                    <div class="bullet-point warning">
+                        <div>
+                            <strong>Punto Único de Falla:</strong> La recolección masiva consolida datos sensibles en un único gran silo altamente vulnerable a ciberataques organizados.
+                        </div>
+                    </div>
+                    <div class="bullet-point warning">
+                        <div>
+                            <strong>Soberanía y Regulación:</strong> Conflicto directo e insalvable con regulaciones de privacidad draconianas como el Reglamento General de Protección de Datos (GDPR).
+                        </div>
+                    </div>
+                    <div class="bullet-point">
+                        <div>
+                            <strong>Alternativa del Aprendizaje Federado (FL):</strong> Las entidades ("clientes") entrenan modelos compartidos manteniendo sus datos de forma estrictamente local y privada.
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <!-- Comparador Interactivo Centralizado vs. Federado -->
+                    <div class="comparator-controls">
+                        <button id="compBtnCentral" class="comp-btn active" onclick="switchComparator('central')">Enfoque Centralizado</button>
+                        <button id="compBtnFed" class="comp-btn" onclick="switchComparator('fed')">Enfoque Federado (FL)</button>
+                    </div>
+                    
+                    <div id="compViewCentral" class="comp-view active">
+                        <div class="tech-badge red" style="background: rgba(244, 63, 94, 0.1); color: var(--accent-red); border-color: rgba(244, 63, 94, 0.2);">Modelo Convencional Inseguro</div>
+                        <p style="font-size: 0.8rem; line-height: 1.4; color: var(--text-light); margin-bottom: 0.8rem;">
+                            <strong>Flujo Masivo de Datos Brutos:</strong> Todos los dispositivos del usuario final envían información extremadamente confidencial al clúster en la nube.
+                        </p>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; font-size: 0.75rem; border: 1px solid rgba(244, 63, 94, 0.2);">
+                            <span style="color: var(--accent-red); font-weight: bold;">[Riesgo Crítico]</span> Fuga de privacidad en tránsito, saturación de red y nula soberanía de datos locales.
+                        </div>
+                    </div>
+                    
+                    <div id="compViewFed" class="comp-view">
+                        <div class="tech-badge green">Modelo Descentralizado Seguro</div>
+                        <p style="font-size: 0.8rem; line-height: 1.4; color: var(--text-light); margin-bottom: 0.8rem;">
+                            <strong>El Dato No se Desplaza:</strong> El modelo matemático se envía a la periferia. Los cómputos se realizan localmente; solo los gradientes se envían de vuelta.
+                        </p>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; font-size: 0.75rem; border: 1px solid rgba(16, 185, 129, 0.2);">
+                            <span style="color: var(--accent-green); font-weight: bold;">[Beneficio Clave]</span> Privacidad implícita de diseño, robustez de fallos distribuidos y bajo ancho de banda.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">03 / 11</div>
+        </div>
+
+        <!-- DIAPOSITIVA 4: EL CICLO DE VIDA OPERATIVO Y LAS "7V" -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-cyan);"></div>
+            <h1 class="slide-title">02. El Ciclo de Vida y las 7V</h1>
+            <p class="slide-subtitle">Flujo de Trabajo Operativo del Consorcio y Mapeo de Big Data</p>
+            
+            <!-- Cabecera de pestañas -->
+            <div class="tabs-header">
+                <button id="tabBtnCiclo" class="tab-btn active" onclick="switchTab('ciclo')">Ciclo de Vida Operativo</button>
+                <button id="tabBtn7v" class="tab-btn" onclick="switchTab('7v')">Impacto en las "7V" del Big Data</button>
+            </div>
+            
+            <!-- Contenido Pestaña 1: Ciclo de vida -->
+            <div id="tabCiclo" class="tab-pane active">
+                <div class="grid-3" style="margin-top: 1rem;">
+                    <div class="glass-card" style="border-top: 4px solid var(--accent-blue);">
+                        <div class="tech-badge">Paso 1: Inicialización</div>
+                        <h4>Distribución Global</h4>
+                        <p>El servidor coordinador central inicializa un modelo global con parámetros <span class="math-formula">w^0</span> y transmite estos pesos base a una fracción aleatoria de clientes participantes en la ronda.</p>
+                    </div>
+                    <div class="glass-card" style="border-top: 4px solid var(--accent-cyan);">
+                        <div class="tech-badge">Paso 2: Local Compute</div>
+                        <h4>Entrenamiento Perimetral</h4>
+                        <p>Cada nodo ejecuta múltiples épocas de optimización (usualmente SGD) sobre sus datos crudos locales cerrados, produciendo un vector de parámetros ajustados <span class="math-formula">w_i^{t+1}</span>.</p>
+                    </div>
+                    <div class="glass-card" style="border-top: 4px solid var(--accent-purple);">
+                        <div class="tech-badge">Paso 3: Agregación</div>
+                        <h4>Fusión en el Servidor</h4>
+                        <p>Los clientes transmiten únicamente las variaciones de pesos al servidor en la nube. Este realiza la agregación matemática mediante promedio ponderado sin ver un solo dato local.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contenido Pestaña 2: Las 7V -->
+            <div id="tab7v" class="tab-pane">
+                <div class="grid-7v">
+                    <div class="card-7v">
+                        <div class="v-title">Volumen <span>VOL</span></div>
+                        <div class="v-desc">Paralelización extrema en hardware periférico. Toda la información se explota estadísticamente sin centralización física.</div>
+                    </div>
+                    <div class="card-7v">
+                        <div class="v-title">Velocidad <span>VEL</span></div>
+                        <div class="v-desc">Inferencia en milisegundos directamente "in situ" en el dispositivo local, libre de la latencia de ida y vuelta a la nube.</div>
+                    </div>
+                    <div class="card-7v">
+                        <div class="v-title">Variedad <span>VAR</span></div>
+                        <div class="v-desc">Gestión robusta de datos heterogéneos y No Independientes e Idénticamente Distribuidos (Non-IID) con regularizaciones.</div>
+                    </div>
+                    <div class="card-7v">
+                        <div class="v-title">Variabilidad <span>VBL</span></div>
+                        <div class="v-desc">Adaptación de topología dinámica y selección de clientes activos ante intermitencias o anchos de banda variables.</div>
+                    </div>
+                    <div class="card-7v">
+                        <div class="v-title">Veracidad <span>VRC</span></div>
+                        <div class="v-desc">Trasladada al plano algorítmico. Detección espacial de gradientes anómalos o sospechosos y defensas estadísticas.</div>
+                    </div>
+                    <div class="card-7v">
+                        <div class="v-title">Valor / Visibilidad <span>VAL</span></div>
+                        <div class="v-desc">Fusión segura de conocimiento de silos comerciales cerrados. Trazabilidad superior por registros de transacciones.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">04 / 11</div>
+        </div>
+
+        <!-- DIAPOSITIVA 5: ARQUITECTURAS TOPOLÓGICAS Y DE PARTICIÓN DE DATOS -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-purple);"></div>
+            <h1 class="slide-title">03. Arquitecturas y Partición de Datos</h1>
+            <p class="slide-subtitle">Clasificación por Espacio de Muestras y Características</p>
+            
+            <div class="grid-3" style="margin-top: 1rem;">
+                <div class="glass-card" style="border-left: 3px solid var(--accent-blue);">
+                    <div class="tech-badge">HFL</div>
+                    <h4 style="color: var(--accent-blue);">Horizontal (HFL)</h4>
+                    <p style="margin-bottom: 0.5rem;"><strong>Mismo espacio de features, distintas muestras.</strong></p>
+                    <p style="font-size: 0.8rem; line-height: 1.35;">Predominante en IoT y teléfonos móviles. Nodos idénticos registran atributos homólogos de usuarios completamente distintos (e.g., predicción de texto en teclados virtuales).</p>
+                </div>
+                <div class="glass-card" style="border-left: 3px solid var(--accent-purple);">
+                    <div class="tech-badge">VFL</div>
+                    <h4 style="color: var(--accent-purple);">Vertical (VFL)</h4>
+                    <p style="margin-bottom: 0.5rem;"><strong>Distintas features, mismos individuos.</strong></p>
+                    <p style="font-size: 0.8rem; line-height: 1.35;">Crucial en sector financiero. Múltiples entidades poseen distintos atributos de los mismos clientes comunes. Requiere de protocolos seguros de Intersección de Conjuntos (PSI).</p>
+                </div>
+                <div class="glass-card" style="border-left: 3px solid var(--accent-cyan);">
+                    <div class="tech-badge">FTL</div>
+                    <h4 style="color: var(--accent-cyan);">Transferencia (FTL)</h4>
+                    <p style="margin-bottom: 0.5rem;"><strong>Nula / mínima superposición de características y muestras.</strong></p>
+                    <p style="font-size: 0.8rem; line-height: 1.35;">Proyecta los dominios asimétricos hacia un subespacio polinómico común a través de codificadores latentes de autoencoder para explotar similitudes implícitas de manera ciega.</p>
+                </div>
+            </div>
+            
+            <div class="glass-card" style="margin-top: 1rem; padding: 1rem 1.5rem; background: rgba(168, 85, 247, 0.03); border-color: rgba(168, 85, 247, 0.1);">
+                <h4 style="font-size: 0.95rem; color: var(--accent-purple); margin-bottom: 0.3rem;">Orquestaciones de Enlace y Redes</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; font-size: 0.8rem; color: var(--text-dim);">
+                    <div><strong>1. Centralizado Estándar:</strong> Un servidor maestro único en la nube opera como la autoridad central y nodo agregador global.</div>
+                    <div><strong>2. Descentralizado P2P:</strong> Topologías entre pares. No existe un coordinador único; los pesos se fusionan por consenso y chismes (*gossip*).</div>
+                    <div><strong>3. Jerárquico:</strong> Introduce agregadores intermedios como microservidores perimetrales MEC en redes 5G celulares.</div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">05 / 11</div>
+        </div>
+
+        <!-- DIAPOSITIVA 6: ALGORITMOS DE OPTIMIZACIÓN MATEMÁTICA -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-amber);"></div>
+            <h1 class="slide-title">04. Algoritmos de Optimización y Agregación</h1>
+            <p class="slide-subtitle">Mitigación de la Deriva del Cliente (Client Drift) ante Datos Non-IID</p>
+            
+            <div class="grid-2" style="margin-top: 0.5rem;">
+                <div class="glass-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 320px; padding: 1rem;">
+                    <div style="font-size: 0.8rem; color: var(--text-light); font-weight: 700; margin-bottom: 0.5rem;">Curvas de Convergencia Teóricas (Heterogeneidad Non-IID)</div>
+                    <!-- SVG de las Curvas de Convergencia -->
+                    <svg viewBox="0 0 300 180" style="width: 100%; height: 100%;">
+                        <!-- Ejes -->
+                        <line x1="20" y1="160" x2="290" y2="160" stroke="var(--border)" stroke-width="2" />
+                        <line x1="20" y1="160" x2="20" y2="10" stroke="var(--border)" stroke-width="2" />
+                        <text x="290" y="172" fill="var(--text-dim)" font-size="8" text-anchor="end">Rondas de Comunicación</text>
+                        <text x="10" y="15" fill="var(--text-dim)" font-size="8" text-anchor="start">Pérdida Global (Loss)</text>
+                        
+                        <!-- Curva FedAvg: Muy inestable, rebota y converge mal -->
+                        <path d="M 20 20 Q 50 140 100 110 T 180 130 T 260 120 T 290 125" fill="none" stroke="var(--accent-red)" stroke-width="2" stroke-dasharray="2,2" />
+                        
+                        <!-- Curva FedProx: Convergencia intermedia, suave -->
+                        <path d="M 20 20 Q 60 90 120 70 T 200 65 T 290 55" fill="none" stroke="var(--accent-amber)" stroke-width="2" />
+                        
+                        <!-- Curva SCAFFOLD: Convergencia extremadamente rápida y lineal -->
+                        <path d="M 20 20 Q 50 40 100 35 T 180 30 T 290 28" fill="none" stroke="var(--accent-green)" stroke-width="2" />
+                        
+                        <!-- Leyendas -->
+                        <circle cx="200" cy="110" r="3" fill="var(--accent-red)" />
+                        <text x="208" y="113" fill="var(--accent-red)" font-size="7">FedAvg (Heterogéneo)</text>
+                        
+                        <circle cx="200" cy="125" r="3" fill="var(--accent-amber)" />
+                        <text x="208" y="128" fill="var(--accent-amber)" font-size="7">FedProx (Estable)</text>
+                        
+                        <circle cx="200" cy="140" r="3" fill="var(--accent-green)" />
+                        <text x="208" y="143" fill="var(--accent-green)" font-size="7">SCAFFOLD (Rápido)</text>
+                    </svg>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                    <div class="glass-card" style="padding: 0.9rem 1.2rem;">
+                        <h4 style="color: var(--accent-red); margin-bottom: 2px;">Federated Averaging (FedAvg)</h4>
+                        <p style="font-size: 0.78rem;"><strong>Heurística base:</strong> Promedio ponderado proporcional al volumen local.</p>
+                        <div class="math-formula">w_{t+1} = \sum_{k=1}^K \frac{n_k}{n} w^k_{t+1}</div>
+                        <p style="font-size: 0.72rem; color: var(--accent-red); margin-top: 2px;">Inestabilidad severa y divergencia matemática ante datos no perimetrales homólogos.</p>
+                    </div>
+                    
+                    <div class="glass-card" style="padding: 0.9rem 1.2rem;">
+                        <h4 style="color: var(--accent-amber); margin-bottom: 2px;">Federated Proximal (FedProx)</h4>
+                        <p style="font-size: 0.78rem;">Introduce un término de regularización cuadrática para limitar la deriva.</p>
+                        <div class="math-formula">min_w ( h(w) + \frac{\mu}{2} \Vert w - w^t \Vert^2 )</div>
+                        <p style="font-size: 0.72rem; color: var(--accent-amber); margin-top: 2px;">Ancla los nodos al modelo global y permite realizar trabajos locales parciales.</p>
+                    </div>
+                    
+                    <div class="glass-card" style="padding: 0.9rem 1.2rem;">
+                        <h4 style="color: var(--accent-green); margin-bottom: 2px;">SCAFFOLD</h4>
+                        <p style="font-size: 0.78rem;">Corrige el sesgo mediante <strong>variables de control</strong> de gradiente.</p>
+                        <div class="math-formula">c^t_{global} - c^t_i \quad \text{(Variantes de Control)}</div>
+                        <p style="font-size: 0.72rem; color: var(--accent-green); margin-top: 2px;">Erradica por completo la deriva del cliente al coste de duplicar la sobrecarga de red.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">06 / 11</div>
+        </div>
+
+        <!-- DIAPOSITIVA 7: INTEGRACIÓN TECNOLÓGICA CON ECOSISTEMAS DE BIG DATA -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-green);"></div>
+            <h1 class="slide-title">05. Integración con Ecosistemas de Big Data</h1>
+            <p class="slide-subtitle">Coexistencia con Motores Distribuidos de Ingeniería de Datos</p>
+            
+            <div class="grid-2" style="margin-top: 1rem;">
+                <div class="stack-container">
+                    <div class="stack-layer purple" onclick="showLayerDetail('frameworks')">
+                        <div class="tech-badge purple">Capa 3: Frameworks de FL</div>
+                        <div class="stack-layer-title">Flower, NVIDIA FLARE, FATE</div>
+                        <div class="stack-layer-desc">Orquestación lógica perimetral, topologías seguras y abstracción de ML.</div>
+                    </div>
+                    <div class="stack-layer" onclick="showLayerDetail('motores')">
+                        <div class="tech-badge">Capa 2: Procesamiento Analítico</div>
+                        <div class="stack-layer-title">Apache Spark, Flink & Storm</div>
+                        <div class="stack-layer-desc">Procesamiento paralelo en memoria, flujos continuos y agregación de tensores.</div>
+                    </div>
+                    <div class="stack-layer green" onclick="showLayerDetail('infra')">
+                        <div class="tech-badge green">Capa 1: Almacenamiento e Infra</div>
+                        <div class="stack-layer-title">Hadoop (HDFS/YARN) & Kubernetes (GKE)</div>
+                        <div class="stack-layer-desc">Almacenamiento masivo distribuido y administración de recursos de clúster.</div>
+                    </div>
+                </div>
+                
+                <div class="glass-card" style="min-height: 280px; display: flex; flex-direction: column; justify-content: center; background: rgba(16, 185, 129, 0.02); border-color: rgba(16, 185, 129, 0.15);">
+                    <div id="layerDetailTitle" style="font-weight: 800; font-size: 1.1rem; color: var(--accent-green); margin-bottom: 0.8rem;">Detalle de la Arquitectura</div>
+                    <div id="layerDetailDesc" style="font-size: 0.88rem; line-height: 1.5; color: var(--text-dim);">
+                        Selecciona una capa del stack analítico de la izquierda para analizar en detalle su integración tecnológica de producción y coexistencia simbiótica con marcos de Big Data.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">07 / 11</div>
+        </div>
+
+        <!-- DIAPOSITIVA 8: SEGURIDAD CRIPTOGRÁFICA Y DEFENSAS -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-red);"></div>
+            <h1 class="slide-title">06. Seguridad Criptográfica y Defensas</h1>
+            <p class="slide-subtitle">Vulnerabilidades Frente a Adversarios y Salvaguardas Formales</p>
+            
+            <div class="grid-2" style="margin-top: 1rem;">
+                <div class="sec-column attacks">
+                    <h4 style="color: var(--accent-red); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 1.2rem;">⚡</span> Ataques del Adversario
+                    </h4>
+                    
+                    <div class="sec-item">
+                        <div class="sec-item-title" style="color: var(--text-light);"><span class="tech-badge red" style="margin: 0; padding: 2px 6px; font-size: 0.65rem;">ENV DATA</span> Envenenamiento de Datos</div>
+                        <div class="sec-item-desc">Manipulación sutil de muestras locales (Label Flipping) para desviar la frontera de decisión sin alertar.</div>
+                    </div>
+                    
+                    <div class="sec-item">
+                        <div class="sec-item-title" style="color: var(--text-light);"><span class="tech-badge red" style="margin: 0; padding: 2px 6px; font-size: 0.65rem;">ENV GRAD</span> Envenenamiento de Modelos</div>
+                        <div class="sec-item-desc">Inyección de perturbaciones vectoriales calculadas (ej: mediante PT-GAN) en los gradientes enviados al coordinador.</div>
+                    </div>
+                    
+                    <div class="sec-item">
+                        <div class="sec-item-title" style="color: var(--text-light);"><span class="tech-badge red" style="margin: 0; padding: 2px 6px; font-size: 0.65rem;">INF MEM</span> Inferencia de Membresía</div>
+                        <div class="sec-item-desc">Deducción inversa de si un registro formó parte del dataset de entrenamiento a través del análisis de las fluctuaciones de pesos globales.</div>
+                    </div>
+                </div>
+                
+                <div class="sec-column defenses">
+                    <h4 style="color: var(--accent-green); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 1.2rem;">🛡</span> Mecanismos de Defensa
+                    </h4>
+                    
+                    <div class="sec-item">
+                        <div class="sec-item-title" style="color: var(--text-light);"><span class="tech-badge green" style="margin: 0; padding: 2px 6px; font-size: 0.65rem;">PRIV DIF</span> Privacidad Diferencial (DP)</div>
+                        <div class="sec-item-desc">Inyección de ruido estocástico (Gaussiano/Laplaciano) a gradientes. Sacrifica cierta precisión a cambio de un presupuesto formal de privacidad <span class="math-formula">\epsilon</span>.</div>
+                    </div>
+                    
+                    <div class="sec-item">
+                        <div class="sec-item-title" style="color: var(--text-light);"><span class="tech-badge green" style="margin: 0; padding: 2px 6px; font-size: 0.65rem;">COMP SEC</span> Computación Multiparte (MPC)</div>
+                        <div class="sec-item-desc">Alinea Cifrado Homomórfico y Secreto Compartido para operar directamente sobre tensores encriptados sin descifrar, conservando el 100% de precisión.</div>
+                    </div>
+                    
+                    <div class="sec-item" style="border: 1px dashed rgba(16, 185, 129, 0.2); border-radius: 8px; padding: 8px; background: rgba(16, 185, 129, 0.02);">
+                        <div style="font-size: 0.72rem; color: var(--accent-green); font-weight: bold; margin-bottom: 2px;">Compromiso Clave (Trade-off):</div>
+                        <div style="font-size: 0.7rem; color: var(--text-dim); line-height: 1.3;">
+                            DP inyecta ruido y destruye precisión para ganar privacidad rápida. MPC es exacto al 100% pero exige un altísimo coste en comunicaciones y computación de chips.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">08 / 11</div>
+        </div>
+
+        <!-- DIAPOSITIVA 9: SINERGIA SECTORIAL Y TELECOMUNICACIONES (5G-A/6G) -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-cyan);"></div>
+            <h1 class="slide-title">07. Sinergia Sectorial y Redes 5G-A/6G</h1>
+            <p class="slide-subtitle">De los Consorcios Farmacéuticos a la Integración del Núcleo Móvil</p>
+            
+            <div class="grid-2" style="margin-top: 1rem;">
+                <div class="glass-card" style="padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; border-left: 4px solid var(--accent-blue);">
+                    <div class="tech-badge">3GPP NWDAF</div>
+                    <h4 style="font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--accent-blue);">Función de Analítica de Datos de Red</h4>
+                    <p style="font-size: 0.8rem; line-height: 1.45; margin-bottom: 0.8rem; color: var(--text-dim);">
+                        La estandarización de la telefonía móvil de próxima generación incrusta el aprendizaje perimetral en el núcleo de red mediante **NWDAF**:
+                    </p>
+                    <ul style="margin: 0; font-size: 0.78rem;">
+                        <li style="padding: 4px 8px; background: none; border: none; margin-bottom: 4px;">
+                            <strong>AnLF (Función Lógica Analítica):</strong> Ejecuta inferencias locales y predicciones de red a escala de microservicios.
+                        </li>
+                        <li style="padding: 4px 8px; background: none; border: none; margin-bottom: 4px;">
+                            <strong>MTLF (Entrenamiento de Modelos):</strong> Actúa como el orquestador federado que entrena los tensores globales de tráfico.
+                        </li>
+                    </ul>
+                    <div style="font-size: 0.72rem; color: var(--accent-cyan); font-weight: 700; margin-top: 0.5rem; border-top: 1px solid var(--border); padding-top: 6px;">
+                        Horizonte 6G: Límites descendentes teóricos de hasta 1.1 Gbps para transferencias.
+                    </div>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                    <div class="glass-card" style="padding: 1rem 1.2rem;">
+                        <h4 style="color: var(--accent-green); font-size: 0.95rem; margin-bottom: 2px;">Consorcio MELLODDY (Pharma)</h4>
+                        <p style="font-size: 0.78rem; line-height: 1.35; color: var(--text-dim);">
+                            Orquestó la cooperación segura de entrenamiento predictivo P2P para el descubrimiento de fármacos entre 10 multinacionales farmacéuticas competitivas sin revelar patentes.
+                        </p>
+                    </div>
+                    
+                    <div class="glass-card" style="padding: 1rem 1.2rem;">
+                        <h4 style="color: var(--accent-cyan); font-size: 0.95rem; margin-bottom: 2px;">Kakao Healthcare & Hospitales</h4>
+                        <p style="font-size: 0.78rem; line-height: 1.35; color: var(--text-dim);">
+                            Despliegue de nodos oncológicos sobre Google Kubernetes Engine (GKE), reduciendo la calibración predictiva en cáncer de mama de dos años a solo cuatro meses.
+                        </p>
+                    </div>
+                    
+                    <div class="glass-card" style="padding: 1rem 1.2rem;">
+                        <h4 style="color: var(--accent-amber); font-size: 0.95rem; margin-bottom: 2px;">Sistemas Inteligentes de Transporte</h4>
+                        <p style="font-size: 0.78rem; line-height: 1.35; color: var(--text-dim);">
+                            Optimización de constelaciones de drones (UAVs) y vehículos autónomos perimetrales mediante descensos de gradiente cooperativos asíncronos.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">09 / 11</div>
+        </div>
+
+        <!-- DIAPOSITIVA 10: FRONTERAS ANALÍTICAS EMERGENTES Y CONCLUSIONES -->
+        <div class="slide">
+            <div class="accent-bar" style="background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));"></div>
+            <h1 class="slide-title">08. Fronteras Analíticas y Conclusiones</h1>
+            <p class="slide-subtitle">Vanguardia Científica y el Destino de la IA Distribuida</p>
+            
+            <div class="grid-3" style="margin-top: 1rem;">
+                <div class="glass-card" style="border-top: 4px solid var(--accent-blue);">
+                    <div class="tech-badge">FedLLM</div>
+                    <h4 style="color: var(--accent-blue);">Alineamiento de LLMs</h4>
+                    <p style="font-size: 0.78rem; line-height: 1.4;">
+                        Ajuste de instrucciones (*instruction tuning*) y alineamiento ético en Grandes Modelos de Lenguaje usando adaptaciones eficientes como <strong>LoRA</strong> mediante plataformas como FATE-LLM y el entorno <em>FedLLM-Bench</em>.
+                    </p>
+                </div>
+                
+                <div class="glass-card" style="border-top: 4px solid var(--accent-purple);">
+                    <div class="tech-badge">PFL (Personalized)</div>
+                    <h4 style="color: var(--accent-purple);">Personalización (PFL)</h4>
+                    <p style="font-size: 0.78rem; line-height: 1.4;">
+                        Evita converger en un único vector global rígido inapropiado. Utiliza <strong>destilación cognitiva dinámica</strong> (pFedKA) y marcos basados en contraste temporal (FUELS) para preservar la idiosincrasia del cliente.
+                    </p>
+                </div>
+                
+                <div class="glass-card" style="border-top: 4px solid var(--accent-cyan);">
+                    <div class="tech-badge">One-Shot FL</div>
+                    <h4 style="color: var(--accent-cyan);">Un Solo Paso (YOCO)</h4>
+                    <p style="font-size: 0.78rem; line-height: 1.4;">
+                        Diseñado para redes aeroespaciales satelitales (LEO) con intermitencia extrema. Paradigmas como <strong>YOCO</strong> (You Only Communicate Once) limitan el canal al <strong>0.03%</strong> del intercambio de rondas tradicional.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="glass-card" style="margin-top: 1.2rem; padding: 1.2rem 1.8rem; background: rgba(59, 130, 246, 0.05); border-color: rgba(59, 130, 246, 0.2); text-align: center;">
+                <div style="font-size: 1.05rem; font-weight: 800; color: white; margin-bottom: 4px;">Infraestructura Analítica y Ética Irrenunciable</div>
+                <p style="font-size: 0.85rem; color: var(--text-dim); max-width: 850px; margin: 0 auto; line-height: 1.45;">
+                    El Aprendizaje Federado ha superado sus estadios formativos más vulnerables para erigirse no como una simple capa de ofuscación de datos, sino como la infraestructura analítica y matemática sobre la cual se procesará inevitablemente el conocimiento distribuido de las próximas décadas bajo un resguardo de opacidad ética total.
+                </p>
+            </div>
+            
+            <div class="slide-internal-num">10 / 11</div>
+        </div>
+
+        <!-- DIAPOSITIVA 11: PREGUNTAS Y CIERRE -->
+        <div class="slide">
+            <div class="accent-bar" style="background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));"></div>
+            <h1 class="slide-title" style="text-align: center; margin-top: 2rem;">¿Preguntas?</h1>
+            <p class="slide-subtitle" style="text-align: center; color: var(--accent-purple); font-size: 1rem; letter-spacing: 0.25em;">Muchas gracias por su atención</p>
+            
+            <div class="authors-box" style="margin-top: 3rem; padding-top: 2.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                <p style="color: var(--accent-blue); font-size: 1.15rem; font-weight: 800; margin-bottom: 0.4rem;">Máster en Ingeniería Informática</p>
+                <div style="font-size: 0.9rem; color: var(--text-dim); font-weight: 700; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 1px;">Universidad de Jaén (UJA)</div>
+                <div style="display: flex; justify-content: center; gap: 20px;">
+                    <div class="author-tag" style="font-size: 1rem; font-weight: bold; background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); padding: 8px 18px; border-radius: 12px;">Raúl Gómez Téllez</div>
+                    <div class="author-tag" style="font-size: 1rem; font-weight: bold; background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); padding: 8px 18px; border-radius: 12px;">Rubén Ramírez Peña</div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">11 / 11</div>
+        </div>
+
+    </div>
+
+    <!-- Controles Inferiores de Navegación -->
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <div class="page-indicator" id="pageIndicator">1 / 11</div>
+        <button class="nav-btn primary" style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); border: none;" onclick="changeSlide(1)">
+            Siguiente
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <!-- PANEL DEL PONENTE (NOTAS DE VOZ) -->
+    <div id="speakerNotesPanel" class="speaker-notes-panel">
+        <div class="notes-header">
+            <div class="notes-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="22"></line>
+                </svg>
+                Guion del Ponente • Diapositiva <span id="notesSlideNum">1</span>
+            </div>
+            
+            <!-- Cronómetro Interactivo para Ensayar -->
+            <div class="notes-timer-wrapper">
+                <div style="font-size: 0.75rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase;">Cronómetro de Ensayo:</div>
+                <div id="stopwatchDisplay" class="stopwatch-display">00:00</div>
+                <button id="stopwatchBtn" class="stopwatch-btn" onclick="toggleStopwatch()">Iniciar</button>
+                <button class="stopwatch-btn" onclick="resetStopwatch()">Reiniciar</button>
+            </div>
+            
+            <button class="notes-close-btn" onclick="toggleSpeakerNotes()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="notes-content-body">
+            <div id="notesScriptText" class="notes-script-text">
+                Cargando notas...
+            </div>
+            
+            <div class="notes-sidebar-info">
+                <div>
+                    <strong style="color: var(--accent-blue); display: block; margin-bottom: 2px;">Tiempo de Discurso:</strong>
+                    <span id="notesSuggestedTime" style="color: white; font-weight: bold;">0:00 - 1:15</span>
+                </div>
+                <div>
+                    <strong style="color: var(--accent-amber); display: block; margin-bottom: 2px;">Foco Clave:</strong>
+                    <span id="notesFocusPoint" style="color: white;">Introducción conceptual y definición del paradigma FL.</span>
+                </div>
+                <div style="margin-top: auto; border-top: 1px solid var(--border); padding-top: 8px; font-size: 0.7rem;">
+                    <em>Tono: Alta densidad, formalidad académica y precisión terminológica.</em>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT DE NAVEGACIÓN E INTERACTIVIDAD DE DIAPOSITIVAS -->
+    <script>
+        // Array de Notas de Voz / Guion del Ponente
+        const speakerNotesData = [
+            {
+                slideNum: 1,
+                time: "0:00 - 0:15 (Duración: 15s)",
+                focus: "Presentación inicial del consorcio",
+                script: "Buenas tardes a todos. Damos inicio a la presentación de Aprendizaje Federado para la asignatura de Computación Distribuida. Los autores somos Raúl Gómez Téllez y Rubén Ramírez Peña. En esta disertación técnica analizaremos la transición de los paradigmas centralizados ineficientes a esquemas perimetrales que garantizan la soberanía de la información y la preservación de la privacidad mediante ingeniería matemática avanzada."
+            },
+            {
+                slideNum: 2,
+                time: "0:15 - 0:30 (Duración: 15s)",
+                focus: "Navegación e índice interactivo",
+                script: "La estructura analítica de nuestra presentación está dividida en ocho ejes temáticos esenciales: desde la crisis de centralización e infraestructura, detallando el ciclo de vida y agregación matricial, las topologías de datos (HFL, VFL, FTL), la comparativa matemática de algoritmos (FedAvg, FedProx, SCAFFOLD), las integraciones corporativas Big Data, las defensas criptográficas y su engranaje NWDAF en redes 5G-Advanced y 6G, hasta concluir en las fronteras de investigación de hiper-escala como FedLLM y YOCO."
+            },
+            {
+                slideNum: 3,
+                time: "0:00 - 1:15 (Tiempo acumulado)",
+                focus: "Crisis del enfoque centralizado",
+                script: "El crecimiento exponencial en la generación de datos en entornos de Inteligencia Artificial e Internet de las Cosas (IoT) ha expuesto las limitaciones estructurales de los enfoques centralizados tradicionales. La metodología convencional de transferir volúmenes masivos de datos periféricos hacia un único repositorio centralizado genera problemas sistémicos complejos. La consolidación de información altamente sensible —como registros médicos, gubernamentales o transacciones financieras— crea un punto único de falla vulnerable a ciberataques y entra en conflicto directo con marcos regulatorios estrictos sobre la soberanía de los datos, tales como el Reglamento General de Protección de Datos (GDPR). Como respuesta transformadora surge el Aprendizaje Federado (FL), un paradigma descentralizado donde las entidades participantes (\"clientes\") entrenan iterativamente un modelo global compartido manteniendo sus datos de forma estrictamente local y privada."
+            },
+            {
+                slideNum: 4,
+                time: "1:15 - 2:45 (Tiempo acumulado)",
+                focus: "Ciclo de vida y dimensiones 7V",
+                script: "El ciclo de vida operativo del FL es un proceso interactivo riguroso: un servidor central inicializa un modelo global y lo distribuye; cada cliente ejecuta un entrenamiento local exclusivo con sus datos privados, y posteriormente extrae y envía únicamente las variaciones paramétricas o pesos matemáticos de vuelta al coordinador. Los datos brutos nunca abandonan su origen. Al mapear este paradigma frente a las características definitorias del Big Data, observamos que aborda el Volumen mediante la paralelización extrema en procesadores periféricos independientes, transformando la masa de datos en una ventaja estadística. La Velocidad se optimiza al ejecutar inferencias inmediatas in situ, eliminando la latencia de transmisión hacia la nube. La Variedad e Variabilidad se gestionan mediante regularizaciones matemáticas para mitigar la heterogeneidad estadística de datos No Independientes e Idénticamente Distribuidos (Non-IID) y topologías adaptativas para la selección de clientes ante conexiones intermitentes. Si bien la Veracidad es un reto crítico debido a la imposibilidad de inspeccionar los datos brutos locales, se traslada al plano algorítmico mediante defensas estadísticas y detección de anomalías para aislar actualizaciones paramétricas divergentes. Finalmente, el Valor se maximiza al fusionar conocimiento de silos impenetrables sin exponer secretos comerciales, mientras que la Visibilidad se eleva mediante registros de transacciones paramétricas que garantizan una trazabilidad e institucionalidad superior a la amalgama centralizada tradicional."
+            },
+            {
+                slideNum: 5,
+                time: "2:45 - 4:15 (Tiempo acumulado)",
+                focus: "Topologías HFL, VFL y FTL",
+                script: "La clasificación metodológica del aprendizaje federado se rige por la alineación de los espacios de características (features) y muestras (samples) entre los participantes. El Aprendizaje Federado Horizontal (HFL) se aplica cuando los clientes comparten el mismo espacio de características pero difieren en las muestras. Es el esquema predominante en telecomunicaciones móviles e IoT, donde dispositivos idénticos registran atributos homólogos de usuarios distintos. Por el contrario, el Aprendizaje Federado Vertical (VFL) interviene cuando múltiples instituciones poseen atributos y dimensiones de datos completamente diferentes sobre un mismo universo de individuos comunes. El VFL, crucial en los sectores financiero y de seguros, introduce la necesidad de determinar qué individuos se comparten en común mediante protocolos criptográficos de Intersección Privada de Conjuntos (PSI) basados en filtros de Bloom o Diffie-Hellman, evolucionando hacia técnicas asimétricas de Unión Privada de Conjuntos (PSU) para prevenir la fuga de membresía organizacional. Por último, el Aprendizaje de Transferencia Federado (FTL) opera ante escenarios con nula o mínima superposición en ambos espacios, proyectando los dominios asimétricos a un subespacio polinómico común mediante codificadores latentes. En cuanto a la orquestación de red, las jerarquías varían desde modelos centralizados estándar con un servidor maestro en la nube, arquitecturas puramente descentralizadas entre pares (P2P), hasta esquemas jerárquicos que introducen agregadores intermedios como servidores MEC en redes 5G para mitigar la saturación de los enlaces troncales."
+            },
+            {
+                slideNum: 6,
+                time: "4:15 - 5:45 (Tiempo acumulado)",
+                focus: "FedAvg vs FedProx vs SCAFFOLD",
+                script: "El núcleo motor del aprendizaje federado radica en sus algoritmos de agregación, diseñados para combatir el riesgo extremo de sobreajuste local (overfitting) y la deriva del cliente (client drift) inducida por datos Non-IID. El algoritmo Federated Averaging (FedAvg) constituye la línea base heurística: realiza un promedio ponderado estrictamente proporcional al volumen de datos local reportado por una fracción seleccionada de nodos. Presenta una alta eficiencia en entornos ideales (IID), pero sufre de inestabilidad severa y fallas de generalización ante heterogeneidad estadística. Para mitigar esta fragilidad, Federated Proximal (FedProx) introduce un término de regularización proximal en la función de pérdida local, restringiendo geométricamente las actualizaciones paramétricas dentro de un radio normativo respecto al modelo global. Esto ancla los nodos locales y permite que dispositivos con limitaciones de hardware entreguen trabajos parciales de forma segura. Dando un paso más adelante, SCAFFOLD ataca el sesgo sistemático local mediante técnicas de reducción de varianza, implementando una variable auxiliar denominada \"variante de control\" que mide la discrepancia entre la dirección del gradiente global y el local. Aunque SCAFFOLD erradica por completo la deriva del cliente y acelera la convergencia, posee la severa contrapartida de duplicar la sobrecarga de comunicación y el uso de memoria RAM a través de la red."
+            },
+            {
+                slideNum: 7,
+                time: "5:45 - 7:00 (Tiempo acumulado)",
+                focus: "Ecosistema Spark, Flower, Flare",
+                script: "La traslación del aprendizaje federado a producción a escala planetaria requiere una coexistencia simbiótica con los motores de ingeniería de Big Data convencionales. En la capa de software y frameworks de orquestación, herramientas open-source como Flower destacan por su diseño agnóstico apto para interactuar de forma flexible con PyTorch, TensorFlow o JAX en flotas masivas de clientes. Para entornos empresariales críticos, NVIDIA FLARE robustece los despliegues mediante encriptación basada en hardware sobre GPUs confidenciales, mientras que el marco FATE se consolida como un entorno especializado integral para tuberías de federación tanto horizontales como verticales. Infraestructuras analíticas de datos distribuidos como Apache Spark, Apache Hadoop y Apache Flink proveen la infraestructura basal irremplazable de almacenamiento masivo y administración de recursos mediante capas como HDFS y YARN. En estas integraciones híbridas, las interfaces de Spark, como PySpark y MLlib, procesan ingestas masivas en paralelo directamente en la memoria caché del clúster corporativo, actuando como un macro-cliente de alta disponibilidad dentro del consorcio federado sin quebrantar la soberanía de la información residente en sus granjas de servidores locales. Mientras Spark gestiona los procesos por lotes (batch), la integración emergente con plataformas de flujo continuo como Apache Storm o Apache Flink garantiza actualizaciones de tensores en milisegundos ante flujos variables de sensores distribuidos."
+            },
+            {
+                slideNum: 8,
+                time: "7:00 - 8:15 (Tiempo acumulado)",
+                focus: "Seguridad, envenenamiento y DP/MPC",
+                script: "La descentralización de los datos expande de manera intrínseca la superficie de ataques algorítmicos por parte de participantes maliciosos. Dentro de las vulnerabilidades adversarias, el envenenamiento de datos (data poisoning) manipula las muestras de entrenamiento mediante técnicas pasivas como la inversión de etiquetas (Label Flipping). Con una letalidad superior se despliega el envenenamiento de modelos (model poisoning o Feature Poisoning), donde los atacantes alteran directamente los gradientes vectoriales transmitidos al orquestador empleando Redes Generativas Antagónicas (como PT-GAN) para inyectar perturbaciones matemáticas mínimas imperceptibles. Las estrategias defensivas abarcan desde esquemas probabilísticos como la Selección Profunda Aleatoria de Características hasta análisis pos-mortem basados en modelos de clusterización espacial y One-class-SVM para segregar vectores sospechosos. Por otra parte, para mitigar los ataques de Inferencia de Membresía —orientados a deducir si un individuo específico formó parte del entrenamiento descifrando las fluctuaciones de los pesos— el estado del arte bascula entre dos paradigmas criptográficos formales: la Privacidad Diferencial (DP), que inyecta ruido estocástico gaussiano o laplaciano sobre los gradientes sacrificando la utilidad y precisión absoluta del modelo final debido al presupuesto de privacidad (e), y la Computación Segura Multiparte (MPC). MPC rechaza aproximaciones probabilísticas y emplea Cifrado Homomórfico o Compartición de Secretos para realizar operaciones matemáticas reales sobre tensores encriptados sin descifrarlos, preservando el 100% de la precisión del modelo original al coste de una severa explosión en las demandas de conectividad de fibra óptica y procesamiento en el dispositivo."
+            },
+            {
+                slideNum: 9,
+                time: "8:15 - 9:30 (Tiempo acumulado)",
+                focus: "NWDAF Core, 5G-A/6G y MELLODDY",
+                script: "La viabilidad empírica del aprendizaje federado se materializa en sectores de alto impacto científico y económico. En ciencias de la salud, consorcios como MELLODDY orquestan colaboraciones P2P para el descubrimiento acelerado de medicamentos entre multinacionales farmacéuticas competitivas, mientras que plataformas como Kakao Healthcare integran nodos hospitalarios sobre Google Kubernetes Engine reduciendo los marcos de calibración predictiva en cáncer de mama terminal de dos años a solo cuatro meses. En el sector financiero y RegTech, posibilita el despliegue de redes transnacionales antifraude integrando marcos de interpretabilidad como FML-XAI, y en Smart Cities viabiliza la optimización de Sistemas de Transporte Inteligentes (ITS) y constelaciones de drones (UAVs) que ejecutan descensos de gradiente cooperativos minimizando costes energéticos perimetrales. Esta escala de rendimiento converge inseparablemente con los límites telemáticos celulares. El Proyecto Asociación de Tercera Generación (3GPP) estandarizó el análisis estocástico mediante la Función de Analítica de Datos de Red (NWDAF) incrustada en el núcleo de la arquitectura 5G, ramificada en una Función Lógica Analítica (AnLF) para inferencia local en microservicios y una Función Lógica de Entrenamiento de Modelos (MTLF) que actúa como incubadora estadística. Durante la transición al 5G-Advanced (Release 18), se han extendido protocolos de seguridad y certificados de autenticación basados en OAuth 2.0 a nivel granular para salvaguardar la propiedad intelectual de los modelos. Con la mirada puesta en el horizonte de 6G (Releases 19 y 20 hacia el año 2030), se integrarán anchos de banda sin fricción que permitirán transferencias asíncronas analíticas y divisiones funcionales de flujos tensoriales que alcanzarán límites teóricos descendentes de hasta 1.1 Gbps bajo condiciones extremas de alta densidad poblacional, convirtiendo al aprendizaje federado en la maquinaria de supervivencia para enrutamientos autónomos y gestión inteligente de radiofrecuencia (RRM)."
+            },
+            {
+                slideNum: 10,
+                time: "9:30 - 10:00 (Tiempo acumulado)",
+                focus: "Futuras fronteras, LLM y satélites LEO",
+                script: "Las fronteras de investigación científica actual se concentran en disolver los últimos cuellos de botella del procesamiento analítico distribuyendo los modelos a hiper-escala. En el ámbito de los Grandes Modelos de Lenguaje surge el campo del FedLLM, concentrado en operaciones post-entrenamiento (instruction tuning y alineación ética de preferencias) empleando esquemas PEFT abstractos como la Adaptación Robusta de Bajo Rango (LoRA) a través de infraestructuras enterprise como FATE-LLM y marcos de testeo hiperrealistas como FedLLM-Bench. En entornos hiper-técnicos estancos que resguardan información de nicho cerrada, un FedLLM local de baja escala demuestra cotas de rendimiento semántico empíricamente superiores a los macro-sistemas monolíticos centralizados cerrados. Paralelamente, el Aprendizaje Federado Personalizado (PFL) descarta la convergencia forzada en un único vector global mediante la inyección de mecanismos de destilación cognitiva dinámica (como pFedKA o el marco FUELS basado en aprendizaje contrastivo espacio-temporal), permitiendo que cada cliente preserve las desviaciones analíticas beneficiosas que encapsulan su idiosincrasia particular sin deteriorar su esqueleto general. Finalmente, para mitigar la latencia terminal en escenarios con intermitencia extrema u órbitas aeroespaciales satelitales (LEO) donde las comunicaciones iterativas multi-ronda tradicionales son inviables, surge el Aprendizaje Federado de Un Solo Paso (One-Shot FL). Arquitecturas de vanguardia como YOCO (You Only Communicate Once) apalancan la disociación matricial adaptativa LoRA para limitar exhaustivamente el intercambio de información a un requerimiento porcentual absurdo: aproximadamente el 0.03% del volumen de interacciones tradicional, consolidando una precisión topológica invariante frente a entornos adversos. En conclusión, el aprendizaje federado ha superado sus estadios formativos más vulnerables para erigirse no como una simple capa de ofuscación, sino como la infraestructura analítica y matemática irrenunciable sobre la cual se procesará inevitablemente el conocimiento distribuido de las próximas décadas bajo un resguardo de opacidad perimetral ética total."
+            },
+            {
+                slideNum: 11,
+                time: "Final (Cierre)",
+                focus: "Q&A, cierre y ronda de preguntas",
+                script: "Para finalizar, abrimos el turno de preguntas y debate técnico. Agradecemos profundamente su atención durante estos diez minutos de disertación conceptual y quedamos a su entera disposición para resolver cualquier duda respecto a los algoritmos de agregación, las topologías de red perimetrales, o los esquemas de encriptación homomórfica expuestos en la presentación. Muchas gracias."
+            }
+        ];
+
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const totalSlides = slides.length;
+
+        // Elementos del panel del ponente
+        const notesPanel = document.getElementById('speakerNotesPanel');
+        const notesToggleBtn = document.getElementById('notesToggleBtn');
+        const notesSlideNum = document.getElementById('notesSlideNum');
+        const notesScriptText = document.getElementById('notesScriptText');
+        const notesSuggestedTime = document.getElementById('notesSuggestedTime');
+        const notesFocusPoint = document.getElementById('notesFocusPoint');
+
+        // Cronómetro
+        let stopwatchTimer = null;
+        let stopwatchSeconds = 0;
+        let stopwatchRunning = false;
+        const stopwatchDisplay = document.getElementById('stopwatchDisplay');
+        const stopwatchBtn = document.getElementById('stopwatchBtn');
+
+        // Inicialización y Actualización de UI
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / totalSlides) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${totalSlides}`;
+            
+            // Actualizar notas del ponente
+            updateSpeakerNotes();
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + totalSlides) % totalSlides;
+            updateUI();
+        }
+
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
+        }
+
+        // Teclado para controlar diapositivas
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") {
+                e.preventDefault();
+                changeSlide(1);
+            }
+            if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                changeSlide(-1);
+            }
+            if (e.key.toLowerCase() === "n") {
+                e.preventDefault();
+                toggleSpeakerNotes();
+            }
+        });
+
+        // Funciones del Panel del Ponente
+        function toggleSpeakerNotes() {
+            notesPanel.classList.toggle('open');
+            notesToggleBtn.classList.toggle('active');
+        }
+
+        function updateSpeakerNotes() {
+            const data = speakerNotesData[currentIdx];
+            if (data) {
+                notesSlideNum.innerText = data.slideNum;
+                notesScriptText.innerHTML = data.script;
+                notesSuggestedTime.innerText = data.time;
+                notesFocusPoint.innerText = data.focus;
+            }
+        }
+
+        // Cronómetro de Ensayo
+        function toggleStopwatch() {
+            if (stopwatchRunning) {
+                // Pausar
+                clearInterval(stopwatchTimer);
+                stopwatchBtn.innerText = "Reanudar";
+                stopwatchRunning = false;
+            } else {
+                // Iniciar
+                stopwatchBtn.innerText = "Pausar";
+                stopwatchRunning = true;
+                stopwatchTimer = setInterval(() => {
+                    stopwatchSeconds++;
+                    const minutes = Math.floor(stopwatchSeconds / 60);
+                    const seconds = stopwatchSeconds % 60;
+                    stopwatchDisplay.innerText = 
+                        (minutes < 10 ? "0" + minutes : minutes) + ":" + 
+                        (seconds < 10 ? "0" + seconds : seconds);
+                }, 1000);
+            }
+        }
+
+        function resetStopwatch() {
+            clearInterval(stopwatchTimer);
+            stopwatchSeconds = 0;
+            stopwatchDisplay.innerText = "00:00";
+            stopwatchBtn.innerText = "Iniciar";
+            stopwatchRunning = false;
+        }
+
+        // Diapositiva 3: Control del comparador interactivo
+        function switchComparator(type) {
+            document.getElementById('compBtnCentral').classList.toggle('active', type === 'central');
+            document.getElementById('compBtnFed').classList.toggle('active', type === 'fed');
+            
+            document.getElementById('compViewCentral').classList.toggle('active', type === 'central');
+            document.getElementById('compViewFed').classList.toggle('active', type === 'fed');
+        }
+
+        // Diapositiva 4: Control de Pestañas
+        function switchTab(tabId) {
+            document.getElementById('tabBtnCiclo').classList.toggle('active', tabId === 'ciclo');
+            document.getElementById('tabBtn7v').classList.toggle('active', tabId === '7v');
+            
+            document.getElementById('tabCiclo').classList.toggle('active', tabId === 'ciclo');
+            document.getElementById('tab7v').classList.toggle('active', tabId === '7v');
+        }
+
+        // Diapositiva 7: Control del stack de arquitectura
+        function showLayerDetail(layer) {
+            const titleEl = document.getElementById('layerDetailTitle');
+            const descEl = document.getElementById('layerDetailDesc');
+            
+            if (layer === 'frameworks') {
+                titleEl.innerText = "Capa 3: Frameworks de FL (Flower, Flare, FATE)";
+                titleEl.style.color = "var(--accent-purple)";
+                descEl.innerHTML = "• <strong>Flower:</strong> Destaca por su diseño extremadamente ligero y agnóstico, apto para interactuar de forma flexible con flotas masivas de clientes Android, iOS o IoT usando PyTorch o TensorFlow.<br><br>• <strong>NVIDIA FLARE:</strong> Robustece la seguridad empresarial mediante encriptación basada en hardware sobre GPUs confidenciales y control de accesos granulares.<br><br>• <strong>FATE:</strong> Ecosistema especializado e integral que provee tuberías visuales analíticas complejas tanto horizontales como verticales para el consorcio.";
+            } else if (layer === 'motores') {
+                titleEl.innerText = "Capa 2: Procesamiento Analítico (Apache Spark/Flink)";
+                titleEl.style.color = "var(--accent-blue)";
+                descEl.innerHTML = "• <strong>Apache Spark:</strong> A través de PySpark y MLlib, procesa ingestas analíticas masivas en paralelo directamente en la memoria caché RAM de los clústeres empresariales, actuando como un macro-cliente de alta disponibilidad dentro del consorcio federado.<br><br>• <strong>Apache Flink / Storm:</strong> Plataformas de procesamiento de flujo continuo perimetral que garantizan actualizaciones de tensores y agregaciones en milisegundos, ideal ante flujos variables de sensores distribuidos.";
+            } else if (layer === 'infra') {
+                titleEl.innerText = "Capa 1: Infraestructura y Almacenamiento (Hadoop/K8s)";
+                titleEl.style.color = "var(--accent-green)";
+                descEl.innerHTML = "• <strong>Hadoop HDFS & YARN:</strong> Proveen la infraestructura basal irremplazable de almacenamiento masivo redundante local y administración distribuida de recursos perimetrales.<br><br>• <strong>Kubernetes (GKE/EKS):</strong> Orquestación nativa en la nube. Permite instanciar y escalar contenedores de entrenamiento federado local de forma elástica sobre granjas de servidores distribuidas globalmente de manera transparente al ML.";
+            }
+        }
+
+        // Inicializar la UI al cargar
+        updateUI();
+    </script>
+</body>
+
+</html>
