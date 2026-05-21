@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA en Análisis Forense - Auditoría Informática</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .hero-forense {
+            background: linear-gradient(rgba(2, 6, 23, 0.88), rgba(2, 6, 23, 0.88)), url('media/forensic_hero.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .ai-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            padding: 1.5rem;
+            border-radius: 20px;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .ai-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .ai-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .badge-tech {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            width: fit-content;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .timeline-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .timeline-step {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-light);
+            padding: 1.2rem;
+            border-radius: 16px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .timeline-step:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary);
+        }
+
+        .timeline-step::after {
+            content: '→';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.5rem;
+            z-index: 10;
+        }
+
+        .timeline-step:last-child::after {
+            content: '';
+        }
+
+        .audit-alert {
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-left: 4px solid var(--accent-red);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .audit-alert-icon {
+            font-size: 1.5rem;
+            color: var(--accent-red);
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-container {
+                flex-direction: column;
+            }
+            .timeline-step::after {
+                content: '↓';
+                bottom: -15px;
+                right: 50%;
+                left: 50%;
+                top: auto;
+                transform: translateX(-50%);
+            }
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body class="presentation-mode">
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html"
+                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon">A</div>
+                <div class="brand">
+                    <h1>Auditoría Informática</h1>
+                    <span>IA en Análisis Forense</span>
+                </div>
+            </a>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">
+            CURSO 2025/26
+        </div>
+    </nav>
+
+    <div id="progress" class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="presentation-viewport">
+        <!-- Diapositiva 1: Portada -->
+        <div class="slide active hero-forense">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Inteligencia Artificial en Análisis Forense</h1>
+            <p class="slide-subtitle">Automatización, Retos de Auditoría y Desafíos Legales</p>
+
+            <div class="authors-box">
+                <p style="color: var(--primary); font-weight: bold; font-size: 0.8rem; letter-spacing: 0.1em; margin-bottom: 1rem; text-transform: uppercase;">
+                    Realizado por:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 600px; margin: 0 auto;">
+                    <div class="author-tag">Raúl Gómez Téllez</div>
+                    <div class="author-tag">Víctor Aguilar Méndez</div>
+                    <div class="author-tag">Rubén Ramírez Peña</div>
+                    <div class="author-tag">Jaime M. Cazalla</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">01 / 10</div>
+        </div>
+
+        <!-- Diapositiva 2: Índice -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Índice de Contenidos</h1>
+            <p class="slide-subtitle">Estructura del Análisis Forense con IA</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 1rem;">
+                <div onclick="goToSlide(3)" class="index-item"><div class="index-num">1</div> Introducción al Forense Digital e IA</div>
+                <div onclick="goToSlide(4)" class="index-item"><div class="index-num">2</div> Aplicaciones Clave de la IA</div>
+                <div onclick="goToSlide(5)" class="index-item"><div class="index-num">3</div> Técnicas y Algoritmos Relevantes</div>
+                <div onclick="goToSlide(6)" class="index-item"><div class="index-num">4</div> El Rol del Auditor de Sistemas</div>
+                <div onclick="goToSlide(7)" class="index-item"><div class="index-num">5</div> Desafíos Legales y Cadena de Custodia</div>
+                <div onclick="goToSlide(8)" class="index-item"><div class="index-num">6</div> Caso Práctico: Triage de Data Breach</div>
+                <div onclick="goToSlide(9)" class="index-item"><div class="index-num">7</div> Conclusiones y Futuro</div>
+                <div onclick="goToSlide(10)" class="index-item"><div class="index-num">8</div> Bibliografía y Estándares</div>
+            </div>
+            <div class="slide-internal-num">02 / 10</div>
+        </div>
+
+        <!-- Diapositiva 3: Introducción -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">El Desafío Forense en la Era del Big Data</h1>
+            <p class="slide-subtitle">1. Introducción al Análisis Forense Digital e IA</p>
+            <div class="data-grid" style="margin-top: 1rem;">
+                <div class="data-card">
+                    <h3>Terabytes</h3>
+                    <p>Volumen de evidencias por dispositivo incautado en investigaciones típicas.</p>
+                </div>
+                <div class="data-card">
+                    <h3>Triage Automatizado</h3>
+                    <p>Necesidad crítica de identificar patrones y evidencias clave en las primeras horas.</p>
+                </div>
+            </div>
+            <div style="margin-top: 1.5rem; line-height: 1.6;">
+                <p>El análisis forense digital clásico se enfrenta a un cuello de botella físico y cognitivo. La <strong>Inteligencia Artificial</strong> no reemplaza al perito judicial, sino que actúa como un <strong>multiplicador de capacidad</strong> para procesar, estructurar y correlacionar grandes volúmenes de datos heterogéneos.</p>
+            </div>
+            <div class="slide-internal-num">03 / 10</div>
+        </div>
+
+        <!-- Diapositiva 4: Aplicaciones Clave -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Aplicaciones Clave en la Práctica Forense</h1>
+            <p class="slide-subtitle">2. ¿Dónde aporta valor la Inteligencia Artificial?</p>
+            <div class="grid-3">
+                <div class="ai-card">
+                    <div class="ai-icon">🔍</div>
+                    <h4 style="font-weight: 700;">Análisis de Redes y Logs</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-dim); line-height: 1.4;">Correlación masiva de logs en milisegundos y detección de tácticas y técnicas evasivas persistentes.</p>
+                </div>
+                <div class="ai-card">
+                    <div class="ai-icon">🛡️</div>
+                    <h4 style="font-weight: 700;">Ingeniería Inversa de Malware</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-dim); line-height: 1.4;">Clasificación heurística e inteligente de variantes polimórficas y empaquetadas sin firmas previas.</p>
+                </div>
+                <div class="ai-card">
+                    <div class="ai-icon">👁️</div>
+                    <h4 style="font-weight: 700;">Forense Multimedia</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-dim); line-height: 1.4;">Detección sistemática de manipulaciones digitales (Deepfakes) y clasificación masiva de imágenes incautadas.</p>
+                </div>
+            </div>
+            <div class="slide-internal-num">04 / 10</div>
+        </div>
+
+        <!-- Diapositiva 5: Técnicas y Algoritmos -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Técnicas y Algoritmos Forenses de IA</h1>
+            <p class="slide-subtitle">3. Herramientas Matemáticas Detrás de las Investigaciones</p>
+            <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1.5rem; margin-top: 1rem;">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div class="index-item" style="margin-bottom: 0; padding: 0.8rem 1.2rem;">
+                        <div class="index-num">NLP</div>
+                        <div><strong>Procesamiento de Lenguaje Natural:</strong> Extracción de entidades y análisis semántico en chats, correos y logs de auditoría estructurados.</div>
+                    </div>
+                    <div class="index-item" style="margin-bottom: 0; padding: 0.8rem 1.2rem;">
+                        <div class="index-num">ML</div>
+                        <div><strong>Clustering No Supervisado:</strong> Agrupación de anomalías en el comportamiento de usuarios (UBA) para detectar exfiltración silenciosa de datos.</div>
+                    </div>
+                    <div class="index-item" style="margin-bottom: 0; padding: 0.8rem 1.2rem;">
+                        <div class="index-num">DL</div>
+                        <div><strong>Deep Learning (CNNs y RNNs):</strong> Detección de esteganografía y análisis de secuencias temporales en llamadas a la API del kernel por malware.</div>
+                    </div>
+                </div>
+                <div class="data-card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; border-color: var(--primary);">
+                    <span style="font-size: 3rem; display: block; margin-bottom: 0.5rem;">🤖</span>
+                    <strong style="color: var(--primary); font-size: 1.1rem;">Modelos Híbridos</strong>
+                    <p style="font-size: 0.75rem; text-align: center; margin-top: 0.5rem; text-transform: none;">La combinación de aprendizaje supervisado para ataques conocidos y no supervisado para incidentes <i>Zero-Day</i> es el estándar actual.</p>
+                </div>
+            </div>
+            <div class="slide-internal-num">05 / 10</div>
+        </div>
+
+        <!-- Diapositiva 6: Rol del Auditor -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">¿Quién Audita la IA? El Rol del Auditor</h1>
+            <p class="slide-subtitle">4. Criterios de Evaluación y Buenas Prácticas</p>
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 1rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 15px; background: rgba(255, 255, 255, 0.02); padding: 1rem; border-radius: 12px; border: 1px solid var(--border-light);">
+                    <div style="font-weight: bold; color: var(--primary);">1. Evitar la "Caja Negra"</div>
+                    <div style="font-size: 0.85rem; color: var(--text-dim);">El auditor informático debe exigir que las herramientas forenses basadas en IA documenten sus modelos, umbrales y conjuntos de entrenamiento para ser auditables.</div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 15px; background: rgba(255, 255, 255, 0.02); padding: 1rem; border-radius: 12px; border: 1px solid var(--border-light);">
+                    <div style="font-weight: bold; color: var(--primary);">2. Validación de Sesgos</div>
+                    <div style="font-size: 0.85rem; color: var(--text-dim);">Evaluación exhaustiva de falsos positivos (que agotan al equipo de respuesta) y falsos negativos (que ocultan incidentes críticos) en las herramientas analíticas.</div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 15px; background: rgba(255, 255, 255, 0.02); padding: 1rem; border-radius: 12px; border: 1px solid var(--border-light);">
+                    <div style="font-weight: bold; color: var(--primary);">3. Pistas de Auditoría (Audit Trails)</div>
+                    <div style="font-size: 0.85rem; color: var(--text-dim);">Garantizar que cada decisión autónoma tomada por la IA de clasificación y filtrado de evidencias quede registrada y sellada temporalmente.</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">06 / 10</div>
+        </div>
+
+        <!-- Diapositiva 7: Desafíos Legales -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Desafíos Legales y Cadena de Custodia</h1>
+            <p class="slide-subtitle">5. Admisibilidad y Cumplimiento en el Ámbito Judicial</p>
+            <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 1.5rem; margin-top: 1rem;">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <h4 style="color: var(--primary); font-weight: 700;">Estándares de Admisibilidad (Daubert)</h4>
+                    <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dim);">
+                        Para que una evidencia procesada por IA sea admisible, el método debe ser contrastable, estar sujeto a revisión por pares, poseer una tasa de error conocida y contar con la aceptación de la comunidad científica.
+                    </p>
+                    <h4 style="color: var(--primary); font-weight: 700; margin-top: 0.5rem;">Preservación e Integridad</h4>
+                    <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dim);">
+                        La IA debe actuar sobre copias bit a bit de los dispositivos y no directamente sobre los originales. Los hashes (SHA-256) deben validarse de manera previa y posterior a la intervención de algoritmos automatizados.
+                    </p>
+                </div>
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <div class="audit-alert">
+                        <div class="audit-alert-icon">⚠️</div>
+                        <div style="font-size: 0.8rem; line-height: 1.4;">
+                            <strong>Advertencia Legal:</strong> Si una herramienta de IA altera metadatos (como marcas de tiempo MAC) durante su análisis sin control, la evidencia puede ser <strong>impugnada</strong> en sede judicial.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-internal-num">07 / 10</div>
+        </div>
+
+        <!-- Diapositiva 8: Caso Práctico -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Caso Práctico: Triage de Brecha de Datos</h1>
+            <p class="slide-subtitle">6. Escenario de Respuesta Forense a Exfiltración Corporativa</p>
+            
+            <div class="timeline-container">
+                <div class="timeline-step">
+                    <div class="badge-tech">PASO 01</div>
+                    <strong style="font-size: 0.9rem;">Incidente Detectado</strong>
+                    <p style="font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">Un endpoint transmite gigabytes sospechosos por canales cifrados HTTP/S no estándar.</p>
+                </div>
+                <div class="timeline-step">
+                    <div class="badge-tech">PASO 02</div>
+                    <strong style="font-size: 0.9rem;">Intervención de la IA</strong>
+                    <p style="font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">El SIEM cognitivo reconstruye la línea temporal de comandos ejecutados en 12 hosts en segundos.</p>
+                </div>
+                <div class="timeline-step">
+                    <div class="badge-tech">PASO 03</div>
+                    <strong style="font-size: 0.9rem;">Verificación Humana</strong>
+                    <p style="font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">El perito recibe el árbol de ataque estructurado y la tasa de confianza de la IA del 99.4%.</p>
+                </div>
+            </div>
+
+            <div class="data-card" style="margin-top: 1.5rem; text-align: left; padding: 1rem 1.5rem;">
+                <p style="font-size: 0.8rem; line-height: 1.4; color: var(--text-main); text-transform: none;">
+                    <strong>Resultado:</strong> El tiempo de resolución y aislamiento del host origen de la brecha se redujo de <strong>18 horas</strong> (análisis manual de logs de firewall y eventos de Windows) a tan solo <strong>9 minutos</strong>.
+                </p>
+            </div>
+            <div class="slide-internal-num">08 / 10</div>
+        </div>
+
+        <!-- Diapositiva 9: Conclusiones -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Conclusiones</h1>
+            <p class="slide-subtitle">7. El Futuro del Análisis Forense y la Auditoría</p>
+            <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1.5rem; margin-top: 1rem;">
+                <div>
+                    <ul style="margin: 0; padding: 0;">
+                        <li style="font-size: 0.9rem; line-height: 1.4; margin-bottom: 10px;"><span>La IA es una <strong>herramienta de asistencia</strong> indispensable frente al volumen de datos moderno, no un sustituto del criterio humano.</span></li>
+                        <li style="font-size: 0.9rem; line-height: 1.4; margin-bottom: 10px;"><span>La <strong>explicabilidad (XAI)</strong> es la clave de bóveda: los algoritmos deben justificar sus inferencias para sostener acusaciones legales.</span></li>
+                        <li style="font-size: 0.9rem; line-height: 1.4; margin-bottom: 10px;"><span>Los auditores deben formarse en técnicas de <strong>IA adversarial</strong> para detectar ataques diseñados específicamente para burlar herramientas forenses.</span></li>
+                    </ul>
+                </div>
+                <div style="background: rgba(59, 130, 246, 0.03); border: 1px dashed var(--border); border-radius: 16px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                    <span style="font-size: 2.5rem; display: block; margin-bottom: 0.5rem;">⚖️</span>
+                    <strong style="color: var(--primary); font-size: 1rem;">"Human in the Loop"</strong>
+                    <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 5px; text-transform: none; line-height: 1.4;">La IA propone, categoriza y correlaciona; el auditor valida y el perito forense firma legalmente.</p>
+                </div>
+            </div>
+            <div class="slide-internal-num">09 / 10</div>
+        </div>
+
+        <!-- Diapositiva 10: Bibliografía -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Bibliografía y Referencias</h1>
+            <p class="slide-subtitle">8. Fuentes Académicas y Estándares Internacionales</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 12px; border: 1px solid var(--border-light);">
+                        <strong style="color: var(--primary); font-size: 0.85rem; display: block;">ISO/IEC 27037:2012</strong>
+                        <span style="font-size: 0.75rem; color: var(--text-dim); display: block; margin-top: 3px;">Directrices para la identificación, recolección, adquisición y preservación de evidencia digital.</span>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 12px; border: 1px solid var(--border-light);">
+                        <strong style="color: var(--primary); font-size: 0.85rem; display: block;">NIST SP 800-86</strong>
+                        <span style="font-size: 0.75rem; color: var(--text-dim); display: block; margin-top: 3px;">Guide to Integrating Forensic Techniques into Incident Response.</span>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 12px; border: 1px solid var(--border-light);">
+                        <strong style="color: var(--primary); font-size: 0.85rem; display: block;">RFC 3227 (IETF)</strong>
+                        <span style="font-size: 0.75rem; color: var(--text-dim); display: block; margin-top: 3px;">Guidelines for Evidence Collection and Archiving (Orden de volatilidad y preservación).</span>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 12px; border: 1px solid var(--border-light);">
+                        <strong style="color: var(--primary); font-size: 0.85rem; display: block;">IEEE Transactions on Cybernetics</strong>
+                        <span style="font-size: 0.75rem; color: var(--text-dim); display: block; margin-top: 3px;">Investigaciones y artículos académicos seleccionados sobre Aprendizaje Profundo aplicado a la detección de manipulaciones de medios.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-internal-num">10 / 10</div>
+        </div>
+    </div>
+
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <div class="page-indicator" id="pageIndicator">1 / 10</div>
+        <button class="nav-btn primary" onclick="changeSlide(1)">
+            Siguiente
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const totalSlides = slides.length;
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / totalSlides) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${totalSlides}`;
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + totalSlides) % totalSlides;
+            updateUI();
+        }
+
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+        });
+
+        updateUI();
+    </script>
+</body>
+
+</html>
