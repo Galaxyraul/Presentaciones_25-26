@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casos de Peritaje Informático Forense - Gómez & Ramírez</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .hero-peritaje {
+            background: linear-gradient(rgba(2, 6, 23, 0.9), rgba(2, 6, 23, 0.9)), url('media/peritaje_hero.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .forensic-case-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            padding: 1.5rem;
+            border-radius: 24px;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .forensic-case-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            background: rgba(59, 130, 246, 0.05);
+            box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.5);
+        }
+
+        .forensic-case-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+        }
+
+        .case-tag {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            width: fit-content;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .case-tag.red {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--accent-red);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .case-tag.green {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--accent-green);
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+
+        .timeline-forensic {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+            position: relative;
+        }
+
+        .timeline-forensic::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 10px;
+            bottom: 10px;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-forensic-item {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timeline-forensic-dot {
+            background: var(--card-bg);
+            border: 3px solid var(--primary);
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: var(--primary);
+            flex-shrink: 0;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+        }
+
+        .timeline-forensic-content {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-light);
+            padding: 1rem 1.25rem;
+            border-radius: 16px;
+            flex: 1;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            transition: var(--transition);
+        }
+
+        .timeline-forensic-content:hover {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .highlight-quote {
+            background: rgba(59, 130, 246, 0.03);
+            border: 1px dashed var(--border);
+            border-left: 4px solid var(--primary);
+            border-radius: 16px;
+            padding: 1.25rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-main);
+            position: relative;
+        }
+
+        .highlight-quote::after {
+            content: '"';
+            position: absolute;
+            right: 1.5rem;
+            bottom: 0.5rem;
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.03);
+            font-family: serif;
+            line-height: 0;
+        }
+
+        .forensic-tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .tool-badge {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-dim);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-family: monospace;
+            border: 1px solid var(--border);
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .timeline-forensic::before {
+                left: 15px;
+            }
+            .timeline-forensic-dot {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
+                border-width: 2px;
+            }
+        }
+    </style>
+</head>
+
+<body class="presentation-mode">
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html"
+                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon">A</div>
+                <div class="brand">
+                    <h1>Auditoría Informática</h1>
+                    <span>Casos de Peritaje Forense</span>
+                </div>
+            </a>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">
+            CURSO 2025/26
+        </div>
+    </nav>
+
+    <div id="progress" class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="presentation-viewport">
+        <!-- Diapositiva 1: Portada -->
+        <div class="slide active hero-peritaje">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title" style="font-size: 2.8rem;">Casos Reales de Peritaje Informático Forense</h1>
+            <p class="slide-subtitle">Evidencias Tecnológicas, Metodología y Defensa en Sala</p>
+
+            <div class="authors-box">
+                <p style="color: var(--primary); font-weight: bold; font-size: 0.8rem; letter-spacing: 0.1em; margin-bottom: 1rem; text-transform: uppercase;">
+                    Realizado por:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 600px; margin: 0 auto;">
+                    <div class="author-tag">Raúl Gómez Téllez</div>
+                    <div class="author-tag">Víctor Aguilar Méndez</div>
+                    <div class="author-tag">Rubén Ramírez Peña</div>
+                    <div class="author-tag">Jaime M. Cazalla</div>
+                </div>
+            </div>
+            <div class="slide-internal-num">01 / 11</div>
+        </div>
+
+        <!-- Diapositiva 2: Índice -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Índice de Contenidos</h1>
+            <p class="slide-subtitle">Estructura del Estudio de Casos</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 1rem;">
+                <div onclick="goToSlide(3)" class="index-item"><div class="index-num">1</div> El Rol del Perito vs. El Auditor</div>
+                <div onclick="goToSlide(4)" class="index-item"><div class="index-num">2</div> Metodología y Cadena de Custodia</div>
+                <div onclick="goToSlide(5)" class="index-item"><div class="index-num">3</div> Caso 1: Robo de IP (Waymo vs. Uber)</div>
+                <div onclick="goToSlide(6)" class="index-item"><div class="index-num">4</div> Caso 2: Estafa Financiera BEC</div>
+                <div onclick="goToSlide(7)" class="index-item"><div class="index-num">5</div> Caso 3: Ruta de la Seda (Silk Road)</div>
+                <div onclick="goToSlide(8)" class="index-item"><div class="index-num">6</div> Redacción del Informe Pericial</div>
+                <div onclick="goToSlide(9)" class="index-item"><div class="index-num">7</div> Defensa en Sala (Ratificación)</div>
+                <div onclick="goToSlide(10)" class="index-item"><div class="index-num">8</div> Conclusiones del Peritaje</div>
+                <div onclick="goToSlide(11)" class="index-item"><div class="index-num">9</div> Bibliografía y Estándares</div>
+            </div>
+            <div class="slide-internal-num">02 / 11</div>
+        </div>
+
+        <!-- Diapositiva 3: Perito vs Auditor -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">El Perito vs. El Auditor</h1>
+            <p class="slide-subtitle">1. Diferenciación de Roles en la Disciplina Tecnológica</p>
+            
+            <div class="grid-2" style="margin-top: 1rem;">
+                <div class="forensic-case-card">
+                    <div class="case-tag">Auditor Informático</div>
+                    <strong style="font-size: 1.1rem; color: var(--text-main);">Evaluación y Control</strong>
+                    <p style="font-size: 0.8rem; color: var(--text-dim); line-height: 1.5;">
+                        • <strong>Preventivo y organizativo:</strong> Asegura el cumplimiento de marcos y estándares.<br>
+                        • <strong>Ámbito:</strong> Normativas, procesos y políticas (ISO 27001, ENS, COBIT).<br>
+                        • <strong>Meta:</strong> Propuesta de planes de mejora continua.
+                    </p>
+                    <span style="font-size: 0.75rem; color: var(--primary); font-weight: bold;">"¿Cumple la organización las normas?"</span>
+                </div>
+                <div class="forensic-case-card" style="border-color: rgba(59,130,246,0.3);">
+                    <div class="case-tag green">Perito Judicial Informático</div>
+                    <strong style="font-size: 1.1rem; color: var(--text-main);">Investigación de Hechos</strong>
+                    <p style="font-size: 0.8rem; color: var(--text-dim); line-height: 1.5;">
+                        • <strong>Reactivo y forense:</strong> Obtención de evidencias para litigios judiciales.<br>
+                        • <strong>Ámbito:</strong> Investigaciones concretas (Penal, Laboral, Civil).<br>
+                        • <strong>Meta:</strong> Auxiliar al Juez de forma científica y objetiva.
+                    </p>
+                    <span style="font-size: 0.75rem; color: var(--accent-green); font-weight: bold;">"¿Qué ocurrió exactamente y quién lo hizo?"</span>
+                </div>
+            </div>
+
+            <div class="highlight-quote" style="margin-top: 1rem; font-size: 0.8rem;">
+                <strong>Clave Judicial:</strong> La Ley de Enjuiciamiento Civil (LEC Art. 340) habilita al perito para emitir dictámenes en el ámbito judicial basándose en conocimientos científicos, artísticos, prácticos o técnicos.
+            </div>
+            <div class="slide-internal-num">03 / 11</div>
+        </div>
+
+        <!-- Diapositiva 4: Metodología y Cadena de Custodia -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Metodología y Cadena de Custodia</h1>
+            <p class="slide-subtitle">2. Rigor Científico y Admisibilidad Legal</p>
+            
+            <div class="timeline-forensic">
+                <div class="timeline-forensic-item">
+                    <div class="timeline-forensic-dot">01</div>
+                    <div class="timeline-forensic-content" style="padding: 0.6rem 1.25rem;">
+                        <strong>Preservación:</strong> Localización de fuentes y bloqueo inmediato de escritura físico/lógico.
+                    </div>
+                </div>
+                <div class="timeline-forensic-item">
+                    <div class="timeline-forensic-dot">02</div>
+                    <div class="timeline-forensic-content" style="padding: 0.6rem 1.25rem;">
+                        <strong>Adquisición:</strong> Clonado bit a bit exacto (E01/RAW) y firma digital criptográfica (hashes).
+                    </div>
+                </div>
+                <div class="timeline-forensic-item">
+                    <div class="timeline-forensic-dot">03</div>
+                    <div class="timeline-forensic-content" style="padding: 0.6rem 1.25rem;">
+                        <strong>Análisis:</strong> Examen no destructivo en copia con software certificado y trazable.
+                    </div>
+                </div>
+            </div>
+
+            <div class="forensic-tools" style="margin-top: 1rem; justify-content: center;">
+                <span class="tool-badge">Estándar ISO/IEC 27037</span>
+                <span class="tool-badge">Estándar UNE 71506 (España)</span>
+                <span class="tool-badge">Bloqueadores de escritura (Write Blockers)</span>
+                <span class="tool-badge">Admisibilidad según Daubert</span>
+            </div>
+            <div class="slide-internal-num">04 / 11</div>
+        </div>
+
+        <!-- Diapositiva 5: Caso 1 -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title" style="font-size: 2.5rem;">Caso 1: Robo de IP (Waymo vs. Uber)</h1>
+            <p class="slide-subtitle">3. Exfiltración Corporativa de Alta Tecnología (Caso Levandowski)</p>
+            
+            <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 1.5rem; margin-top: 0.5rem;">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div class="case-tag red">Hechos Reales</div>
+                    <p style="font-size: 0.85rem; line-height: 1.5;">
+                        A. Levandowski exfiltró <strong>14.000 planos de LIDAR</strong> (Waymo) a su portátil personal antes de irse a Uber.
+                    </p>
+                    <strong style="color: var(--primary); font-size: 0.9rem; margin-top: 5px;">Evidencias Forenses Clave:</strong>
+                    <ul style="margin: 0; padding: 0;">
+                        <li style="font-size: 0.8rem; padding: 6px 12px; margin-bottom: 5px;">
+                            <span><strong>SetupAPI.dev.log:</strong> Conexión demostrada de discos duros externos personales.</span>
+                        </li>
+                        <li style="font-size: 0.8rem; padding: 6px 12px; margin-bottom: 5px;">
+                            <span><strong>Shellbags y LNKs:</strong> Pruebas de navegación y apertura de planos exfiltrados.</span>
+                        </li>
+                        <li style="font-size: 0.8rem; padding: 6px 12px; margin-bottom: 5px;">
+                            <span><strong>CCleaner en MFT:</strong> Rastro forense del borrado deliberado de evidencias.</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center;">
+                    <div class="forensic-case-card" style="border-color: rgba(239,68,68,0.2);">
+                        <strong style="font-size: 0.95rem; color: var(--accent-red);">Consecuencias Legales y Corporativas</strong>
+                        <p style="font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">
+                            El riguroso peritaje informático forzó a Uber a firmar un acuerdo extrajudicial cediendo el 0.34% de sus acciones a Waymo (<strong>$245 millones</strong>). Levandowski fue condenado a <strong>18 meses de prisión</strong> por robo de secretos comerciales.
+                        </p>
+                        <div class="forensic-tools">
+                            <span class="tool-badge">MFT Analysis</span>
+                            <span class="tool-badge">USB Forensics</span>
+                            <span class="tool-badge">LNK Parser</span>
+                            <span class="tool-badge">FTK Imager</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-internal-num">05 / 11</div>
+        </div>
+
+        <!-- Diapositiva 6: Caso 2 -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title" style="font-size: 2.4rem;">Caso 2: Business Email Compromise (BEC)</h1>
+            <p class="slide-subtitle">4. Suplantación de Identidad y Fraude Financiero</p>
+            
+            <div style="display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 1.5rem; margin-top: 0.5rem;">
+                <div style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
+                    <div class="forensic-case-card" style="border-color: rgba(34, 197, 94, 0.2);">
+                        <strong style="font-size: 0.95rem; color: var(--accent-green);">El Escenario</strong>
+                        <p style="font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">
+                            Intercepción y desvío de <strong>€120.000</strong> en facturas de proveedor. ¿De quién es la responsabilidad de la brecha?
+                        </p>
+                        <strong style="font-size: 0.85rem; margin-top: 5px;">Objetivo del Peritaje:</strong>
+                        <p style="font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">
+                            Determinar qué servidor de correo sufrió la intrusión para establecer responsabilidades.
+                        </p>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div class="case-tag green">Evidencias Clave</div>
+                    <ul style="margin: 0; padding: 0;">
+                        <li style="font-size: 0.78rem; padding: 6px 12px; margin-bottom: 5px;">
+                            <span><strong>Reglas en Exchange:</strong> Desvío a 'Eliminados' de correos con palabras clave ('factura', 'banco') para ocultar el hackeo.</span>
+                        </li>
+                        <li style="font-size: 0.78rem; padding: 6px 12px; margin-bottom: 5px;">
+                            <span><strong>Headers y SPF/DKIM:</strong> Fallos de alineación SPF y uso de dominio clonado (<i>typosquatting</i>).</span>
+                        </li>
+                        <li style="font-size: 0.78rem; padding: 6px 12px; margin-bottom: 5px;">
+                            <span><strong>Unified Audit Logs:</strong> Accesos al buzón desde IPs asociadas a VPNs comerciales y Tor.</span>
+                        </li>
+                    </ul>
+                    <div class="forensic-tools" style="justify-content: flex-end;">
+                        <span class="tool-badge">SPF/DKIM/DMARC</span>
+                        <span class="tool-badge">Exchange Logs</span>
+                        <span class="tool-badge">Header Analysis</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-internal-num">06 / 11</div>
+        </div>
+
+        <!-- Diapositiva 7: Caso 3 -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title" style="font-size: 2.5rem;">Caso 3: Silk Road (Ruta de la Seda)</h1>
+            <p class="slide-subtitle">5. Admisibilidad de Evidencias en Sistemas Cifrados (Caso Ulbricht)</p>
+            
+            <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1.5rem; margin-top: 0.5rem;">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div class="case-tag red">El Gran Reto</div>
+                    <p style="font-size: 0.8rem; line-height: 1.4;">
+                        Capturar el portátil de Ross Ulbricht (<i>Silk Road</i>) encendido y desbloqueado para evitar el cifrado AES completo.
+                    </p>
+                    <strong style="color: var(--primary); font-size: 0.85rem; margin-top: 5px;">Hito Forense: La Captura Activa ("The Snatch")</strong>
+                    <p style="font-size: 0.8rem; line-height: 1.4; color: var(--text-dim);">
+                        Distracción en biblioteca pública y sustracción del equipo activo mientras chateaba como administrador.
+                    </p>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; justify-content: center; gap: 10px;">
+                    <div class="forensic-case-card" style="padding: 1.2rem; border-color: rgba(59,130,246,0.2);">
+                        <strong style="font-size: 0.9rem; color: var(--primary);">Evidencias Obtenidas:</strong>
+                        <ul style="margin: 0; padding: 0;">
+                            <li style="font-size: 0.75rem; padding: 4px 10px; margin-bottom: 4px;"><span>Chats activos de "Dread Pirate Roberts".</span></li>
+                            <li style="font-size: 0.75rem; padding: 4px 10px; margin-bottom: 4px;"><span><i>.bash_history</i> con comandos directos a servidores.</span></li>
+                            <li style="font-size: 0.75rem; padding: 4px 10px; margin-bottom: 4px;"><span>Monederos Bitcoin activos con comisiones millonarias.</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-quote" style="margin-top: 0.5rem; font-size: 0.75rem; padding: 0.8rem 1.2rem;">
+                <strong>Debate Legal:</strong> La defensa impugnó la incautación acusando vulneración de la Cuarta Enmienda (registro irrazonable). El peritaje forense del gobierno demostró que la integridad del sistema operativo y los hashes de la memoria volátil no sufrieron alteraciones en el proceso, validando su admisibilidad total.
+            </div>
+            <div class="slide-internal-num">07 / 11</div>
+        </div>
+
+        <!-- Diapositiva 8: Redacción del Informe Pericial -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Redacción del Informe Pericial</h1>
+            <p class="slide-subtitle">6. La Estructura Formal del Dictamen Forense</p>
+            
+            <div style="display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 1.5rem; margin-top: 1rem;">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dim);">
+                        Estructura formal y comprensible de un Dictamen Forense:
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 0.8rem; border-radius: 12px; border: 1px solid var(--border-light);">
+                            <strong style="color: var(--primary); font-size: 0.8rem; display: block;">1. Objeto del Dictamen</strong>
+                            <span style="font-size: 0.7rem; color: var(--text-dim);">Preguntas técnicas exactas a responder en sala.</span>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 0.8rem; border-radius: 12px; border: 1px solid var(--border-light);">
+                            <strong style="color: var(--primary); font-size: 0.8rem; display: block;">2. Cadena de Custodia</strong>
+                            <span style="font-size: 0.7rem; color: var(--text-dim);">Registro estricto de hashes y trazabilidad de evidencias.</span>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 0.8rem; border-radius: 12px; border: 1px solid var(--border-light);">
+                            <strong style="color: var(--primary); font-size: 0.8rem; display: block;">3. Entorno Instrumental</strong>
+                            <span style="font-size: 0.7rem; color: var(--text-dim);">Software forense de reputación validada (FTK/Autopsy).</span>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 0.8rem; border-radius: 12px; border: 1px solid var(--border-light);">
+                            <strong style="color: var(--primary); font-size: 0.8rem; display: block;">4. Conclusiones</strong>
+                            <span style="font-size: 0.7rem; color: var(--text-dim);">Respuestas categóricas y claras, sin dudas.</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(59, 130, 246, 0.03); border: 1px dashed var(--border); border-radius: 20px; padding: 1.5rem; text-align: center;">
+                    <span style="font-size: 3rem; display: block; margin-bottom: 0.5rem;">📄</span>
+                    <strong style="color: var(--primary); font-size: 0.95rem;">Rigor de Redacción</strong>
+                    <p style="font-size: 0.72rem; color: var(--text-dim); margin-top: 8px; line-height: 1.4; text-transform: none;">
+                        Un error de sintaxis en el registro de un hash o un software no certificado por el perito puede suponer la <strong>descalificación técnica</strong> total del informe por la parte contraria.
+                    </p>
+                </div>
+            </div>
+            <div class="slide-internal-num">08 / 11</div>
+        </div>
+
+        <!-- Diapositiva 9: Defensa en Sala (Ratificación) -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Defensa en Sala: La Ratificación</h1>
+            <p class="slide-subtitle">7. El Reto de Traducir Bits a Leyes</p>
+            
+            <div class="grid-2" style="margin-top: 1rem;">
+                <div class="forensic-case-card" style="border-color: rgba(255,255,255,0.05);">
+                    <strong style="font-size: 1rem; color: var(--primary);">Interrogatorio Judicial</strong>
+                    <p style="font-size: 0.8rem; color: var(--text-dim); line-height: 1.5;">
+                        • <strong>Cross-Examination:</strong> Defensa de la solidez técnica del informe ante las partes.<br>
+                        • <strong>Neutralidad absoluta:</strong> Rigor y honestidad científica por encima de todo.<br>
+                        • <strong>Límites:</strong> Evitar emitir valoraciones legales (labor exclusiva del Juez).
+                    </p>
+                </div>
+                
+                <div class="forensic-case-card" style="border-color: rgba(255,255,255,0.05);">
+                    <strong style="font-size: 1rem; color: var(--primary);">"Explicación Simple"</strong>
+                    <p style="font-size: 0.8rem; color: var(--text-dim); line-height: 1.5;">
+                        • <strong>Sin tecnicismos:</strong> Explicar conceptos de bajo nivel de forma asimilable.<br>
+                        • <strong>Uso de analogías:</strong> Acercar el mundo binario a la vida física cotidiana.
+                    </p>
+                    <div class="highlight-quote" style="font-size: 0.7rem; padding: 8px 12px; margin-top: 5px;">
+                        <i>"Un hash es como la huella dactilar de un archivo; si cambia una sola letra, la huella cambia por completo."</i>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-internal-num">09 / 11</div>
+        </div>
+
+        <!-- Diapositiva 10: Conclusión -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Conclusiones del Peritaje</h1>
+            <p class="slide-subtitle">8. Lecciones Clave y Futuro de la Prueba Digital</p>
+            
+            <div style="display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 1.5rem; margin-top: 1rem;">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div class="timeline-forensic" style="gap: 12px; margin-top: 0;">
+                        <div class="timeline-forensic-item">
+                            <div class="timeline-forensic-dot" style="width:32px; height:32px; font-size:0.8rem;">1</div>
+                            <div class="timeline-forensic-content" style="padding:0.6rem 1rem;">
+                                <strong>Extrema Volatilidad de las Evidencias:</strong> Exige un respeto escrupuloso a los estándares de adquisición (UNE 71506 / ISO 27037). Cualquier fallo en la cadena de custodia desacredita el dictamen en sala.
+                            </div>
+                        </div>
+                        <div class="timeline-forensic-item">
+                            <div class="timeline-forensic-dot" style="width:32px; height:32px; font-size:0.8rem;">2</div>
+                            <div class="timeline-forensic-content" style="padding:0.6rem 1rem;">
+                                <strong>La Independencia como Mandato Legal:</strong> El perito promete bajo juramento decir la verdad y actuar de forma neutral. Un informe sesgado o partidista es fácilmente desmontado por la contraparte.
+                            </div>
+                        </div>
+                        <div class="timeline-forensic-item">
+                            <div class="timeline-forensic-dot" style="width:32px; height:32px; font-size:0.8rem;">3</div>
+                            <div class="timeline-forensic-content" style="padding:0.6rem 1rem;">
+                                <strong>Rigor Técnico vs. Lenguaje Simple:</strong> De nada sirve un peritaje brillante si el Tribunal no lo entiende. Traducir artefactos informáticos en analogías claras y comprensibles es la verdadera clave de éxito.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <div class="highlight-quote" style="font-size: 0.8rem; line-height: 1.45;">
+                        <strong>Síntesis Forense:</strong> Los bits no mienten; sin embargo, para que se conviertan en prueba válida, el perito debe actuar como el <strong>puente científico</strong> infalible entre el laboratorio forense y el estrado judicial.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">10 / 11</div>
+        </div>
+
+        <!-- Diapositiva 11: Bibliografía -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Bibliografía y Estándares de Referencia</h1>
+            <p class="slide-subtitle">9. Fundamentos Académicos, Normativos y Casos de Estudio</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="background: rgba(255,255,255,0.02); padding: 0.8rem; border-radius: 12px; border: 1px solid var(--border-light);">
+                        <strong style="color: var(--primary); font-size: 0.8rem; display: block;">ISO/IEC 27037:2012</strong>
+                        <span style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-top: 2px;">Directrices internacionales para la identificación, recolección, adquisición y preservación de evidencia digital.</span>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.02); padding: 0.8rem; border-radius: 12px; border: 1px solid var(--border-light);">
+                        <strong style="color: var(--primary); font-size: 0.8rem; display: block;">Norma UNE 71506:2013 (España)</strong>
+                        <span style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-top: 2px;">Especificación nacional para la metodología de preservación, adquisición, análisis y presentación de evidencias.</span>
+                    </div>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="background: rgba(255,255,255,0.02); padding: 0.8rem; border-radius: 12px; border: 1px solid var(--border-light);">
+                        <strong style="color: var(--primary); font-size: 0.8rem; display: block;">Ley de Enjuiciamiento Civil (LEC)</strong>
+                        <span style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-top: 2px;">Artículos 335 a 352 reguladores de la prueba pericial judicial y las tachas de peritos en España.</span>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.02); padding: 0.8rem; border-radius: 12px; border: 1px solid var(--border-light);">
+                        <strong style="color: var(--primary); font-size: 0.8rem; display: block;">Sentencia Tribunal Supremo STS 300/2015</strong>
+                        <span style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-top: 2px;">Jurisprudencia española clave sobre los requisitos de admisibilidad e integridad para pantallazos y chats de redes sociales.</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="forensic-tools" style="margin-top: 1rem; justify-content: center;">
+                <span class="tool-badge">Waymo LLC v. Uber Technologies Inc. (N.D. Cal. 2018)</span>
+                <span class="tool-badge">United States v. Ross Ulbricht (S.D.N.Y. 2015)</span>
+            </div>
+            <div class="slide-internal-num">11 / 11</div>
+        </div>
+    </div>
+
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <div class="page-indicator" id="pageIndicator">1 / 10</div>
+        <button class="nav-btn primary" onclick="changeSlide(1)">
+            Siguiente
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const totalSlides = slides.length;
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / totalSlides) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${totalSlides}`;
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + totalSlides) % totalSlides;
+            updateUI();
+        }
+
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+        });
+
+        updateUI();
+    </script>
+</body>
+
+</html>
