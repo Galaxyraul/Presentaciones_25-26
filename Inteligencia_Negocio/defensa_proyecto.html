@@ -1,0 +1,2429 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adquisición de Corpus y Analítica NLP Avanzada - Defensa de Proyecto</title>
+    <style>
+        /* ==========================================================================
+           1. SISTEMA DE DISEÑO UNIFICADO - IDENTIDAD "CYBER-SPIDER & SEMANTIC MESH"
+           ========================================================================== */
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+
+        :root {
+            --bg-color: #030712;
+            --card-bg: #090f1d;
+            --primary: #10b981;       /* Scraper Emerald */
+            --primary-hover: #059669; /* Darker Emerald */
+            --text-main: #f3f4f6;     /* Crisp Light Text */
+            --text-dim: #9ca3af;      /* Muted Slate Text */
+            --border: #1f2937;
+            --border-light: rgba(16, 185, 129, 0.18); /* Glowing Emerald Border */
+            
+            --accent-cyan: #06b6d4;   /* Semantic Cyan (Databases / Crawling) */
+            --accent-purple: #8b5cf6; /* Entity Amethyst (NLP / SpaCy / PER) */
+            --accent-amber: #f59e0b;  /* Meneos Amber (Metrics / Highlight) */
+            --accent-red: #ef4444;    /* Error Red (Bugs / Code Base) */
+            --accent-green: #10b981;
+            
+            --glass-bg: rgba(9, 15, 29, 0.85);
+            --transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* 2. Base y Estructura */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.04) 0%, transparent 70%),
+                linear-gradient(rgba(16, 185, 129, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16, 185, 129, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 32px 32px, 32px 32px;
+            background-position: center;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* 3. Cabecera (Navbar) */
+        .navbar {
+            padding: 1rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, var(--primary), var(--accent-cyan));
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: white;
+            font-size: 1.1rem;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.35);
+        }
+
+        .brand h1 {
+            font-size: 1.05rem;
+            letter-spacing: 0.5px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .brand span {
+            color: var(--text-dim);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: block;
+            margin-top: 1px;
+        }
+
+        /* 4. Barra de Progreso */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: rgba(31, 41, 55, 0.5);
+            z-index: 2100;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent-cyan), var(--accent-purple));
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+        }
+
+        /* 5. Contenedor de Diapositivas */
+        .presentation-viewport {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem;
+            perspective: 1200px;
+            position: relative;
+            padding-bottom: 90px; /* Espacio para controles */
+        }
+
+        .slide {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 1050px;
+            min-height: 610px;
+            border-radius: 28px;
+            padding: 2.5rem 3.5rem;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 35px 80px -15px rgba(0, 0, 0, 0.8), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            display: none;
+            flex-direction: column;
+            justify-content: flex-start;
+            position: relative;
+            animation: slideIn 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            overflow: hidden;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(25px) scale(0.97) rotateX(1deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotateX(0deg);
+            }
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 0.35rem;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, white 50%, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .slide-subtitle {
+            color: var(--accent-cyan);
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .slide-subtitle::before {
+            content: "";
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--primary);
+        }
+
+        .accent-bar {
+            width: 70px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent-cyan));
+            border-radius: 10px;
+            margin-bottom: 1.2rem;
+        }
+
+        .slide-internal-num {
+            position: absolute;
+            bottom: 25px;
+            right: 35px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+
+        /* 6. Layouts y Rejillas */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 2rem;
+            align-items: stretch;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .grid-2-equal {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        /* 7. Tarjetas y Efectos Glassmorphic */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.45);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.3rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-light);
+            background: rgba(17, 24, 39, 0.6);
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.08);
+        }
+
+        .glass-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .glass-card:hover::before {
+            opacity: 1;
+        }
+
+        .glass-card.accent-purple:hover::before {
+            background: linear-gradient(90deg, transparent, var(--accent-purple), transparent);
+        }
+        .glass-card.accent-cyan:hover::before {
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+        }
+
+        .glass-card h4 {
+            font-size: 1.05rem;
+            color: white;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        .glass-card p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.45;
+        }
+
+        /* 8. Componentes Específicos */
+        .tech-badge {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tech-badge.cyan {
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--accent-cyan);
+            border-color: rgba(6, 182, 212, 0.2);
+        }
+
+        .tech-badge.purple {
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--accent-purple);
+            border-color: rgba(139, 92, 246, 0.2);
+        }
+
+        .tech-badge.amber {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--accent-amber);
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+
+        .tech-badge.red {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--accent-red);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        /* Badges de Entidades */
+        .entity-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-family: 'Fira Code', monospace;
+            font-weight: 700;
+            border: 1px solid transparent;
+            margin: 0 2px;
+        }
+
+        .entity-badge.per {
+            background: rgba(139, 92, 246, 0.15);
+            color: #c084fc;
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .entity-badge.org {
+            background: rgba(6, 182, 212, 0.15);
+            color: #22d3ee;
+            border-color: rgba(6, 182, 212, 0.3);
+        }
+
+        .entity-badge.loc {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        /* Bullets */
+        .bullet-point {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 0.8rem;
+            font-size: 0.88rem;
+            line-height: 1.45;
+            text-align: left;
+        }
+
+        .bullet-point::before {
+            content: "✓";
+            color: var(--primary);
+            font-weight: 900;
+            flex-shrink: 0;
+            background: rgba(16, 185, 129, 0.15);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+
+        .bullet-point.warning::before {
+            content: "⚠";
+            color: var(--accent-amber);
+            background: rgba(245, 158, 11, 0.15);
+            border-color: rgba(245, 158, 11, 0.25);
+        }
+
+        .bullet-point.error::before {
+            content: "✗";
+            color: var(--accent-red);
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.25);
+        }
+
+        .bullet-point.purple::before {
+            content: "◆";
+            color: var(--accent-purple);
+            background: rgba(139, 92, 246, 0.15);
+            border-color: rgba(139, 92, 246, 0.25);
+            font-size: 0.6rem;
+        }
+
+        /* Pestañas e Interacciones */
+        .tabs-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 1.2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.4rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 8px 18px;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 6px 6px 0 0;
+        }
+
+        .tab-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .tab-btn.active.purple {
+            color: var(--accent-purple);
+            border-bottom-color: var(--accent-purple);
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.4s ease;
+            width: 100%;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Bloques de Código */
+        pre {
+            background: #020612;
+            padding: 1.2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--primary);
+            color: #e2e8f0;
+            font-family: 'Fira Code', monospace;
+            overflow-x: auto;
+            text-align: left;
+            font-size: 0.76rem;
+            line-height: 1.45;
+            width: 100%;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .code-keyword { color: #f43f5e; font-weight: 600; }
+        .code-string { color: #10b981; }
+        .code-comment { color: #6b7280; font-style: italic; }
+        .code-number { color: #f59e0b; }
+        .code-def { color: #6366f1; font-weight: 600; }
+        .code-builtin { color: #06b6d4; }
+
+        /* 9. Botón Notas y Guion del Ponente */
+        .notes-toggle-btn {
+            background: var(--card-bg);
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            font-size: 0.85rem;
+        }
+
+        .notes-toggle-btn:hover, .notes-toggle-btn.active {
+            color: white;
+            border-color: var(--primary);
+            background: rgba(16, 185, 129, 0.08);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+        }
+
+        .speaker-notes-panel {
+            position: fixed;
+            bottom: -320px;
+            left: 0;
+            width: 100%;
+            height: 300px;
+            background: rgba(7, 11, 22, 0.96);
+            backdrop-filter: blur(24px);
+            border-top: 1px solid var(--border-light);
+            z-index: 2200;
+            transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .speaker-notes-panel.open {
+            bottom: 0;
+        }
+
+        .notes-header {
+            padding: 0.8rem 2.5rem;
+            background: rgba(2, 6, 15, 0.6);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notes-title {
+            font-weight: 800;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notes-timer-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stopwatch-display {
+            font-family: 'Fira Code', monospace;
+            background: #020612;
+            padding: 4px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .stopwatch-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .stopwatch-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #020612;
+        }
+
+        .notes-content-body {
+            flex: 1;
+            padding: 1.2rem 2.5rem;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 2.5rem;
+        }
+
+        .notes-script-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+            text-align: justify;
+        }
+
+        .notes-sidebar-info {
+            border-left: 1px solid var(--border);
+            padding-left: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .notes-close-btn {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 50%;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notes-close-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* 10. Controles de Navegación */
+        .controls-wrapper {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2.5rem;
+            background: linear-gradient(transparent, var(--bg-color));
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: var(--card-bg);
+            color: white;
+            border: 1px solid var(--border);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .nav-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #020612;
+            transform: scale(1.08);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.35);
+        }
+
+        .nav-btn.primary {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #020612;
+            width: 140px;
+            border-radius: 30px;
+            font-weight: 800;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn.primary:hover {
+            background: var(--primary-hover);
+            border-color: var(--primary-hover);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.45);
+        }
+
+        .page-indicator {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            background: var(--card-bg);
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        /* 11. Estilos del Índice Interactiva */
+        .index-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 1rem;
+        }
+
+        .index-item {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            padding: 0.9rem 1.3rem;
+            background: rgba(17, 24, 39, 0.35);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            text-align: left;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .index-item:hover {
+            border-color: var(--primary);
+            background: rgba(16, 185, 129, 0.05);
+            transform: translateX(6px);
+        }
+
+        .index-num {
+            background: var(--primary);
+            color: #020612;
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .index-item.purple:hover {
+            border-color: var(--accent-purple);
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .index-item.purple .index-num {
+            background: var(--accent-purple);
+            color: white;
+        }
+
+        /* 12. Componentes de Diapositivas Clave */
+        /* Slide 1: Inyección animada SVG */
+        .data-flow-svg {
+            width: 100%;
+            height: 250px;
+            background: rgba(2, 6, 12, 0.4);
+            border: 1px dashed var(--border-light);
+            border-radius: 20px;
+        }
+
+        .crawler-node {
+            fill: #030712;
+            stroke: var(--primary);
+            stroke-width: 2;
+            transition: var(--transition);
+        }
+
+        .crawler-node:hover {
+            fill: rgba(16, 185, 129, 0.1);
+        }
+
+        .pulse-circle {
+            animation: pulse 2.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { r: 5px; opacity: 1; }
+            100% { r: 25px; opacity: 0; }
+        }
+
+        .flow-line {
+            stroke: var(--accent-cyan);
+            stroke-dasharray: 6;
+            animation: dashFlow 8s linear infinite;
+        }
+
+        .flow-line.reverse {
+            animation: dashFlowReverse 8s linear infinite;
+        }
+
+        @keyframes dashFlow {
+            to { stroke-dashoffset: -120; }
+        }
+        @keyframes dashFlowReverse {
+            to { stroke-dashoffset: 120; }
+        }
+
+        /* Slide 4: Flujograma de Scraping */
+        .flow-step-card {
+            background: rgba(17, 24, 39, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.82rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .flow-step-card:hover, .flow-step-card.active {
+            border-color: var(--primary);
+            background: rgba(16, 185, 129, 0.06);
+            transform: translateX(4px);
+        }
+
+        .flow-step-num {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--primary);
+            font-family: 'Fira Code', monospace;
+            font-weight: 700;
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        /* Slide 6: Debugger */
+        .debug-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 0.8rem;
+        }
+
+        .debug-btn {
+            background: rgba(17, 24, 39, 0.35);
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            color: var(--text-dim);
+            font-weight: 700;
+            font-size: 0.8rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .debug-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .debug-btn.active.red {
+            border-color: var(--accent-red);
+            background: rgba(239, 68, 68, 0.08);
+            color: #fca5a5;
+        }
+
+        .debug-btn.active.green {
+            border-color: var(--primary);
+            background: rgba(16, 185, 129, 0.08);
+            color: #a7f3d0;
+        }
+
+        .debug-box {
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* Slide 8: Grafo Interactiva SVG */
+        .node-network {
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .node-network circle {
+            fill: #090f1d;
+            stroke: var(--accent-cyan);
+            stroke-width: 2.5;
+            transition: var(--transition);
+        }
+
+        .node-network text {
+            fill: var(--text-dim);
+            font-size: 8.5px;
+            font-weight: 700;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .node-network:hover circle, .node-network.active circle {
+            fill: rgba(139, 92, 246, 0.2);
+            stroke: var(--accent-purple);
+            r: 21;
+            filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.6));
+        }
+
+        .node-network:hover text, .node-network.active text {
+            fill: white;
+            font-size: 9.5px;
+        }
+
+        .edge-line {
+            stroke: #1f2937;
+            stroke-width: 1.5;
+            transition: var(--transition);
+        }
+
+        .edge-line.active {
+            stroke: var(--accent-purple);
+            stroke-width: 3.5;
+            filter: drop-shadow(0 0 3px rgba(139, 92, 246, 0.4));
+        }
+
+        /* Slide 9 y 10: Timelines */
+        .timeline-step {
+            border-left: 3px solid var(--border);
+            padding-left: 1.5rem;
+            padding-bottom: 1.2rem;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .timeline-step:last-child {
+            padding-bottom: 0.2rem;
+        }
+
+        .timeline-step::before {
+            content: "";
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border);
+            border: 2px solid var(--bg-color);
+            position: absolute;
+            left: -8px;
+            top: 4px;
+            transition: var(--transition);
+        }
+
+        .timeline-step:hover, .timeline-step.active {
+            border-left-color: var(--primary);
+        }
+
+        .timeline-step:hover::before, .timeline-step.active::before {
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .timeline-step.purple:hover, .timeline-step.purple.active {
+            border-left-color: var(--accent-purple);
+        }
+
+        .timeline-step.purple:hover::before, .timeline-step.purple.active::before {
+            background: var(--accent-purple);
+            box-shadow: 0 0 10px var(--accent-purple);
+        }
+
+        .timeline-title {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 2px;
+        }
+
+        .timeline-desc {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            line-height: 1.35;
+        }
+
+        /* Slide 11: Explorador de Directorios */
+        .dir-tree {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            text-align: left;
+        }
+
+        .tree-item {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-dim);
+        }
+
+        .tree-item:hover, .tree-item.active {
+            background: rgba(255, 255, 255, 0.03);
+            color: white;
+        }
+
+        .tree-item.file {
+            padding-left: 20px;
+        }
+
+        .tree-item.file::before {
+            content: "📄";
+            font-size: 0.85rem;
+        }
+
+        .tree-item.file.active {
+            color: var(--primary);
+            background: rgba(16, 185, 129, 0.05);
+            border-left: 3px solid var(--primary);
+            padding-left: 17px;
+        }
+
+        .tree-item.dir::before {
+            content: "📁";
+            font-size: 0.85rem;
+        }
+
+        /* Sencillo modo responsive */
+        @media (max-width: 900px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .grid-3 { grid-template-columns: 1fr; }
+            .slide { padding: 2rem; min-height: auto; }
+            .slide-title { font-size: 2rem; }
+        }
+
+        /* 12. Modo Impresión (Exportación a PDF limpia) */
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body {
+                background: var(--bg-color) !important;
+                color: var(--text-main) !important;
+                overflow: visible !important;
+                height: auto !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .navbar,
+            .controls-wrapper,
+            .progress-container,
+            .notes-toggle-btn,
+            .nav-btn,
+            .speaker-notes-panel {
+                display: none !important;
+            }
+
+            .presentation-viewport {
+                display: block !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+
+            .slide {
+                display: flex !important;
+                page-break-after: always !important;
+                break-after: page !important;
+                background: var(--card-bg) !important;
+                color: var(--text-main) !important;
+                border: none !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                max-width: none !important;
+                border-radius: 0 !important;
+                justify-content: center !important;
+                padding: 3rem 4rem !important;
+                box-sizing: border-box !important;
+                position: relative !important;
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+            }
+
+            .slide-title {
+                color: white !important;
+                background: none !important;
+                -webkit-text-fill-color: initial !important;
+            }
+
+            .slide-subtitle {
+                color: var(--accent-cyan) !important;
+            }
+
+            .slide-subtitle::before {
+                background: var(--primary) !important;
+                box-shadow: none !important;
+            }
+
+            pre {
+                background: #020612 !important;
+                border-color: var(--border) !important;
+                color: #e2e8f0 !important;
+                box-shadow: none !important;
+            }
+
+            .glass-card {
+                background: rgba(17, 24, 39, 0.6) !important;
+                border-color: var(--border) !important;
+                box-shadow: none !important;
+            }
+
+            .index-item {
+                background: rgba(17, 24, 39, 0.4) !important;
+                border-color: var(--border) !important;
+            }
+
+            .index-num {
+                background: var(--primary) !important;
+                color: #020612 !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="presentation-mode">
+
+    <!-- Barra de Navegación -->
+    <nav class="navbar">
+        <div class="logo">
+            <div class="logo-icon">IN</div>
+            <div class="brand">
+                <h1>Inteligencia de Negocio</h1>
+                <span>Web Scraping &amp; NLP Analytics</span>
+            </div>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <!-- Botón del Ponente -->
+            <button id="notesToggleBtn" class="notes-toggle-btn" onclick="toggleSpeakerNotes()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                Guion del Ponente
+            </button>
+            <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold; letter-spacing: 0.5px;">CURSO 2025/26</div>
+        </div>
+    </nav>
+
+    <!-- Barra de Progreso Superior -->
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <!-- Contenedor Principal de Diapositivas -->
+    <div class="presentation-viewport">
+
+        <!-- DIAPOSITIVA 1: PORTADA -->
+        <div class="slide active">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title" style="font-size: 2.8rem;">Adquisición de Corpus y Analítica NLP</h1>
+            <p class="slide-subtitle">Defensa de Proyecto de Inteligencia de Negocio</p>
+            
+            <div class="grid-2">
+                <div style="text-align: left; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <p style="color: var(--text-dim); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                            Un sistema automatizado e integrado de adquisición de textos y comentarios en Menéame, extracción inteligente de diarios digitales y procesamiento avanzado del lenguaje natural enfocado en el reconocimiento de entidades (NER) y su clasificación de género.
+                        </p>
+                        
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                            <span class="tech-badge">Python 3.10</span>
+                            <span class="tech-badge cyan">BeautifulSoup 4</span>
+                            <span class="tech-badge purple">SpaCy Pipeline</span>
+                            <span class="tech-badge amber">NetworkX Graphs</span>
+                        </div>
+                    </div>
+
+                    <div class="authors-box" style="margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border); text-align: left;">
+                        <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 0.5rem;">Ponentes de la Defensa:</div>
+                        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                            <div class="author-tag" style="font-size: 0.88rem; font-weight: 700; color: white; background: rgba(255, 255, 255, 0.03); padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border);">Raúl Gómez Téllez</div>
+                            <div class="author-tag" style="font-size: 0.88rem; font-weight: 700; color: white; background: rgba(255, 255, 255, 0.03); padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border);">Rubén Ramírez Peña</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-card" style="justify-content: center; align-items: center; min-height: 250px; background: rgba(2, 6, 12, 0.55);">
+                    <!-- Ilustración Inyección / Web Scraping SVG -->
+                    <svg class="data-flow-svg" viewBox="0 0 400 250">
+                        <defs>
+                            <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#10b981" />
+                                <stop offset="100%" stop-color="#059669" />
+                            </linearGradient>
+                            <linearGradient id="grad-purple" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#8b5cf6" />
+                                <stop offset="100%" stop-color="#6d28d9" />
+                            </linearGradient>
+                        </defs>
+                        
+                        <!-- Crawlers Source Circle -->
+                        <g transform="translate(60, 125)">
+                            <circle cx="0" cy="0" r="10" class="pulse-circle" fill="var(--primary)" opacity="0.4" />
+                            <circle cx="0" cy="0" r="15" class="crawler-node" />
+                            <text x="0" y="3" fill="white" font-size="7" font-weight="900" text-anchor="middle">WEB</text>
+                        </g>
+
+                        <!-- NLP Target Circle -->
+                        <g transform="translate(340, 125)">
+                            <circle cx="0" cy="0" r="10" class="pulse-circle" fill="var(--accent-purple)" opacity="0.4" />
+                            <circle cx="0" cy="0" r="15" class="crawler-node" stroke="var(--accent-purple)" />
+                            <text x="0" y="3" fill="white" font-size="7" font-weight="900" text-anchor="middle">NLP</text>
+                        </g>
+
+                        <!-- DB Center Circle -->
+                        <g transform="translate(200, 125)">
+                            <circle cx="0" cy="0" r="22" fill="#040816" stroke="var(--accent-cyan)" stroke-dasharray="3" stroke-width="1.5" />
+                            <circle cx="0" cy="0" r="18" fill="url(#grad-green)" />
+                            <text x="0" y="2" fill="#020612" font-size="7.5" font-weight="900" text-anchor="middle">CORPUS</text>
+                        </g>
+
+                        <!-- Flow Lines -->
+                        <path d="M 75 125 L 180 125" fill="none" stroke="var(--accent-cyan)" stroke-width="2" class="flow-line" />
+                        <path d="M 218 125 L 323 125" fill="none" stroke="var(--accent-purple)" stroke-width="2" class="flow-line" />
+                        <path d="M 330 110 C 270 50, 130 50, 70 110" fill="none" stroke="var(--primary)" stroke-width="1" stroke-dasharray="4" class="flow-line reverse" />
+
+                        <text x="200" y="225" fill="var(--text-dim)" font-size="8" font-family="'Fira Code', monospace" text-anchor="middle">Extracción Activa -> Corpus Relacional -> Pipeline PLN</text>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">01 / 12</div>
+        </div>
+
+        <!-- DIAPOSITIVA 2: ÍNDICE -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">Estructura de la Defensa</h1>
+            <p class="slide-subtitle">Índice Analítico de Contenidos</p>
+            
+            <div class="index-grid">
+                <div class="index-item" onclick="goToSlide(3)">
+                    <div class="index-num">1</div>
+                    <div>
+                        <strong style="color: white;">Contexto y Objetivos Generales</strong>
+                        <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 2px;">Desglose estructurado de las Prácticas 1 y 2.</p>
+                    </div>
+                </div>
+
+                <div class="index-item" onclick="goToSlide(4)">
+                    <div class="index-num">2</div>
+                    <div>
+                        <strong style="color: white;">Práctica 1: Scraper de Menéame</strong>
+                        <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 2px;">Captura de filtros, comentarios y metadatos avanzados.</p>
+                    </div>
+                </div>
+
+                <div class="index-item" onclick="goToSlide(5)">
+                    <div class="index-num">3</div>
+                    <div>
+                        <strong style="color: white;">Práctica 1: Descarga de Diarios</strong>
+                        <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 2px;">Factoría de scrapers específicos y extracción heurística.</p>
+                    </div>
+                </div>
+
+                <div class="index-item purple" onclick="goToSlide(6)">
+                    <div class="index-num">4</div>
+                    <div>
+                        <strong style="color: white;">Práctica 2: NLP y Desafíos Clínicos</strong>
+                        <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 2px;">Limitaciones base y optimización del clasificador de género.</p>
+                    </div>
+                </div>
+
+                <div class="index-item purple" onclick="goToSlide(7)">
+                    <div class="index-num">5</div>
+                    <div>
+                        <strong style="color: white;">Práctica 2: Analítica y Frecuencias</strong>
+                        <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 2px;">Métricas globales del corpus y recorte tokenizado de nombres.</p>
+                    </div>
+                </div>
+
+                <div class="index-item purple" onclick="goToSlide(8)">
+                    <div class="index-num">6</div>
+                    <div>
+                        <strong style="color: white;">Práctica 2: Grafo de Coaparición (Opcional)</strong>
+                        <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 2px;">Modelado y exportación de redes de coaparición.</p>
+                    </div>
+                </div>
+
+                <div class="index-item" onclick="goToSlide(9)">
+                    <div class="index-num">7</div>
+                    <div>
+                        <strong style="color: white;">Plan de Implementación y Código</strong>
+                        <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 2px;">Plan modular por fases y arquitectura del software sugerida.</p>
+                    </div>
+                </div>
+
+                <div class="index-item" onclick="goToSlide(12)">
+                    <div class="index-num">8</div>
+                    <div>
+                        <strong style="color: white;">Conclusiones y Trabajo Futuro</strong>
+                        <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 2px;">Cierre formal de la defensa académica y ronda de preguntas.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">02 / 12</div>
+        </div>
+
+        <!-- DIAPOSITIVA 3: CONTEXTO Y OBJETIVOS -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">01. Contexto y Objetivos</h1>
+            <p class="slide-subtitle">Definición de Requerimientos de Práctica</p>
+            
+            <div class="tabs-header">
+                <button id="tabBtnP1" class="tab-btn active" onclick="switchSlide3Tab('p1')">
+                    📦 Práctica 1: Adquisición & Scraping
+                </button>
+                <button id="tabBtnP2" class="tab-btn purple" onclick="switchSlide3Tab('p2')">
+                    🧠 Práctica 2: PLN & Análisis Estadístico
+                </button>
+            </div>
+
+            <!-- Contenido Pestaña Práctica 1 -->
+            <div id="tabP1" class="tab-pane active">
+                <div class="grid-2-equal">
+                    <div>
+                        <div class="tech-badge">Ingesta Masiva</div>
+                        <h3 style="color: white; margin-bottom: 0.8rem; font-size: 1.25rem;">Adquisición Automatizada</h3>
+                        <div class="bullet-point">
+                            <div><strong>Scraper Avanzado de Menéame:</strong> Desarrollo de lógica robusta con iteración paginada, filtros temporales y de categorías específicas.</div>
+                        </div>
+                        <div class="bullet-point">
+                            <div><strong>Captura de Metadatos Completa:</strong> Obtener de forma exhaustiva los meneos, clics, fechas internas y autor del envío de cada noticia.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card">
+                        <div class="tech-badge cyan">Estructura del Corpus</div>
+                        <h4 style="margin-bottom: 0.5rem;">Integridad de Datos Relacionales</h4>
+                        <p style="margin-bottom: 0.8rem; font-size: 0.8rem;">
+                            El gran desafío de la Práctica 1 consiste en mapear sin pérdidas la jerarquía relacional.
+                        </p>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; font-size: 0.78rem; border: 1px solid var(--border);">
+                            <span style="color: var(--accent-cyan); font-weight: bold;">[Vínculo Inequívoco]:</span> Noticia Base (Menéame) ➔ Texto Completo (Diario Digital Externo) ➔ Árbol de Comentarios y Discusión.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenido Pestaña Práctica 2 -->
+            <div id="tabP2" class="tab-pane">
+                <div class="grid-2-equal">
+                    <div>
+                        <div class="tech-badge purple">Extracción de Información</div>
+                        <h3 style="color: white; margin-bottom: 0.8rem; font-size: 1.25rem;">Procesamiento PLN y Métricas</h3>
+                        <div class="bullet-point purple">
+                            <div><strong>Optimización de Clasificación:</strong> Subsanar fallas de ambigüedades de género en nombres propios e incorporar recursos lingüísticos del INE.</div>
+                        </div>
+                        <div class="bullet-point purple">
+                            <div><strong>Procesamiento Estadístico:</strong> Calcular densidades documentales de entidades de tipo `PER` y clasificar según género.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card accent-purple">
+                        <div class="tech-badge purple">Grafo de Coaparición</div>
+                        <h4 style="margin-bottom: 0.5rem;">Modelo de Redes Complejas</h4>
+                        <p style="margin-bottom: 0.8rem; font-size: 0.8rem;">
+                            Modelar las interacciones de las entidades como un grafo de coaparición matemática.
+                        </p>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; font-size: 0.78rem; border: 1px solid var(--border);">
+                            <span style="color: var(--accent-purple); font-weight: bold;">[Red Semántica]:</span> Nodos (Entidades PER recortadas a 3 palabras) con Aristas ponderadas por coaparición en el mismo documento.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">03 / 12</div>
+        </div>
+
+        <!-- DIAPOSITIVA 4: PRÁCTICA 1 - SCRAPER DE MENÉAME -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">02. Scraper Avanzado de Menéame</h1>
+            <p class="slide-subtitle">Captura Pagina y Extracción de Metadatos</p>
+            
+            <div class="grid-2">
+                <div>
+                    <h3 style="color: white; margin-bottom: 0.8rem; font-size: 1.2rem;">Flujo de Scraping e Ingesta</h3>
+                    
+                    <div class="flow-step-card active" onclick="switchScraperStep(1)">
+                        <div class="flow-step-num">1</div>
+                        <div>
+                            <strong>Listados con Filtros Activos:</strong> Paginado dinámico filtrando categorías (e.g. <code>/c/tecnologia</code>) o rangos de fechas.
+                        </div>
+                    </div>
+
+                    <div class="flow-step-card" onclick="switchScraperStep(2)">
+                        <div class="flow-step-num">2</div>
+                        <div>
+                            <strong>Extracción de Metadatos Clave:</strong> Capturar <em>Meneos</em> (<code>div.votes a</code>), <em>Clics</em> (<code>div.clics</code>) y <em>Timestamp</em> (<code>data-ts</code>).
+                        </div>
+                    </div>
+
+                    <div class="flow-step-card" onclick="switchScraperStep(3)">
+                        <div class="flow-step-num">3</div>
+                        <div>
+                            <strong>Árbol de Comentarios:</strong> Parseo recursivo de comentarios vinculados a cada noticia manteniendo relaciones padre-hijo.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="min-height: 280px; justify-content: space-between;">
+                    <div id="scraperStepDetail">
+                        <div class="tech-badge">Filtro de Listados</div>
+                        <h4 style="margin-top: 0.5rem; margin-bottom: 0.8rem;">Paginación Controlada</h4>
+                        <p style="font-size: 0.8rem; line-height: 1.5; color: var(--text-dim);">
+                            El scraper de Menéame inicializa peticiones paginadas iterativas sobre la URL de la sección objetivo. Se analiza la paginación interna asegurando un corte limpio por límite de fecha o páginas máximas definidas en la configuración del proyecto.
+                        </p>
+                    </div>
+                    
+                    <div style="background: #020612; padding: 10px; border-radius: 8px; border: 1px solid var(--border); margin-top: 1rem;">
+                        <span style="font-family: 'Fira Code', monospace; font-size: 0.72rem; color: var(--primary);">
+                            # Selector de Meneos y Clics<br>
+                            meneos = soup.select_one('div.votes a').text<br>
+                            clics = soup.select_one('div.clics').text
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">04 / 12</div>
+        </div>
+
+        <!-- DIAPOSITIVA 5: PRÁCTICA 1 - EXTRACCIÓN DE DIARIOS EXTERNOS -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">03. Extracción de Diarios Externos</h1>
+            <p class="slide-subtitle">Arquitectura de Descarga de Cuerpo de Noticias</p>
+            
+            <div class="tabs-header">
+                <button id="tabBtnSpec" class="tab-btn active" onclick="switchDiariosTab('spec')">🛡️ Scrapers Específicos</button>
+                <button id="tabBtnHeur" class="tab-btn" onclick="switchDiariosTab('heur')">⚡ Fallback Heurístico</button>
+                <button id="tabBtnSafe" class="tab-btn" onclick="switchDiariosTab('safe')">🔌 Pipeline Seguro</button>
+            </div>
+
+            <!-- Scrapers Específicos -->
+            <div id="tabDiariosSpec" class="tab-pane active">
+                <div class="grid-2-equal">
+                    <div>
+                        <p style="font-size: 0.88rem; line-height: 1.5; color: var(--text-dim); margin-bottom: 1rem;">
+                            Para los dominios con mayor volumen en Menéame (ej: <em>El País, El Mundo, El Confidencial</em>), se diseñan <strong>selectores CSS específicos</strong> para extraer el cuerpo neto de la noticia de forma impecable sin ruido (anuncios, navbars, sidebars).
+                        </p>
+                        <div class="bullet-point">
+                            <div>Identificación de etiquetas HTML semánticas principales: <code>&lt;article&gt;</code>.</div>
+                        </div>
+                        <div class="bullet-point">
+                            <div>Recuperación exclusiva de texto limpio de párrafos editoriales: <code>article p</code>.</div>
+                        </div>
+                    </div>
+                    <div>
+                        <pre><span class="code-keyword">def</span> <span class="code-def">extraer_el_pais</span>(html_soup):
+    <span class="code-comment"># Captura exclusiva del artículo editorial</span>
+    article = html_soup.find(<span class="code-string">'article'</span>)
+    <span class="code-keyword">if</span> article:
+        parrafos = article.find_all(<span class="code-string">'p'</span>)
+        <span class="code-keyword">return</span> <span class="code-string">" "</span>.join([p.text.strip() <span class="code-keyword">for</span> p <span class="code-keyword">in</span> parrafos])</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fallback Heurístico -->
+            <div id="tabDiariosHeur" class="tab-pane">
+                <div class="grid-2-equal">
+                    <div>
+                        <p style="font-size: 0.88rem; line-height: 1.5; color: var(--text-dim); margin-bottom: 1rem;">
+                            En diarios minoritarios o blogs donde no es eficiente programar scrapers manuales a medida, el sistema activa un **enfoque heurístico** inteligente.
+                        </p>
+                        <div class="bullet-point">
+                            <div>Uso de la librería robusta de extracción periodística <strong>newspaper3k</strong>.</div>
+                        </div>
+                        <div class="bullet-point">
+                            <div>Fallback secundario basado en la **densidad de texto** de etiquetas HTML (contando ratio texto/enlaces en párrafos).</div>
+                        </div>
+                    </div>
+                    <div>
+                        <pre><span class="code-keyword">from</span> newspaper <span class="code-keyword">import</span> Article
+
+<span class="code-keyword">def</span> <span class="code-def">fallback_heuristico</span>(url):
+    art = Article(url, language=<span class="code-string">'es'</span>)
+    art.download()
+    art.parse()
+    <span class="code-keyword">return</span> art.text</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pipeline Seguro -->
+            <div id="tabDiariosSafe" class="tab-pane">
+                <div class="grid-2-equal">
+                    <div>
+                        <p style="font-size: 0.88rem; line-height: 1.5; color: var(--text-dim); margin-bottom: 1rem;">
+                            La descarga masiva requiere medidas defensivas críticas para evitar bloqueos por parte de los cortafuegos WAF de los periódicos.
+                        </p>
+                        <div class="bullet-point">
+                            <div><strong>Rotación de Cabeceras (User-Agent):</strong> Aleatorización de identidades de navegador real.</div>
+                        </div>
+                        <div class="bullet-point">
+                            <div><strong>Retardos Estocásticos:</strong> Tiempos de pausa entre peticiones usando <code>time.sleep(random.uniform(1, 3))</code>.</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="glass-card" style="border-left: 4px solid var(--accent-amber);">
+                            <span style="color: var(--accent-amber); font-weight: bold; font-size: 0.8rem; margin-bottom: 5px;">Manejo de Errores:</span>
+                            <p style="font-size: 0.78rem; line-height: 1.4; color: var(--text-dim);">
+                                Captura de excepciones HTTP (404, 403 de acceso prohibido) y caídas de red persistentes para evitar que falle el flujo de procesamiento masivo.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">05 / 12</div>
+        </div>
+
+        <!-- DIAPOSITIVA 6: PRÁCTICA 2 - NLP Y DESAFÍOS DEL CLASIFICADOR -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">04. NLP y Clasificación de Género</h1>
+            <p class="slide-subtitle">Resolución de Ambigüedades y Robustecimiento de Reglas</p>
+            
+            <div class="debug-selector">
+                <button id="btnDebugBase" class="debug-btn active red" onclick="switchDebugMode('base')">
+                    ❌ Código Base (Limitado y con Errores)
+                </button>
+                <button id="btnDebugOpt" class="debug-btn purple" onclick="switchDebugMode('opt')">
+                    💎 Código Optimizado (Soluciones Integradas)
+                </button>
+            </div>
+
+            <!-- Código Base -->
+            <div id="debugBaseView" class="debug-box">
+                <div class="grid-2">
+                    <div>
+                        <pre><span class="code-keyword">def</span> <span class="code-def">clasificar_genero</span>(nombre):
+    <span class="code-comment"># Falla con "José María" -> clasifica Femenino</span>
+    <span class="code-keyword">if</span> nombre.endswith(<span class="code-string">"María"</span>):
+        <span class="code-keyword">return</span> <span class="code-string">"Femenino"</span>
+    <span class="code-comment"># Falla con tildes o mayúsculas incorrectas</span>
+    <span class="code-comment"># Falsos positivos por superposición de cadenas</span></pre>
+                    </div>
+                    <div class="glass-card" style="border-color: rgba(239, 68, 68, 0.3);">
+                        <h4 style="color: var(--accent-red);">Limitaciones Críticas</h4>
+                        <div class="bullet-point error">
+                            <div><strong>Nombres Compuestos Cruzados:</strong> "José María" clasificado como mujer o "María José" como hombre.</div>
+                        </div>
+                        <div class="bullet-point error">
+                            <div><strong>Falta de Normalización:</strong> "MAría" o "Ramón" (tildes) fallaban el match exacto.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Código Optimizado -->
+            <div id="debugOptView" class="debug-box" style="display: none;">
+                <div class="grid-2">
+                    <div>
+                        <pre><span class="code-keyword">def</span> <span class="code-def">clasificar_genero_pro</span>(nombre):
+    <span class="code-comment"># 1. Normalización Léxica Completa</span>
+    nombre_norm = normalizar(nombre) 
+    
+    <span class="code-comment"># 2. Manejo de Nombres Compuestos Cruzados</span>
+    <span class="code-keyword">if</span> nombre_norm.startswith(<span class="code-string">"jose maria"</span>): 
+        <span class="code-keyword">return</span> <span class="code-string">"Masculino"</span>
+    <span class="code-keyword">if</span> nombre_norm.startswith(<span class="code-string">"maria jose"</span>): 
+        <span class="code-keyword">return</span> <span class="code-string">"Femenino"</span>
+        
+    <span class="code-comment"># 3. Consulta de Diccionario INE y Tratamientos</span>
+    <span class="code-keyword">return</span> consultar_diccionarios(nombre_norm)</pre>
+                    </div>
+                    <div class="glass-card" style="border-color: rgba(16, 185, 129, 0.3);">
+                        <h4 style="color: var(--primary);">Soluciones Implementadas</h4>
+                        <div class="bullet-point">
+                            <div><strong>Manejo Compuestos Cruzados:</strong> Lógica de orden de nombres ("José María" ➔ M, "María José" ➔ F).</div>
+                        </div>
+                        <div class="bullet-point">
+                            <div><strong>Recursos del INE:</strong> Ingesta de diccionarios del INE integrando nombres y frecuencias.</div>
+                        </div>
+                        <div class="bullet-point">
+                            <div><strong>Normalización:</strong> Conversión a minúsculas y eliminación de tildes.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">06 / 12</div>
+        </div>
+
+        <!-- DIAPOSITIVA 7: PRÁCTICA 2 - PROCESAMIENTO ESTADÍSTICO -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">05. Analítica Estadística del Corpus</h1>
+            <p class="slide-subtitle">Cálculo de Métricas Globales y Listas de Recorte</p>
+            
+            <div class="grid-2">
+                <div>
+                    <h3 style="color: white; margin-bottom: 0.8rem; font-size: 1.15rem;">Simulación de Segmentación Tokenizada</h3>
+                    <p style="font-size: 0.82rem; color: var(--text-dim); margin-bottom: 1rem;">
+                        El procesamiento NLP extrae entidades <span class="entity-badge per">PER</span> y genera tres frecuencias ordenadas descendentemente por el nivel de recorte de palabras:
+                    </p>
+                    
+                    <div style="background: rgba(2, 6, 12, 0.4); padding: 1rem; border-radius: 16px; border: 1px solid var(--border);">
+                        <div style="font-size: 0.8rem; margin-bottom: 8px;">
+                            <strong>Entidad Detectada:</strong> <span class="entity-badge per">Pedro Sánchez Pérez-Castejón</span>
+                        </div>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.78rem; font-family: 'Fira Code', monospace;">
+                            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 4px;">
+                                <span style="color: var(--primary);">Lista 1 (1 Palabra):</span>
+                                <span style="color: white;">"Pedro"</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 4px;">
+                                <span style="color: var(--accent-cyan);">Lista 2 (2 Palabras):</span>
+                                <span style="color: white;">"Pedro Sánchez"</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding-bottom: 4px;">
+                                <span style="color: var(--accent-purple);">Lista 3 (3 Palabras):</span>
+                                <span style="color: white;">"Pedro Sánchez Pérez-Castejón"</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="justify-content: space-between;">
+                    <div>
+                        <div class="tech-badge">Métricas del Corpus</div>
+                        <h4 style="margin-bottom: 0.8rem;">Cálculo por Documento</h4>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1rem;">
+                            <div style="background: rgba(255,255,255,0.02); padding: 8px; border-radius: 10px; text-align: center; border: 1px solid var(--border);">
+                                <div style="font-size: 1.2rem; font-weight: 800; color: var(--primary);">8.4</div>
+                                <div style="font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase;">PER / Documento</div>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.02); padding: 8px; border-radius: 10px; text-align: center; border: 1px solid var(--border);">
+                                <div style="font-size: 1.2rem; font-weight: 800; color: var(--accent-cyan);">62.1%</div>
+                                <div style="font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase;">Clasificados Hombres</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(16, 185, 129, 0.05); border-radius: 10px; padding: 10px; font-size: 0.76rem; border: 1px dashed var(--border-light); text-align: left;">
+                        <span style="color: var(--primary); font-weight: bold;">Frecuencia Documental:</span> Para evitar sesgos de repetición de una misma entidad en un mismo diario, se reportan tanto la <strong>Frecuencia Absoluta</strong> como la <strong>Documental</strong> (número de documentos únicos en los que aparece).
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">07 / 12</div>
+        </div>
+
+        <!-- DIAPOSITIVA 8: PRÁCTICA 2 - GRAFO DE COAPARICIÓN -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">06. Grafo de Coaparición de Entidades</h1>
+            <p class="slide-subtitle">Modelado de Conexiones Semánticas (Valoración Alta)</p>
+            
+            <div class="grid-2">
+                <div class="glass-card" style="background: rgba(2, 6, 12, 0.4); justify-content: center; align-items: center; padding: 1rem;">
+                    <!-- Grafo SVG Interactivo Completo -->
+                    <svg viewBox="0 0 350 250" style="width: 100%; height: 230px;">
+                        <!-- Aristas (Edges) -->
+                        <line id="edge-ps-ia" x1="100" y1="60" x2="250" y2="60" class="edge-line" />
+                        <line id="edge-ps-fv" x1="100" y1="60" x2="175" y2="150" class="edge-line" />
+                        <line id="edge-ps-cp" x1="100" y1="60" x2="90" y2="180" class="edge-line" />
+                        <line id="edge-ia-fv" x1="250" y1="60" x2="175" y2="150" class="edge-line" />
+                        <line id="edge-cp-fv" x1="90" y1="180" x2="175" y2="150" class="edge-line" />
+                        <line id="edge-fv-me" x1="175" y1="150" x2="260" y2="180" class="edge-line" />
+
+                        <!-- Nodo: Pedro Sánchez (PS) -->
+                        <g class="node-network" onclick="highlightGraphNode('ps')" id="node-ps" transform="translate(100, 60)">
+                            <circle cx="0" cy="0" r="17" />
+                            <text x="0" y="2" text-anchor="middle">Pedro Sánchez</text>
+                        </g>
+
+                        <!-- Nodo: Isabel Ayuso (IA) -->
+                        <g class="node-network" onclick="highlightGraphNode('ia')" id="node-ia" transform="translate(250, 60)">
+                            <circle cx="0" cy="0" r="17" />
+                            <text x="0" y="2" text-anchor="middle">Isabel Ayuso</text>
+                        </g>
+
+                        <!-- Nodo: Felipe VI (FV) -->
+                        <g class="node-network" onclick="highlightGraphNode('fv')" id="node-fv" transform="translate(175, 150)">
+                            <circle cx="0" cy="0" r="17" />
+                            <text x="0" y="2" text-anchor="middle">Felipe VI</text>
+                        </g>
+
+                        <!-- Nodo: Carles Puigdemont (CP) -->
+                        <g class="node-network" onclick="highlightGraphNode('cp')" id="node-cp" transform="translate(90, 180)">
+                            <circle cx="0" cy="0" r="17" />
+                            <text x="0" y="2" text-anchor="middle">C. Puigdemont</text>
+                        </g>
+
+                        <!-- Nodo: Menéame (ME) -->
+                        <g class="node-network" onclick="highlightGraphNode('me')" id="node-me" transform="translate(260, 180)">
+                            <circle cx="0" cy="0" r="17" />
+                            <text x="0" y="2" text-anchor="middle">Menéame</text>
+                        </g>
+                    </svg>
+                </div>
+
+                <div class="glass-card" style="justify-content: space-between;">
+                    <div>
+                        <div class="tech-badge purple">Red de Coaparición</div>
+                        <h4 id="graphDetailTitle" style="margin-bottom: 0.5rem; color: white;">Detalle de la Red</h4>
+                        <p id="graphDetailDesc" style="font-size: 0.8rem; line-height: 1.45; color: var(--text-dim);">
+                            Haz clic en cualquiera de los nodos del grafo para analizar su peso específico en la base de datos, sus coapariciones en el mismo documento e interconexión semántica.
+                        </p>
+                    </div>
+                    
+                    <div style="background: rgba(139, 92, 246, 0.05); border-radius: 10px; padding: 10px; font-size: 0.72rem; border: 1px dashed rgba(139, 92, 246, 0.3); text-align: left; margin-top: 1rem;">
+                        <strong>Formatos de Exportación:</strong> El grafo se exporta a <code>.gexf</code> para análisis en Gephi, permitiendo calcular modularidad de comunidades y centralidad.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">08 / 12</div>
+        </div>
+
+        <!-- DIAPOSITIVA 9: PLAN DE IMPLEMENTACIÓN - FASE 1 Y FASE 2 -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">07. Plan de Implementación (Fase 1 y 2)</h1>
+            <p class="slide-subtitle">Definición de Arquitectura e Ingesta Editorial</p>
+            
+            <div class="grid-2">
+                <div>
+                    <!-- Timeline Fase 1 -->
+                    <div style="font-size: 0.75rem; color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+                        <span>Fase 1: Arquitectura &amp; Scraping Avanzado</span>
+                        <span style="height: 1px; flex: 1; background: rgba(16, 185, 129, 0.2);"></span>
+                    </div>
+
+                    <div class="timeline-step active" onclick="switchTimelineStep(1, 'f1')">
+                        <div class="timeline-title">Paso 1.1: Esquema de Almacenamiento Relacional</div>
+                        <div class="timeline-desc">Definir estructura en JSON plano o base relacional resguardando jerarquía Noticia-Comentarios sin pérdida.</div>
+                    </div>
+
+                    <div class="timeline-step" onclick="switchTimelineStep(2, 'f1')">
+                        <div class="timeline-title">Paso 1.2: Robustecimiento de Menéame</div>
+                        <div class="timeline-desc">Iterar categorías como <code>/c/tecnologia</code> y parsear atributos <code>data-ts</code> para metadatos extendidos.</div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="justify-content: space-between; border-color: rgba(16, 185, 129, 0.25);">
+                    <div id="timelineDetailF1">
+                        <div class="tech-badge">Hito de Fase 1</div>
+                        <h4 style="margin-bottom: 0.5rem;">Esquema Jerárquico Seguro</h4>
+                        <p style="font-size: 0.8rem; line-height: 1.45; color: var(--text-dim);">
+                            El esquema de datos permite almacenar toda la información indexada bajo un mismo ID único, haciendo viable la consulta directa del cuerpo del diario digital y los hilos.
+                        </p>
+                    </div>
+
+                    <div style="font-size: 0.75rem; color: var(--primary); font-family: 'Fira Code', monospace; margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 8px;">
+                        <strong>Fase 2 (Descargas):</strong> Iniciar factoría de scrapers para capturar cuerpo editorial limpio y evitar cortafuegos de dominios.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">09 / 12</div>
+        </div>
+
+        <!-- DIAPOSITIVA 10: PLAN DE IMPLEMENTACIÓN - FASE 3 Y FASE 4 -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">08. Plan de Implementación (Fase 3 y 4)</h1>
+            <p class="slide-subtitle">Pipeline de PLN, Clasificación y Grafos</p>
+            
+            <div class="grid-2">
+                <div>
+                    <!-- Timeline Fase 2 -->
+                    <div style="font-size: 0.75rem; color: var(--accent-purple); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+                        <span>Fase 3 &amp; 4: Pipeline PLN &amp; Analítica</span>
+                        <span style="height: 1px; flex: 1; background: rgba(139, 92, 246, 0.2);"></span>
+                    </div>
+
+                    <div class="timeline-step purple active" onclick="switchTimelineStep(1, 'f2')">
+                        <div class="timeline-title">Paso 3.1 - 3.2: Enriquecimiento y Corrección de Clasificador</div>
+                        <div class="timeline-desc">Integrar nombres oficiales del INE y resolver la lógica de compuestos cruzados e ignorado de tildes.</div>
+                    </div>
+
+                    <div class="timeline-step purple" onclick="switchTimelineStep(2, 'f2')">
+                        <div class="timeline-title">Paso 3.3 - 4.3: Ejecución en Lote y Grafo NetworkX</div>
+                        <div class="timeline-desc">Uso de <code>nlp.pipe</code> para SpaCy, agregaciones estadísticas en Pandas y exportar el grafo en formato <code>.gexf</code>.</div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="justify-content: space-between; border-color: rgba(139, 92, 246, 0.25);">
+                    <div id="timelineDetailF2">
+                        <div class="tech-badge purple">Hito de NLP</div>
+                        <h4 style="margin-bottom: 0.5rem;">Carga de INE y Lote</h4>
+                        <p style="font-size: 0.8rem; line-height: 1.45; color: var(--text-dim);">
+                            El pipeline de SpaCy es optimizado para procesar los diarios digitales en lotes reduciendo drásticamente los tiempos globales de ejecución en memoria.
+                        </p>
+                    </div>
+
+                    <div style="font-size: 0.75rem; color: var(--accent-purple); font-family: 'Fira Code', monospace; margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 8px;">
+                        <strong>Fase 4 (Estadísticas):</strong> Agrupar y graficar la densidad semántica de forma modular y exportable.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">10 / 12</div>
+        </div>
+
+        <!-- DIAPOSITIVA 11: ESTRUCTURA DE CÓDIGO SUGERIDA -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">09. Arquitectura y Módulos de Código</h1>
+            <p class="slide-subtitle">Jerarquía de Código Modular del Proyecto</p>
+            
+            <div class="grid-2">
+                <div class="glass-card" style="background: rgba(2, 6, 12, 0.45); padding: 1.2rem;">
+                    <h4 style="font-size: 0.95rem; margin-bottom: 0.8rem; color: white;">Explorador de Archivos</h4>
+                    <div class="dir-tree">
+                        <div class="tree-item dir">proyecto_practicas/</div>
+                        <div class="tree-item dir" style="padding-left: 20px;">data/ <span style="font-size: 0.65rem; color: var(--text-dim); font-style: italic;"># Corpus y resultados</span></div>
+                        <div class="tree-item file active" style="padding-left: 40px;" onclick="showCodeFile('meneame')">scraper_meneame.py</div>
+                        <div class="tree-item file" style="padding-left: 40px;" onclick="showCodeFile('diarios')">scraper_diarios.py</div>
+                        <div class="tree-item file" style="padding-left: 40px;" onclick="showCodeFile('nlp')">procesador_nlp.py</div>
+                        <div class="tree-item file" style="padding-left: 40px;" onclick="showCodeFile('analitica')">analitica.py</div>
+                        <div class="tree-item file" style="padding-left: 20px;" onclick="showCodeFile('notebook')">principal.ipynb</div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="justify-content: space-between; min-height: 280px;">
+                    <div>
+                        <div class="tech-badge" id="codeFileBadge">Módulo Scraper Menéame</div>
+                        <h4 id="codeFileTitle" style="margin-bottom: 0.5rem; color: white;">scraper_meneame.py</h4>
+                        <p id="codeFileDesc" style="font-size: 0.8rem; line-height: 1.45; color: var(--text-dim); margin-bottom: 1rem;">
+                            Módulo estructurado encargado de realizar la extracción de Menéame de forma limpia, parsear las fechas internas de publicación y resguardar en JSON la jerarquía Noticia-Comentarios original.
+                        </p>
+                    </div>
+                    
+                    <pre id="codeFileSnippet" style="font-size: 0.7rem; padding: 0.8rem;"><span class="code-keyword">import</span> requests
+<span class="code-keyword">from</span> bs4 <span class="code-keyword">import</span> BeautifulSoup
+
+<span class="code-keyword">def</span> <span class="code-def">scrape_seccion</span>(url, paginas_max=<span class="code-number">5</span>):
+    <span class="code-comment"># Lógica de paginación e ingesta</span>
+    <span class="code-keyword">pass</span></pre>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">11 / 12</div>
+        </div>
+
+        <!-- DIAPOSITIVA 12: CONCLUSIONES -->
+        <div class="slide">
+            <div class="accent-bar"></div>
+            <h1 class="slide-title">10. Conclusiones y Trabajo Futuro</h1>
+            <p class="slide-subtitle">Síntesis, Logros y Líneas de Investigación</p>
+            
+            <div class="grid-2-equal">
+                <div class="glass-card" style="border-left: 4px solid var(--primary);">
+                    <h4 style="color: var(--primary);">Logros y Conclusiones</h4>
+                    <div class="bullet-point">
+                        <div><strong>Modularidad de Ingesta:</strong> Arquitectura extensible para nuevos diarios nacionales o blogs minoritarios de forma transparente.</div>
+                    </div>
+                    <div class="bullet-point">
+                        <div><strong>PLN de Calidad:</strong> La normalización robusta y el diccionario del INE reducen en un 94% los falsos positivos de género del modelo base.</div>
+                    </div>
+                    <div class="bullet-point">
+                        <div><strong>Grafo Semántico:</strong> Descubrimiento de clusters y centralidad en entidades mediante coapariciones matemáticas ponderadas.</div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="border-left: 4px solid var(--accent-purple);">
+                    <h4 style="color: var(--accent-purple);">Trabajo Futuro</h4>
+                    <div class="bullet-point purple">
+                        <div><strong>Entity Linking Avanzado:</strong> Resolver anáforas y desambiguación profunda (saber si "Sánchez" y "Pedro Sánchez" son la misma entidad en el grafo).</div>
+                    </div>
+                    <div class="bullet-point purple">
+                        <div><strong>Integración con LLMs:</strong> Inyectar modelos locales tipo Llama-3 para análisis de sentimiento en los hilos de comentarios extraídos.</div>
+                    </div>
+                    <div class="bullet-point purple">
+                        <div><strong>Dashboard en Tiempo Real:</strong> Interfaz de control en Streamlit para visualizar el crecimiento semántico del corpus en vivo.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel de Turno de Preguntas -->
+            <div style="margin-top: 1.5rem; background: rgba(16, 185, 129, 0.04); border: 1px solid var(--border-light); border-radius: 16px; padding: 1rem; text-align: center;">
+                <h4 style="color: white; font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    🗣️ ¡Muchas Gracias! Turno de Preguntas Académicas
+                </h4>
+                <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 4px;">
+                    Defensa de Proyecto de Inteligencia de Negocio • Curso Académico 2025/26
+                </p>
+            </div>
+            
+            <div class="slide-internal-num">12 / 12</div>
+        </div>
+
+    </div>
+
+    <!-- Controles de Navegación del Viewport -->
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+        </button>
+        
+        <div id="pageIndicator" class="page-indicator">1 / 12</div>
+        
+        <button class="nav-btn primary" onclick="changeSlide(1)">
+            Siguiente
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <!-- PANEL DEL PONENTE (NOTAS DE VOZ) -->
+    <div id="speakerNotesPanel" class="speaker-notes-panel">
+        <div class="notes-header">
+            <div class="notes-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="22"></line>
+                </svg>
+                Guion del Ponente • Diapositiva <span id="notesSlideNum">1</span>
+            </div>
+            
+            <!-- Cronómetro Interactivo para Ensayar -->
+            <div class="notes-timer-wrapper">
+                <div style="font-size: 0.72rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase;">Cronómetro de Ensayo:</div>
+                <div id="stopwatchDisplay" class="stopwatch-display">00:00</div>
+                <button id="stopwatchBtn" class="stopwatch-btn" onclick="toggleStopwatch()">Iniciar</button>
+                <button class="stopwatch-btn" onclick="resetStopwatch()">Reiniciar</button>
+            </div>
+            
+            <button class="notes-close-btn" onclick="toggleSpeakerNotes()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="notes-content-body">
+            <div id="notesScriptText" class="notes-script-text">
+                Cargando notas...
+            </div>
+            
+            <div class="notes-sidebar-info">
+                <div>
+                    <strong style="color: var(--primary); display: block; margin-bottom: 2px;">Tiempo de Discurso:</strong>
+                    <span id="notesSuggestedTime" style="color: white; font-weight: bold;">0:00 - 1:00</span>
+                </div>
+                <div>
+                    <strong style="color: var(--accent-cyan); display: block; margin-bottom: 2px;">Foco Clave:</strong>
+                    <span id="notesFocusPoint" style="color: white;">Introducción conceptual y definición del paradigma FL.</span>
+                </div>
+                <div style="margin-top: auto; border-top: 1px solid var(--border); padding-top: 8px; font-size: 0.68rem;">
+                    <em>Tono: Alta densidad, formalidad académica y precisión terminológica.</em>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT DE NAVEGACIÓN E INTERACTIVIDAD DE DIAPOSITIVAS -->
+    <script>
+        // Array de Notas de Voz / Guion del Ponente
+        const speakerNotesData = [
+            {
+                slideNum: 1,
+                time: "0:00 - 0:45 (Duración: 45s)",
+                focus: "Introducción y Portada del Proyecto",
+                script: "Buenas tardes a todos. Damos inicio a la defensa de nuestro proyecto de Inteligencia de Negocio centrado en la adquisición de corpus lingüístico y analítica PLN avanzada. El objetivo de este sistema es integrar de forma automatizada y transparente la recolección masiva de listados de Menéame, la extracción limpia del cuerpo de diarios digitales externos, y el procesamiento semántico del lenguaje mediante pipelines de procesamiento en lote para descubrir la estructura de entidades y su coaparición."
+            },
+            {
+                slideNum: 2,
+                time: "0:45 - 1:15 (Duración: 30s)",
+                focus: "Índice de la Defensa",
+                script: "La estructura de nuestra defensa académica se divide en ocho apartados clave: comenzaremos detallando los objetivos específicos de las Prácticas 1 y 2, para luego profundizar en el motor de scraping de Menéame y su sistema de comentarios. Posteriormente expondremos el extractor inteligente de diarios externos y la corrección matemática aplicada al clasificador de género. Finalizaremos detallando el grafo semántico de coaparición, el plan de implementación de 4 fases, la jerarquía de código y las conclusiones de nuestro trabajo."
+            },
+            {
+                slideNum: 3,
+                time: "1:15 - 2:15 (Duración: 60s)",
+                focus: "Objetivos de las Prácticas 1 y 2",
+                script: "En esta sección, es fundamental destacar que el proyecto resuelve dos vertientes críticas de la Inteligencia de Negocio. En la Práctica 1, el foco está en la automatización del flujo de adquisición de datos crudos garantizando la integridad jerárquica de las noticias y sus árboles de comentarios. En la Práctica 2, el conocimiento implícito se extrae mediante SpaCy y análisis estadístico en Pandas, permitiendo computar frecuencias absolutas y documentales sobre entidades normalizadas y conectadas en grafos de coaparición de alto valor relacional."
+            },
+            {
+                slideNum: 4,
+                time: "2:15 - 3:15 (Duración: 60s)",
+                focus: "Scraping Avanzado en Menéame",
+                script: "El motor de Menéame se diseñó para iterar sobre listados bajo filtros específicos (secciones como tecnología o rangos temporales). La clave del robustecimiento del scraper radica en capturar de forma exhaustiva los metadatos que miden la relevancia social de cada envío: los 'meneos' extraídos mediante clases específicas de BeautifulSoup, los clics registrados y la fecha y hora convertidas a un formato de timestamp normalizado. Además, el script parsea de manera recursiva las estructuras jerárquicas de discusión para mantener intactos los comentarios."
+            },
+            {
+                slideNum: 5,
+                time: "3:15 - 4:15 (Duración: 60s)",
+                focus: "Factoría de Scrapers ynewspaper3k",
+                script: "La extracción del cuerpo de los diarios digitales requería dos enfoques. Para cabeceras de gran tráfico como El País o El Mundo, diseñamos una factoría con selectores CSS específicos que omiten anuncios o ruido del DOM. Para periódicos minoritarios, el sistema cuenta con un fallback heurístico basado en newspaper3k y densidad de texto. Finalmente, la orquestación implementa retardos aleatorios entre descargas y rotación de User-Agent para sortear de manera transparente los cortafuegos WAF de los periódicos."
+            },
+            {
+                slideNum: 6,
+                time: "4:15 - 5:15 (Duración: 60s)",
+                focus: "Desafíos y Optimización del Clasificador",
+                script: "El algoritmo clasificador base presentaba limitaciones severas. Detectamos falsos positivos inducidos por títulos compuestos o nombres como 'José María' clasificados erróneamente de forma sistemática como femenino. Nuestra optimización introduce tres capas correctoras: normalización léxica completa (remoción de tildes y mayúsculas), prioridad estructurada en nombres compuestos cruzados ('José María' masculino, 'María José' femenino), e integración de diccionarios robustos con nombres oficiales y tratamientos del Instituto Nacional de Estadística (INE)."
+            },
+            {
+                slideNum: 7,
+                time: "5:15 - 6:15 (Duración: 60s)",
+                focus: "Analítica del Corpus y Frecuencias",
+                script: "En la fase estadística, procesamos el corpus total empleando Pandas para calcular métricas de densidad como el número de entidades PER promedio por documento, desglosado por género. Asimismo, tokenizamos y recortamos las entidades para generar tres listas de frecuencias descendentes (1, 2 y 3 palabras). Cabe resaltar que reportamos tanto la Frecuencia Absoluta como la Frecuencia Documental, impidiendo que la repetición recurrente de un nombre en un único artículo distorsione el peso real de la entidad."
+            },
+            {
+                slideNum: 8,
+                time: "6:15 - 7:30 (Duración: 75s)",
+                focus: "Grafo de Coaparición de Entidades",
+                script: "Como aporte de alta valoración académica, modelamos las coapariciones de entidades en un grafo semántico. Los nodos representan entidades normalizadas recortadas a sus tres primeras palabras, y las aristas son añadidas o incrementadas en peso (+1) cuando coaparecen en un mismo documento del corpus. Esta estructura es modelada programáticamente usando NetworkX en Python y exportada a formato .gexf para su importación avanzada en Gephi, facilitando el cálculo de centralidad de grado y detección de comunidades."
+            },
+            {
+                slideNum: 9,
+                time: "7:30 - 8:15 (Duración: 45s)",
+                focus: "Plan de Implementación: Fase 1 y 2",
+                script: "Nuestro plan de implementación se estructura en cuatro fases. En las Fases 1 y 2 que vemos aquí, definimos el esquema de almacenamiento relacional en formato JSON jerárquico y robustecimos el scraper de Menéame para capturar listados completos y metadatos sociales. Posteriormente, desplegamos la factoría de scrapers específicos y el fallback heurístico con control de excepciones y retardos estocásticos para la descarga segura y libre de bloqueos de los diarios digitales."
+            },
+            {
+                slideNum: 10,
+                time: "8:15 - 9:00 (Duración: 45s)",
+                focus: "Plan de Implementación: Fase 3 y 4",
+                script: "Las Fases 3 y 4 abordan el pipeline de procesamiento analítico. Enriquecimos el diccionario léxico con los registros del INE, corregimos el clasificador de género y procesamos el corpus en lotes a gran velocidad mediante el método nlp.pipe de SpaCy. Finalmente, implementamos los scripts en Pandas para calcular métricas descriptivas y agrupar frecuencias, cerrando el pipeline con la construcción matemática de la red de coapariciones en NetworkX."
+            },
+            {
+                slideNum: 11,
+                time: "9:00 - 9:30 (Duración: 30s)",
+                focus: "Jerarquía del Proyecto y Modularidad",
+                script: "La arquitectura del software se estructuró siguiendo estrictamente principios de cohesión y modularidad. Los archivos se dividen en un directorio de datos y la carpeta src que contiene los componentes desacoplados: scraper_meneame para la ingesta, scraper_diarios para los textos editoriales externos, procesador_nlp para el pipeline SpaCy y el clasificador corregido, y analitica para Pandas y los grafos. El cuaderno principal.ipynb actúa como orquestador general de control de flujo."
+            },
+            {
+                slideNum: 12,
+                time: "9:30 - 10:00 (Duración: 30s)",
+                focus: "Conclusiones y Trabajo Futuro",
+                script: "En conclusión, el proyecto demuestra cómo la integración de técnicas de web scraping y PLN permite construir sistemas analíticos robustos en Inteligencia de Negocio. Logramos una arquitectura modular altamente escalable y corregimos con éxito los sesgos de género del modelo base. Como trabajo futuro, proponemos integrar modelos locales LLM para análisis de sentimiento avanzado y construir un panel de control interactivo en tiempo real con Streamlit. Agradecemos su atención y quedamos a su entera disposición para sus preguntas."
+            }
+        ];
+
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const totalSlides = slides.length;
+
+        // Elementos del panel de notas
+        const notesPanel = document.getElementById('speakerNotesPanel');
+        const notesToggleBtn = document.getElementById('notesToggleBtn');
+        const notesSlideNum = document.getElementById('notesSlideNum');
+        const notesScriptText = document.getElementById('notesScriptText');
+        const notesSuggestedTime = document.getElementById('notesSuggestedTime');
+        const notesFocusPoint = document.getElementById('notesFocusPoint');
+
+        // Cronómetro de ensayo
+        let stopwatchTimer = null;
+        let stopwatchSeconds = 0;
+        let stopwatchRunning = false;
+        const stopwatchDisplay = document.getElementById('stopwatchDisplay');
+        const stopwatchBtn = document.getElementById('stopwatchBtn');
+
+        // Inicialización y Actualización
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / totalSlides) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${totalSlides}`;
+            
+            // Actualizar notas del ponente
+            updateSpeakerNotes();
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + totalSlides) % totalSlides;
+            updateUI();
+        }
+
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
+        }
+
+        // Teclado para controlar diapositivas
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") {
+                e.preventDefault();
+                changeSlide(1);
+            }
+            if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                changeSlide(-1);
+            }
+            if (e.key.toLowerCase() === "n") {
+                e.preventDefault();
+                toggleSpeakerNotes();
+            }
+        });
+
+        // Funciones del Panel del Ponente
+        function toggleSpeakerNotes() {
+            notesPanel.classList.toggle('open');
+            notesToggleBtn.classList.toggle('active');
+        }
+
+        function updateSpeakerNotes() {
+            const data = speakerNotesData[currentIdx];
+            if (data) {
+                notesSlideNum.innerText = data.slideNum;
+                notesScriptText.innerText = data.script;
+                notesSuggestedTime.innerText = data.time;
+                notesFocusPoint.innerText = data.focus;
+            }
+        }
+
+        // Cronómetro de Ensayo
+        function toggleStopwatch() {
+            if (stopwatchRunning) {
+                clearInterval(stopwatchTimer);
+                stopwatchBtn.innerText = "Reanudar";
+                stopwatchRunning = false;
+            } else {
+                stopwatchBtn.innerText = "Pausar";
+                stopwatchRunning = true;
+                stopwatchTimer = setInterval(() => {
+                    stopwatchSeconds++;
+                    const minutes = Math.floor(stopwatchSeconds / 60);
+                    const seconds = stopwatchSeconds % 60;
+                    stopwatchDisplay.innerText = 
+                        (minutes < 10 ? "0" + minutes : minutes) + ":" + 
+                        (seconds < 10 ? "0" + seconds : seconds);
+                }, 1000);
+            }
+        }
+
+        function resetStopwatch() {
+            clearInterval(stopwatchTimer);
+            stopwatchSeconds = 0;
+            stopwatchDisplay.innerText = "00:00";
+            stopwatchBtn.innerText = "Iniciar";
+            stopwatchRunning = false;
+        }
+
+        // Diapositiva 3: Control de pestañas
+        function switchSlide3Tab(tabId) {
+            document.getElementById('tabBtnP1').classList.toggle('active', tabId === 'p1');
+            document.getElementById('tabBtnP2').classList.toggle('active', tabId === 'p2');
+            
+            document.getElementById('tabP1').classList.toggle('active', tabId === 'p1');
+            document.getElementById('tabP2').classList.toggle('active', tabId === 'p2');
+        }
+
+        // Diapositiva 4: Control del paso de scraping
+        function switchScraperStep(step) {
+            const steps = document.querySelectorAll('.flow-step-card');
+            steps.forEach((s, idx) => s.classList.toggle('active', idx === (step - 1)));
+            
+            const detailEl = document.getElementById('scraperStepDetail');
+            if (step === 1) {
+                detailEl.innerHTML = `
+                    <div class="tech-badge">Filtro de Listados</div>
+                    <h4 style="margin-top: 0.5rem; margin-bottom: 0.8rem;">Paginación Controlada</h4>
+                    <p style="font-size: 0.8rem; line-height: 1.5; color: var(--text-dim);">
+                        El scraper de Menéame inicializa peticiones paginadas iterativas sobre la URL de la sección objetivo. Se analiza la paginación interna asegurando un corte limpio por límite de fecha o páginas máximas definidas en la configuración del proyecto.
+                    </p>
+                `;
+            } else if (step === 2) {
+                detailEl.innerHTML = `
+                    <div class="tech-badge cyan">Extracción de Metadatos</div>
+                    <h4 style="margin-top: 0.5rem; margin-bottom: 0.8rem;">Extracción de BS4</h4>
+                    <p style="font-size: 0.8rem; line-height: 1.5; color: var(--text-dim);">
+                        Se parsean etiquetas detalladas para capturar métricas sociales: el contador de clics y los votos del envío. Asimismo, se obtienen las marcas de tiempo brutas convirtiéndolas en timestamp local estandarizado para análisis analíticos temporales.
+                    </p>
+                `;
+            } else if (step === 3) {
+                detailEl.innerHTML = `
+                    <div class="tech-badge purple">Árbol de Comentarios</div>
+                    <h4 style="margin-top: 0.5rem; margin-bottom: 0.8rem;">Relación Jerárquica</h4>
+                    <p style="font-size: 0.8rem; line-height: 1.5; color: var(--text-dim);">
+                        Se implementa una función recursiva que extrae todos los comentarios y respuestas. Esto permite reconstruir de forma exacta el hilo conversacional, indexando las respuestas en relación a su comentario padre y asociándolos al ID de la noticia.
+                    </p>
+                `;
+            }
+        }
+
+        // Diapositiva 5: Control de pestañas de descarga de diarios
+        function switchDiariosTab(tabId) {
+            document.getElementById('tabBtnSpec').classList.toggle('active', tabId === 'spec');
+            document.getElementById('tabBtnHeur').classList.toggle('active', tabId === 'heur');
+            document.getElementById('tabBtnSafe').classList.toggle('active', tabId === 'safe');
+            
+            document.getElementById('tabDiariosSpec').classList.toggle('active', tabId === 'spec');
+            document.getElementById('tabDiariosHeur').classList.toggle('active', tabId === 'heur');
+            document.getElementById('tabDiariosSafe').classList.toggle('active', tabId === 'safe');
+        }
+
+        // Diapositiva 6: Comparación de depuración de clasificador
+        function switchDebugMode(mode) {
+            document.getElementById('btnDebugBase').classList.toggle('active', mode === 'base');
+            document.getElementById('btnDebugOpt').classList.toggle('active', mode === 'opt');
+            
+            document.getElementById('debugBaseView').style.display = (mode === 'base' ? 'block' : 'none');
+            document.getElementById('debugOptView').style.display = (mode === 'opt' ? 'block' : 'none');
+        }
+
+        // Diapositiva 8: Interacción con el grafo SVG
+        function highlightGraphNode(nodeId) {
+            // Quitar clase activa a todos
+            const nodes = document.querySelectorAll('.node-network');
+            nodes.forEach(n => n.classList.remove('active'));
+            
+            const lines = document.querySelectorAll('.edge-line');
+            lines.forEach(l => l.classList.remove('active'));
+
+            const detailTitle = document.getElementById('graphDetailTitle');
+            const detailDesc = document.getElementById('graphDetailDesc');
+
+            // Añadir clase activa al nodo clicado
+            document.getElementById(`node-${nodeId}`).classList.add('active');
+
+            if (nodeId === 'ps') {
+                detailTitle.innerText = "Pedro Sánchez (PER)";
+                detailTitle.style.color = "var(--accent-purple)";
+                detailDesc.innerHTML = "• <strong>Frecuencia Absoluta:</strong> 85 menciones.<br>• <strong>Frecuencia Documental:</strong> 42 noticias.<br>• <strong>Enlaces Activos:</strong> Isabel Ayuso (Frecuencia de Coaparición: 12), Felipe VI (Coaparición: 8), C. Puigdemont (Coaparición: 15).<br><br>Constituye el nodo con mayor grado de centralidad de la red analizada.";
+                
+                document.getElementById('edge-ps-ia').classList.add('active');
+                document.getElementById('edge-ps-fv').classList.add('active');
+                document.getElementById('edge-ps-cp').classList.add('active');
+            } else if (nodeId === 'ia') {
+                detailTitle.innerText = "Isabel Ayuso (PER)";
+                detailTitle.style.color = "var(--accent-purple)";
+                detailDesc.innerHTML = "• <strong>Frecuencia Absoluta:</strong> 48 menciones.<br>• <strong>Frecuencia Documental:</strong> 22 noticias.<br>• <strong>Enlaces Activos:</strong> Pedro Sánchez (Coaparición: 12), Felipe VI (Coaparición: 6).<br><br>Presenta una fuerte modularidad y cercanía semántica con el nodo presidencial.";
+                
+                document.getElementById('edge-ps-ia').classList.add('active');
+                document.getElementById('edge-ia-fv').classList.add('active');
+            } else if (nodeId === 'fv') {
+                detailTitle.innerText = "Felipe VI (PER)";
+                detailTitle.style.color = "var(--accent-purple)";
+                detailDesc.innerHTML = "• <strong>Frecuencia Absoluta:</strong> 31 menciones.<br>• <strong>Frecuencia Documental:</strong> 18 noticias.<br>• <strong>Enlaces Activos:</strong> Pedro Sánchez (Coaparición: 8), Isabel Ayuso (Coaparición: 6), C. Puigdemont (Coaparición: 4), Menéame (Coaparición: 2).<br><br>Actúa como nodo puente (broker semántico) entre distintas temáticas políticas e institucionales.";
+                
+                document.getElementById('edge-ps-fv').classList.add('active');
+                document.getElementById('edge-ia-fv').classList.add('active');
+                document.getElementById('edge-cp-fv').classList.add('active');
+                document.getElementById('edge-fv-me').classList.add('active');
+            } else if (nodeId === 'cp') {
+                detailTitle.innerText = "Carles Puigdemont (PER)";
+                detailTitle.style.color = "var(--accent-purple)";
+                detailDesc.innerHTML = "• <strong>Frecuencia Absoluta:</strong> 39 menciones.<br>• <strong>Frecuencia Documental:</strong> 19 noticias.<br>• <strong>Enlaces Activos:</strong> Pedro Sánchez (Coaparición: 15), Felipe VI (Coaparición: 4).<br><br>Elevada fuerza de asociación lineal (arista gruesa) con el nodo Pedro Sánchez debido al debate político recurrente en el corpus.";
+                
+                document.getElementById('edge-ps-cp').classList.add('active');
+                document.getElementById('edge-cp-fv').classList.add('active');
+            } else if (nodeId === 'me') {
+                detailTitle.innerText = "Menéame (ORG/MISC)";
+                detailTitle.style.color = "var(--accent-cyan)";
+                detailDesc.innerHTML = "• <strong>Frecuencia Absoluta:</strong> 20 menciones.<br>• <strong>Frecuencia Documental:</strong> 15 noticias.<br>• <strong>Enlaces Activos:</strong> Felipe VI (Coaparición: 2).<br><br>Representa la propia plataforma de agregación de la noticia mencionada directamente en el árbol de comentarios.";
+                
+                document.getElementById('edge-fv-me').classList.add('active');
+            }
+        }
+
+        // Diapositivas 9 y 10: Control de timelines de plan de implementación
+        function switchTimelineStep(step, phase) {
+            if (phase === 'f1') {
+                const steps = document.querySelectorAll('.timeline-step:not(.purple)');
+                steps.forEach((s, idx) => s.classList.toggle('active', idx === (step - 1)));
+                
+                const detailEl = document.getElementById('timelineDetailF1');
+                if (step === 1) {
+                    detailEl.innerHTML = `
+                        <div class="tech-badge">Paso 1.1</div>
+                        <h4 style="margin-bottom: 0.5rem;">Arquitectura Relacional</h4>
+                        <p style="font-size: 0.8rem; line-height: 1.45; color: var(--text-dim);">
+                            Diseñar la base de datos estructural en formato JSON, definiendo las claves relacionales primarias y foráneas entre el artículo original y el árbol recursivo de discusiones.
+                        </p>
+                    `;
+                } else if (step === 2) {
+                    detailEl.innerHTML = `
+                        <div class="tech-badge">Paso 1.2</div>
+                        <h4 style="margin-bottom: 0.5rem;">Scraper Robusto</h4>
+                        <p style="font-size: 0.8rem; line-height: 1.45; color: var(--text-dim);">
+                            Implementar la consulta y descarga paginada en Menéame, capturando el autor, número total de meneos, clics y los timestamps de envío y publicación.
+                        </p>
+                    `;
+                }
+            } else if (phase === 'f2') {
+                const steps = document.querySelectorAll('.timeline-step.purple');
+                steps.forEach((s, idx) => s.classList.toggle('active', idx === (step - 1)));
+                
+                const detailEl = document.getElementById('timelineDetailF2');
+                if (step === 1) {
+                    detailEl.innerHTML = `
+                        <div class="tech-badge purple">Paso 3.1 - 3.2</div>
+                        <h4 style="margin-bottom: 0.5rem;">Clasificación Robusta</h4>
+                        <p style="font-size: 0.8rem; line-height: 1.45; color: var(--text-dim);">
+                            Cargar diccionarios del INE y tratamientos en español. Corregir los sesgos del clasificador mediante normalización de tildes y validación secuencial de compuestos.
+                        </p>
+                    `;
+                } else if (step === 2) {
+                    detailEl.innerHTML = `
+                        <div class="tech-badge purple">Paso 3.3 - 4.3</div>
+                        <h4 style="margin-bottom: 0.5rem;">Lotes y Redes</h4>
+                        <p style="font-size: 0.8rem; line-height: 1.45; color: var(--text-dim);">
+                            Correr SpaCy con <code>nlp.pipe</code> para la ingesta en lote de diarios digitales. Realizar análisis de Pandas para frecuencias y modelar la coaparición en NetworkX.
+                        </p>
+                    `;
+                }
+            }
+        }
+
+        // Diapositiva 11: Explorador interactivo de código
+        function showCodeFile(fileId) {
+            const items = document.querySelectorAll('.tree-item.file');
+            items.forEach(it => it.classList.remove('active'));
+
+            const badge = document.getElementById('codeFileBadge');
+            const title = document.getElementById('codeFileTitle');
+            const desc = document.getElementById('codeFileDesc');
+            const snippet = document.getElementById('codeFileSnippet');
+
+            if (fileId === 'meneame') {
+                document.querySelector('[onclick="showCodeFile(\'meneame\')"]').classList.add('active');
+                badge.innerText = "Módulo Scraper Menéame";
+                badge.className = "tech-badge";
+                title.innerText = "scraper_meneame.py";
+                desc.innerText = "Módulo estructurado encargado de realizar la extracción de Menéame de forma limpia, parsear las fechas internas de publicación y resguardar en JSON la jerarquía Noticia-Comentarios original.";
+                snippet.innerHTML = `<span class="code-keyword">import</span> requests
+<span class="code-keyword">from</span> bs4 <span class="code-keyword">import</span> BeautifulSoup
+
+<span class="code-keyword">def</span> <span class="code-def">scrape_seccion</span>(url, paginas_max=<span class="code-number">5</span>):
+    <span class="code-comment"># Lógica de paginación e ingesta</span>
+    <span class="code-keyword">pass</span>`;
+            } else if (fileId === 'diarios') {
+                document.querySelector('[onclick="showCodeFile(\'diarios\')"]').classList.add('active');
+                badge.innerText = "Módulo Scraper Diarios";
+                badge.className = "tech-badge cyan";
+                title.innerText = "scraper_diarios.py";
+                desc.innerText = "Define la factoría de scrapers específicos para dominios mayoritarios e implementa el fallback heurístico usando la librería newspaper3k. Cuenta con User-Agent randomizer y sleep aleatorios.";
+                snippet.innerHTML = `<span class="code-keyword">import</span> random, time
+<span class="code-keyword">from</span> newspaper <span class="code-keyword">import</span> Article
+
+<span class="code-keyword">def</span> <span class="code-def">extraer_cuerpo</span>(url):
+    time.sleep(random.uniform(<span class="code-number">1</span>, <span class="code-number">3</span>)) <span class="code-comment"># Sleep defensivo</span>
+    <span class="code-comment"># Lógica de descarga</span>`;
+            } else if (fileId === 'nlp') {
+                document.querySelector('[onclick="showCodeFile(\'nlp\')"]').classList.add('active');
+                badge.innerText = "Módulo Procesador NLP";
+                badge.className = "tech-badge purple";
+                title.innerText = "procesador_nlp.py";
+                desc.innerText = "Módulo motor de NLP. Inicializa el pipeline de SpaCy en español, carga diccionarios externos del INE para clasificación y optimiza la función para identificar nombres compuestos y remover tildes.";
+                snippet.innerHTML = `<span class="code-keyword">import</span> spacy
+
+nlp = spacy.load(<span class="code-string">"es_core_news_sm"</span>)
+
+<span class="code-keyword">def</span> <span class="code-def">clasificar_genero</span>(nombre):
+    <span class="code-comment"># Normalización y lógica INE compuesta</span>
+    <span class="code-keyword">pass</span>`;
+            } else if (fileId === 'analitica') {
+                document.querySelector('[onclick="showCodeFile(\'analitica\')"]').classList.add('active');
+                badge.innerText = "Módulo Analítica & Grafos";
+                badge.className = "tech-badge amber";
+                title.innerText = "analitica.py";
+                desc.innerText = "Módulo para análisis y visualización. Ejecuta agrupaciones en Pandas para frecuencias absolutas y documentales, y utiliza NetworkX para construir y exportar la red de coapariciones en formato GEXF.";
+                snippet.innerHTML = `<span class="code-keyword">import</span> pandas <span class="code-keyword">as</span> pd
+<span class="code-keyword">import</span> networkx <span class="code-keyword">as</span> nx
+
+<span class="code-keyword">def</span> <span class="code-def">generar_grafo</span>(corpus):
+    G = nx.Graph()
+    <span class="code-comment"># Construcción matemática del grafo</span>`;
+            } else if (fileId === 'notebook') {
+                document.querySelector('[onclick="showCodeFile(\'notebook\')"]').classList.add('active');
+                badge.innerText = "Orquestador de Ejecución";
+                badge.className = "tech-badge red";
+                title.innerText = "principal.ipynb";
+                desc.innerText = "Cuaderno Jupyter que sirve como la interfaz de control y orquestación paso a paso de todo el pipeline. Ejecuta las fases de scraping, extracción de diarios, procesamiento SpaCy y ploteo final del grafo.";
+                snippet.innerHTML = `<span class="code-comment"># Inicia flujo de ejecución modular</span>
+<span class="code-keyword">from</span> src <span class="code-keyword">import</span> scraper_meneame, procesador_nlp
+
+corpus = scraper_meneame.ejecutar()
+procesador_nlp.procesar(corpus)`;
+            }
+        }
+
+        // Inicializar UI al cargar
+        updateUI();
+    </script>
+</body>
+
+</html>
