@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Forense con Sensity AI - Raúl Gómez</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* Custom visual tokens for Sensity AI (Deep Indigo and Cyberpunk Violet) */
+        :root {
+            --accent-violet: #8b5cf6;
+            --accent-violet-hover: #7c3aed;
+            --glow: rgba(139, 92, 246, 0.4);
+            --scan-line: rgba(34, 197, 94, 0.3);
+        }
+
+        .hero-banner {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-violet);
+            top: 50%;
+            left: 0;
+            box-shadow: 0 0 10px var(--accent-violet);
+            animation: scanEffect 3s linear infinite;
+        }
+
+        @keyframes scanEffect {
+            0% {
+                top: 0%;
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                top: 100%;
+                opacity: 0;
+            }
+        }
+
+        .badge-threat {
+            display: inline-block;
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        /* 3-Column multilayer motor grid */
+        .multilayer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Deployment Card layout */
+        .deploy-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .deploy-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-light);
+            border-radius: 24px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .deploy-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+        }
+
+        .deploy-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 0.8rem;
+        }
+
+        /* Mock Judicial Pericial Report Card */
+        .report-card {
+            background: #090d16;
+            border: 1px solid var(--border);
+            border-top: 5px solid var(--accent-violet);
+            border-radius: 20px;
+            padding: 1.5rem;
+            font-family: 'Fira Code', monospace;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+            margin-top: 1rem;
+        }
+
+        .report-header-line {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.6rem;
+            margin-bottom: 0.8rem;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .report-detail {
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            line-height: 1.5;
+            margin-bottom: 0.4rem;
+            text-align: left;
+        }
+
+        .report-verdict {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 5px 10px;
+            border-radius: 8px;
+            margin-top: 0.8rem;
+        }
+
+        /* Embedded forensic image styling */
+        .forensic-image {
+            width: 100%;
+            max-height: 240px;
+            object-fit: contain;
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            background: rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+
+        .forensic-image:hover {
+            border-color: var(--accent-violet);
+            box-shadow: 0 0 20px var(--glow);
+        }
+
+
+        .notes-header {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--accent-violet);
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+        }
+
+        .notes-content {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+    </style>
+</head>
+
+<body class="presentation-mode">
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html"
+                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon" style="background: var(--accent-violet);">S</div>
+                <div class="brand">
+                    <h1>Auditoría de Seguridad</h1>
+                    <span>Forense Digital: Sensity AI</span>
+                </div>
+            </a>
+        </div>
+        <div
+            style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold; display: flex; align-items: center; gap: 8px;">
+            <span>UJA • UNIVERSIDAD DE JAÉN</span>
+        </div>
+    </nav>
+
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar"
+            style="background: var(--accent-violet); box-shadow: 0 0 15px var(--accent-violet);"></div>
+    </div>
+
+    <div class="presentation-viewport">
+        <!-- Diapositiva 1: Portada -->
+        <div class="slide active">
+            <div class="hero-banner">
+                <span
+                    style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; font-weight: 800; letter-spacing: 4px; color: var(--text-main);">SENSITY.AI</span>
+            </div>
+            <div class="accent-bar" style="background: var(--accent-violet);"></div>
+            <h1 class="slide-title" style="font-size: 2.3rem;">Análisis Forense Multimedia mediante Sensity AI</h1>
+            <p class="slide-subtitle" style="color: var(--accent-violet); margin-bottom: 1.5rem;">Detección Multicapa de
+                Amenazas Sintéticas</p>
+
+            <div class="authors-box" style="margin-top: 1rem; padding-top: 1rem;">
+                <p
+                    style="color: var(--accent-violet); font-weight: bold; font-size: 0.75rem; letter-spacing: 0.1em; margin-bottom: 0.4rem; text-transform: uppercase;">
+                    Asignatura: Auditoría y Seguridad en Sistemas de Información
+                </p>
+                <div class="author-tag" style="font-size: 1.2rem; margin: 0.2rem 0;">Raúl Gómez Téllez</div>
+                <p style="font-size: 0.8rem; color: var(--text-dim);">Máster en Ingeniería Informática | UJA</p>
+            </div>
+            <div class="slide-internal-num">01 / 12 </div>
+        </div>
+
+
+
+        <!-- Diapositiva 2: El Contexto de la Amenaza (Fraude Sintético) -->
+        <div class="slide">
+            <div class="accent-bar" style="background: var(--accent-violet);"></div>
+            <h1 class="slide-title" style="font-size: 2.2rem;">El Contexto de la Amenaza</h1>
+            <p class="slide-subtitle" style="color: var(--accent-violet);">El auge del fraude sintético</p>
+
+            <div
+                style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; align-items: center; margin-top: 0.5rem;">
+                <div style="font-size: 0.9rem; line-height: 1.5; color: var(--text-dim); text-align: left;">
+                    <ul style="margin-top: 0;">
+                        <li style="padding: 0.6rem 1rem; margin-bottom: 0.5rem;">
+                            <strong>Evolución del cibercrimen:</strong> Transición directa de la manipulación
+                            tradicional de
+                            metadatos a la Inteligencia Artificial Generativa avanzada (Deepfakes de alta fidelidad,
+                            clonación fidedigna de voz).
+                        </li>
+                        <li style="padding: 0.6rem 1rem; margin-bottom: 0.5rem;">
+                            <strong>Ineficacia defensiva:</strong> Inutilidad de los analizadores hash o heurísticos
+                            tradicionales frente a sofisticadas arquitecturas GAN y modelos de difusión estable.
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="data-grid" style="grid-template-columns: 1fr; gap: 1rem;">
+                    <div class="data-card"
+                        style="border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.03); padding: 1.2rem;">
+                        <div
+                            style="font-size: 0.75rem; color: var(--accent-red); font-weight: 800; letter-spacing: 1px;">
+                            FRAUDE DE IDENTIDAD</div>
+                        <div style="font-size: 2.2rem; font-weight: 800; color: var(--accent-red); margin: 0.3rem 0;">
+                            +145%
+                        </div>
+                        <p style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">Crecimiento
+                            del
+                            fraude del CEO y suplantaciones sintéticas</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide-internal-num">02 / 12</div>
+        </div>
+
+        <!-- Diapositiva 3: Sensity AI como Plataforma Forense -->
+        <div class="slide">
+            <div class="accent-bar" style="background: var(--accent-violet);"></div>
+            <h1 class="slide-title">Sensity AI como Plataforma</h1>
+            <p class="slide-subtitle" style="color: var(--accent-violet);">Visual Threat Intelligence de nivel pericial
+            </p>
+
+            <div
+                style="font-size: 0.95rem; line-height: 1.5; color: var(--text-dim); text-align: left; margin-top: 0.5rem;">
+                <ul style="margin-top: 0;">
+                    <li style="padding: 0.8rem 1.2rem; margin-bottom: 0.6rem;">
+                        <strong>Definición Forense:</strong> Plataforma de Inteligencia de Amenazas Visuales
+                        específicamente
+                        orientada a proporcionar evidencias de grado pericial reproducibles ante tribunales.
+                    </li>
+                    <li style="padding: 0.8rem 1.2rem; margin-bottom: 0.6rem;">
+                        <strong>Enfoque Integral:</strong> Auditoría unificada y correlacionada de imagen estática,
+                        vídeo
+                        dinámico y pistas de audio para desmontar engaños estructurados.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="deploy-grid">
+                <div class="deploy-card" style="padding: 1rem 1.5rem;">
+                    <div class="deploy-header">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)"
+                            stroke-width="2">
+                            <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                        </svg>
+                        <h4 style="color: var(--primary); font-size: 0.95rem;">Modelos Cloud</h4>
+                    </div>
+                    <p style="font-size: 0.75rem; color: var(--text-dim);">API de alta disponibilidad y actualizaciones
+                        continuas de detección.</p>
+                </div>
+                <div class="deploy-card" style="border-top-color: var(--accent-violet); padding: 1rem 1.5rem;">
+                    <div class="deploy-header">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-violet)"
+                            stroke-width="2">
+                            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                        </svg>
+                        <h4 style="color: var(--accent-violet); font-size: 0.95rem;">On-Premise (Local)</h4>
+                    </div>
+                    <p style="font-size: 0.75rem; color: var(--text-dim);">Aislamiento local completo de evidencias,
+                        vital
+                        para soberanía y normativas gubernamentales.</p>
+                </div>
+            </div>
+
+            <div class="slide-internal-num">03 / 12</div>
+        </div>
+
+        <!-- Diapositiva 4: Arquitectura de Integración (API RESTful) -->
+        <div class="slide">
+            <div class="accent-bar" style="background: var(--accent-violet);"></div>
+            <h1 class="slide-title">Arquitectura de Integración</h1>
+            <p class="slide-subtitle" style="color: var(--accent-violet);">Pipeline asíncrono y control de acceso REST
+            </p>
+
+            <div
+                style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 1.5rem; align-items: center; margin-top: 0.5rem;">
+                <div style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dim); text-align: left;">
+                    <ul style="margin-top: 0;">
+                        <li style="padding: 0.5rem 0.8rem; margin-bottom: 0.4rem;">
+                            <strong>Sesiones JWT:</strong> Control de accesos estricto mediante tokens JWT generados en
+                            el
+                            endpoint `/auth/tokens`.
+                        </li>
+                        <li style="padding: 0.5rem 0.8rem; margin-bottom: 0.4rem;">
+                            <strong>Modelo Asíncrono:</strong> Orientación a eventos vía <em>Webhooks</em> (`POST
+                            /webhooks/{event}`) eliminando el costoso <em>polling</em>.
+                        </li>
+                        <li style="padding: 0.5rem 0.8rem; margin-bottom: 0.4rem;">
+                            <strong>Límites:</strong> Soporte para ingestas masivas de hasta <strong>68 MB</strong>,
+                            2560p,
+                            vídeos de 30 min y audios de 20 min.
+                        </li>
+                    </ul>
+                </div>
+
+                <div
+                    style="font-family: 'Fira Code', monospace; font-size: 0.72rem; background: #020617; padding: 1rem; border-radius: 12px; border: 1px solid var(--border-light); text-align: left;">
+                    <div style="color: #64748b; margin-bottom: 0.4rem;">// Ciclo de Vida del Análisis</div>
+                    <span style="color: var(--accent-violet);">[Cliente]</span> -- POST /tasks (JWT) --> <span
+                        style="color: var(--primary);">[Sensity]</span><br>
+                    <span style="color: var(--accent-violet);">[Cliente]</span> <-- 202 Accepted (Task ID) -- <span
+                        style="color: var(--primary);">[Sensity]</span><br>
+                        <div style="color: #475569; margin: 0.3rem 0;">&gt;&gt; Pipeline en ejecución asíncrona...</div>
+                        <span style="color: var(--accent-violet);">[Cliente]</span> <-- POST Webhook (Resultados) --
+                            <span style="color: var(--primary);">[Sensity]</span>
+                </div>
+            </div>
+
+            <div class="slide-internal-num">04 / 12</div>
+        </div>
+
+        <!-- Diapositiva 5: Endpoints y Pipeline Analítico -->
+        <div class="slide">
+            <div class="accent-bar" style="background: var(--accent-violet);"></div>
+            <h1 class="slide-title">Endpoints y Pipeline Analítico</h1>
+            <p class="slide-subtitle" style="color: var(--accent-violet);">Servicios modulares de auditoría</p>
+
+            <div class="data-grid" style="grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem;">
+                <div class="data-card" style="text-align: left; padding: 1rem 1.5rem;">
+                    <code
+                        style="color: var(--accent-violet); font-size: 0.85rem; font-weight: bold;">POST /tasks/face_manipulation</code>
+                    <p style="font-size: 0.75rem; margin-top: 0.3rem; color: var(--text-dim); text-transform: none;">
+                        Evalúa manipulaciones locales (Face Swap, Reenactment) devolviendo matrices de probabilidad
+                        facial.
+                    </p>
+                </div>
+
+                <div class="data-card" style="text-align: left; padding: 1rem 1.5rem;">
+                    <code
+                        style="color: var(--primary); font-size: 0.85rem; font-weight: bold;">POST /tasks/image_generation</code>
+                    <p style="font-size: 0.75rem; margin-top: 0.3rem; color: var(--text-dim); text-transform: none;">
+                        Servicio especializado en la detección de síntesis total desde cero generada por modelos de
+                        difusión
+                        estable.
+                    </p>
+                </div>
+
+                <div class="data-card" style="text-align: left; padding: 1rem 1.5rem;">
+                    <code
+                        style="color: var(--accent-green); font-size: 0.85rem; font-weight: bold;">POST /tasks/voice_analysis</code>
+                    <p style="font-size: 0.75rem; margin-top: 0.3rem; color: var(--text-dim); text-transform: none;">
+                        Escrutinio matemático profundo del espectro acústico en busca de clonación vocal por
+                        inteligencia
+                        artificial.
+                    </p>
+                </div>
+
+                <div class="data-card" style="text-align: left; padding: 1rem 1.5rem;">
+                    <code
+                        style="color: var(--accent-red); font-size: 0.85rem; font-weight: bold;">POST /tasks/forensic_analysis</code>
+                    <p style="font-size: 0.75rem; margin-top: 0.3rem; color: var(--text-dim); text-transform: none;">
+                        Análisis profundo de la estructura interna del contenedor del archivo multimedia y consistencia
+                        de
+                        cabeceras.
+                    </p>
+                </div>
+            </div>
+
+            <div class="slide-internal-num">05 / 12</div>
+        </div>
+
+        <!-- Diapositiva 6: Análisis de Píxeles e Inconsistencias Biométricas -->
+        <div class="slide">
+            <div class="accent-bar" style="background: var(--accent-violet);"></div>
+            <h1 class="slide-title" style="font-size: 2.3rem;">Análisis de Píxeles e Inconsistencias</h1>
+            <p class="slide-subtitle" style="color: var(--accent-violet);">Inconsistencias Biométricas y Mapas de Calor
+            </p>
+
+            <div
+                style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 2rem; align-items: center; margin-top: 0.5rem;">
+                <div style="font-size: 0.85rem; line-height: 1.6; color: var(--text-dim); text-align: left;">
+                    <p style="margin-bottom: 0.8rem; color: var(--text-main); font-weight: bold;">Examen de
+                        micro-dinámicas
+                        humanas:</p>
+                    <ul style="margin-top: 0;">
+                        <li
+                            style="padding: 0.4rem 0.8rem; margin-bottom: 0.4rem; background: transparent; border: none;">
+                            <strong>Fallos Biométricos:</strong> Rastreo de parpadeos anómalos, reflejos corneales
+                            asimétricos y rigidez pupilar.
+                        </li>
+                        <li
+                            style="padding: 0.4rem 0.8rem; margin-bottom: 0.4rem; background: transparent; border: none;">
+                            <strong>Mapas de Calor (Heatmaps):</strong> Sensity ilumina los bordes del rostro y zonas de
+                            interpolación inusual.
+                        </li>
+                        <li
+                            style="padding: 0.4rem 0.8rem; margin-bottom: 0.4rem; background: transparent; border: none;">
+                            <strong>Ruido de Alta Frecuencia:</strong> Identificación del ruido generado por la
+                            interpolación de píxeles al mezclar frames.
+                        </li>
+                    </ul>
+                </div>
+
+                <div style="text-align: center;">
+                    <img src="media/mapa_calor.png" class="forensic-image" alt="Mapa de calor de Sensity AI">
+                    <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.4rem;">Heatmap forense:
+                        Iluminación
+                        de inconsistencias en el contorno facial</p>
+                </div>
+            </div>
+
+            <div class="slide-internal-num">06 / 12</div>
+        </div>
+
+        <!-- Diapositiva 7: Auditoría Acústica y Estructural (JSON Output) -->
+        <div class="slide">
+            <div class="accent-bar" style="background: var(--accent-violet);"></div>
+            <h1 class="slide-title">Auditoría Acústica y Estructural</h1>
+            <p class="slide-subtitle" style="color: var(--accent-violet);">Modelado acústico y Red Flags en JSON</p>
+
+            <div
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: center; margin-top: 0.5rem;">
+                <div style="font-size: 0.82rem; line-height: 1.5; color: var(--text-dim); text-align: left;">
+                    <p style="color: var(--text-main); font-weight: bold; margin-bottom: 0.5rem;">Escrutinio de audio y
+                        metadatos:</p>
+                    <ul style="margin-top: 0;">
+                        <li
+                            style="padding: 0.4rem 0.8rem; margin-bottom: 0.3rem; background: transparent; border: none;">
+                            <strong>Métricas de Voz:</strong> Evaluación algorítmica de variables críticas como
+                            <em>jitter</em>, <em>shimmer</em> y consistencia de <em>pitch</em>.
+                        </li>
+                        <li
+                            style="padding: 0.4rem 0.8rem; margin-bottom: 0.3rem; background: transparent; border: none;">
+                            <strong>Software de Edición:</strong> Clasificación de herramientas en <code>benign</code>,
+                            <code>suspect</code> o <code>critical</code>.
+                        </li>
+                        <li
+                            style="padding: 0.4rem 0.8rem; margin-bottom: 0.3rem; background: transparent; border: none;">
+                            <strong>Alertas de Integridad:</strong> Levantamiento inmediato de banderas automáticas como
+                            <code>METADATA_ERROR</code> o <code>FILE_EDITED</code>.
+                        </li>
+                    </ul>
+                </div>
+
+                <div
+                    style="font-family: 'Fira Code', monospace; font-size: 0.72rem; background: #020617; padding: 0.8rem; border-radius: 12px; border: 1px solid var(--border-light); text-align: left; max-height: 250px; overflow-y: auto;">
+                    <pre
+                        style="border: none; padding: 0; background: transparent; margin: 0; font-size: 0.7rem; color: #a9b1d6;">
+{
+  <span style="color: var(--accent-violet);">"audio_features"</span>: {
+    "jitter": 0.024,
+    "shimmer": 0.18,
+    "pitch_consistency": 0.89,
+    "synthesized_prob": 0.96
+  },
+  <span style="color: var(--primary);">"red_flags"</span>: [
+    "METADATA_ERROR",
+    "FILE_EDITED"
+  ],
+  <span style="color: var(--accent-green);">"claim_lists"</span>: "suspect"
+}
+</pre>
+                </div>
+            </div>
+
+            <div class="slide-internal-num">07 / 12</div>
+        </div>
+
+        <!-- Diapositiva 8: Aplicación Defensiva: Entornos KYC -->
+        <div class="slide">
+            <div class="accent-bar" style="background: var(--accent-violet);"></div>
+            <h1 class="slide-title">Aplicación en Entornos KYC</h1>
+            <p class="slide-subtitle" style="color: var(--accent-violet);">Protección activa de identidad en onboarding
+            </p>
+
+            <div
+                style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 2rem; align-items: center; margin-top: 0.5rem;">
+                <div style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dim); text-align: left;">
+                    <ul style="margin-top: 0;">
+                        <li style="padding: 0.5rem 0.8rem; margin-bottom: 0.4rem;">
+                            <strong>Anti-Spoofing:</strong> Bloqueo absoluto de ataques de presentación que intentan
+                            inyectar fotos estáticas, máscaras en 3D o streams de video sintéticos.
+                        </li>
+                        <li style="padding: 0.5rem 0.8rem; margin-bottom: 0.4rem;">
+                            <strong>Protección del Liveness:</strong> Evita la evasión de pruebas de vitalidad pasivas y
+                            activas auditando los flujos entrantes de la webcam.
+                        </li>
+                        <li style="padding: 0.5rem 0.8rem; margin-bottom: 0.4rem;">
+                            <strong>Integración Backend:</strong> Evaluación automatizada de selfies y documentos de
+                            identidad antes de conceder accesos lógicos y firmas de contratos.
+                        </li>
+                    </ul>
+                </div>
+
+                <div style="text-align: center;">
+                    <img src="media/geometrica.png" class="forensic-image" alt="Análisis Biométrico Geométrico">
+                    <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.4rem;">Mapeo geométrico facial y
+                        control de puntos de vitalidad</p>
+                </div>
+            </div>
+
+            <div class="slide-internal-num">08 / 12</div>
+        </div>
+
+        <!-- Diapositiva 9: Caso Práctico (Planteamiento del Incidente) -->
+        <div class="slide">
+            <div class="accent-bar" style="background: var(--accent-violet);"></div>
+            <h1 class="slide-title">Caso Práctico: Planteamiento</h1>
+            <p class="slide-subtitle" style="color: var(--accent-violet);">Intento de suplantación en apertura de cuenta
+            </p>
+
+            <div class="list-step" style="margin-top: 1rem;">
+                <div class="step-num"
+                    style="background: rgba(139, 92, 246, 0.1); color: var(--accent-violet); border-color: rgba(139, 92, 246, 0.2);">
+                    1</div>
+                <div style="text-align: left;">
+                    <strong>El Incidente:</strong> Un atacante intenta suplantar una identidad corporativa abriendo una
+                    cuenta bancaria digital usando un pasaporte sintético y un <strong>selfie-video deepfake</strong>
+                    inyectado.
+                </div>
+            </div>
+
+            <div class="list-step">
+                <div class="step-num"
+                    style="background: rgba(139, 92, 246, 0.1); color: var(--accent-violet); border-color: rgba(139, 92, 246, 0.2);">
+                    2</div>
+                <div style="text-align: left;">
+                    <strong>Recolección Forense:</strong> Intercepción del video de vitalidad sospechoso y volcado
+                    íntegro
+                    de la sesión HTTP en crudo para preservar los metadatos y la estructura original del contenedor.
+                </div>
+            </div>
+
+            <div class="list-step">
+                <div class="step-num"
+                    style="background: rgba(139, 92, 246, 0.1); color: var(--accent-violet); border-color: rgba(139, 92, 246, 0.2);">
+                    3</div>
+                <div style="text-align: left;">
+                    <strong>Cadena de Custodia:</strong> Almacenamiento seguro en almacenamiento forense no modificable,
+                    calculando hashes SHA-256 atómicos de las evidencias antes de su envío al pipeline analítico.
+                </div>
+            </div>
+
+            <div class="slide-internal-num">09 / 12</div>
+        </div>
+
+        <!-- Diapositiva 10: Ejecución del Análisis Automatizado -->
+        <div class="slide">
+            <div class="accent-bar" style="background: var(--accent-violet);"></div>
+            <h1 class="slide-title">Ejecución del Análisis</h1>
+            <p class="slide-subtitle" style="color: var(--accent-violet);">Orquestación de la API de Sensity</p>
+
+            <div class="list-step" style="margin-top: 1rem;">
+                <div class="step-num"
+                    style="background: rgba(59, 130, 246, 0.1); color: var(--primary); border-color: rgba(59, 130, 246, 0.2);">
+                    1</div>
+                <div style="text-align: left;">
+                    <strong>Invocación REST:</strong> El servidor de la entidad realiza una petición
+                    <code>POST /tasks/face_manipulation</code> enviando el video de vitalidad intermitente e
+                    introduciendo
+                    las credenciales JWT.
+                </div>
+            </div>
+
+            <div class="list-step">
+                <div class="step-num"
+                    style="background: rgba(59, 130, 246, 0.1); color: var(--primary); border-color: rgba(59, 130, 246, 0.2);">
+                    2</div>
+                <div style="text-align: left;">
+                    <strong>Procesamiento de Tensores:</strong> El backend de la aplicación aguarda de forma pasiva sin
+                    bloquear hilos de ejecución de la pasarela bancaria.
+                </div>
+            </div>
+
+            <div class="list-step">
+                <div class="step-num"
+                    style="background: rgba(59, 130, 246, 0.1); color: var(--primary); border-color: rgba(59, 130, 246, 0.2);">
+                    3</div>
+                <div style="text-align: left;">
+                    <strong>Recepción por Webhook:</strong> Se recibe el payload JSON de resultados bajo la firma
+                    pre-suscrita <code>face_manipulation_analysis_complete</code> conteniendo el veredicto final.
+                </div>
+            </div>
+
+            <div class="slide-internal-num">10 / 12</div>
+        </div>
+
+        <!-- Diapositiva 11: Resultados y Reporte Pericial -->
+        <div class="slide">
+            <div class="accent-bar" style="background: var(--accent-violet);"></div>
+            <h1 class="slide-title">Resultados y Reporte Pericial</h1>
+            <p class="slide-subtitle" style="color: var(--accent-violet);">Explicabilidad y Evidencia Judicial</p>
+
+            <div class="report-card" style="border-top-color: var(--accent-red); margin-top: 0.5rem;">
+                <div class="report-header-line">
+                    <span>SENSITY FORENSICS REPORT - VERDICT: SUSPICIOUS</span>
+                    <span>SUCCESS: TRUE</span>
+                </div>
+                <div class="report-detail"><strong>HASH DE CADENA (SHA-256):</strong> 7f8d9b1c2d3e4f5a...</div>
+                <div class="report-detail"><strong>DETECCIÓN DE MANIPULACIÓN:</strong> POSITIVO (99.4%)</div>
+                <div class="report-detail">
+                    <strong>EXPLANATION:</strong> "Alteración geométrica y temporal detectada de manera consistente por
+                    la
+                    métrica de <code>spectral_artifacts</code> en el área labial (desfase temporal de fase de audio y
+                    sincronía de píxeles)."
+                </div>
+            </div>
+
+            <p style="font-size: 0.85rem; color: var(--text-dim); margin-top: 0.8rem; text-align: left;">
+                * <strong>Rigor explicativo:</strong> La plataforma expone con precisión la anomalía matemática (ej:
+                <code>spectral_artifacts</code>) que justifica el veredicto de sospecha, vital para litigios judiciales.
+            </p>
+
+            <div class="slide-internal-num">11 / 12</div>
+        </div>
+
+        <!-- Diapositiva 12: Conclusiones Finales -->
+        <div class="slide">
+            <div class="accent-bar" style="background: var(--accent-violet);"></div>
+            <h1 class="slide-title">Conclusiones Finales</h1>
+            <p class="slide-subtitle" style="color: var(--accent-violet);">Certeza matemática y Q&A</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+                <div class="data-card"
+                    style="border-color: var(--accent-green); background: rgba(34, 197, 94, 0.03); text-align: left; padding: 1.5rem;">
+                    <strong
+                        style="color: var(--accent-green); display: block; margin-bottom: 0.5rem; font-size: 1.1rem;">Rigor
+                        Científico</strong>
+                    Transformación directa de tensores y vectores matemáticos complejos en informes periciales
+                    auditables,
+                    objetivos y de alta fiabilidad.
+                </div>
+                <div class="data-card"
+                    style="border-color: var(--accent-violet); background: rgba(139, 92, 246, 0.03); text-align: left; padding: 1.5rem;">
+                    <strong
+                        style="color: var(--accent-violet); display: block; margin-bottom: 0.5rem; font-size: 1.1rem;">Escalabilidad
+                        Defensiva</strong>
+                    API de alto rendimiento que permite la auditoría asíncrona de flujos de verificación masivos sin
+                    sobrecargar los sistemas transaccionales.
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(139, 92, 246, 0.05); border-radius: 16px; text-align: center; border: 1px dashed rgba(139, 92, 246, 0.2);"
+                class="index-item">
+                <div style="font-weight: bold; color: var(--accent-violet); font-size: 1.3rem; letter-spacing: 2px;">
+                    ¿PREGUNTAS?
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.2rem;">
+                    Apertura al tribunal de evaluación de Auditoría y Seguridad en SI
+                </p>
+            </div>
+
+            <div class="slide-internal-num">12 / 12</div>
+        </div>
+    </div>
+
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+
+        <div class="page-indicator" id="pageIndicator">1 / 12</div>
+
+        <button class="nav-btn primary" style="background: var(--accent-violet); border-color: var(--accent-violet);"
+            onclick="changeSlide(1)">
+            Siguiente
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / slides.length) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${slides.length}`;
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + slides.length) % slides.length;
+            updateUI();
+        }
+
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+            if (e.key === "ArrowLeft") changeSlide(-1);
+        });
+
+        updateUI();
+    </script>
+</body>
+
+</html>
