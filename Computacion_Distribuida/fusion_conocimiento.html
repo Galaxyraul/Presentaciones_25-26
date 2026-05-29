@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica 1: Fusión de Conocimiento - Reconocimiento de Actividades Humanas (HAR)</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root {
+            --accent-purple: #a855f7;
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #f43f5e;
+            --accent-amber: #f59e0b;
+            --bg-color-dark: #020617;
+            --card-bg-dark: #0f172a;
+            --border-glow: rgba(168, 85, 247, 0.3);
+            --glass-bg-accent: rgba(15, 23, 42, 0.95);
+        }
+
+        .presentation-viewport {
+            position: relative;
+            padding-bottom: 80px;
+        }
+
+        .slide {
+            max-width: 1050px;
+            min-height: 640px;
+            padding: 2.5rem 3.5rem;
+            display: none;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        /* Responsive Grid layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            align-items: center;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        /* Premium Glass Cards with Glow */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-purple);
+            background: rgba(30, 41, 59, 0.5);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.15);
+        }
+
+        .glass-card h4 {
+            font-size: 1.2rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .glass-card p {
+            font-size: 0.88rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        /* Tech badges */
+        .tech-badge {
+            background: rgba(168, 85, 247, 0.1);
+            color: var(--accent-purple);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .tech-badge.cyan {
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--accent-cyan);
+            border-color: rgba(6, 182, 212, 0.2);
+        }
+
+        .tech-badge.green {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .tech-badge.amber {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--accent-amber);
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+
+        /* Interactive Speaker Notes Panel */
+        .speaker-notes-panel {
+            position: fixed;
+            bottom: -320px;
+            left: 0;
+            width: 100%;
+            height: 300px;
+            background: var(--glass-bg-accent);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            z-index: 2200;
+            transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .speaker-notes-panel.open {
+            bottom: 0;
+        }
+
+        .notes-header {
+            padding: 0.8rem 2rem;
+            background: rgba(2, 6, 23, 0.5);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notes-title {
+            font-weight: 800;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--accent-purple);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notes-timer-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stopwatch-display {
+            font-family: 'Fira Code', monospace;
+            background: #020617;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: var(--accent-green);
+        }
+
+        .stopwatch-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-light);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .stopwatch-btn:hover {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+        }
+
+        .notes-content-body {
+            flex: 1;
+            padding: 1.2rem 2rem;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 2rem;
+        }
+
+        .notes-script-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+            text-align: justify;
+        }
+
+        .notes-sidebar-info {
+            border-left: 1px solid var(--border);
+            padding-left: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .notes-close-btn {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 50%;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notes-close-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Speaker notes toggle button */
+        .notes-toggle-btn {
+            background: var(--card-bg);
+            color: var(--text-dim);
+            border: 1px solid var(--border-light);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            font-size: 0.85rem;
+        }
+
+        .notes-toggle-btn:hover, .notes-toggle-btn.active {
+            color: white;
+            border-color: var(--accent-purple);
+            background: rgba(168, 85, 247, 0.1);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+        }
+
+        /* SVGs and Network diagrams */
+        .network-svg {
+            width: 100%;
+            height: 220px;
+            background: transparent;
+        }
+
+        .node-pulse {
+            animation: pulse 2s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { r: 12; opacity: 0.4; }
+            100% { r: 20; opacity: 0.1; }
+        }
+
+        .data-flow-line {
+            stroke-dasharray: 6;
+            animation: flow 4s linear infinite;
+        }
+
+        @keyframes flow {
+            to { stroke-dashoffset: -40; }
+        }
+
+        /* Custom Interactive Components CSS */
+        /* Slide 8: Loop simulator */
+        .simulator-box {
+            background: rgba(2, 6, 23, 0.5);
+            border: 1px dashed var(--border);
+            border-radius: 16px;
+            padding: 1.2rem;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .cpu-bar-container {
+            width: 100%;
+            height: 16px;
+            background: #1e293b;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 10px;
+            border: 1px solid var(--border-light);
+        }
+
+        .cpu-bar {
+            height: 100%;
+            width: 85%;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-amber), var(--accent-red));
+            transition: width 0.5s ease, background 0.5s ease;
+        }
+
+        .loop-ball {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: var(--accent-cyan);
+            margin: 10px 0;
+            position: relative;
+            left: 0;
+        }
+
+        .loop-ball.animating-classic {
+            animation: bounce-classic 0.5s steps(2) infinite alternate;
+            background: var(--accent-red);
+        }
+
+        .loop-ball.animating-decoupled-fast {
+            animation: bounce-decoupled-fast 0.02s linear infinite alternate;
+            background: var(--accent-cyan);
+        }
+
+        .loop-ball.animating-decoupled-slow {
+            animation: bounce-decoupled-slow 0.1s ease-in-out infinite alternate;
+            background: var(--accent-green);
+        }
+
+        @keyframes bounce-classic {
+            0% { left: 0; }
+            100% { left: 90%; }
+        }
+
+        @keyframes bounce-decoupled-fast {
+            0% { left: 0; }
+            100% { left: 90%; }
+        }
+
+        @keyframes bounce-decoupled-slow {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.3); }
+        }
+
+        /* Slide 9: Sensor Specs Toggles */
+        .sensor-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            color: var(--text-dim);
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 0.5rem;
+            text-align: left;
+        }
+
+        .sensor-btn.active {
+            background: rgba(168, 85, 247, 0.12);
+            color: white;
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
+        }
+
+        .sensor-detail-pane {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .sensor-detail-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Slide 12: Dashboard Toggles */
+        .dash-toggle-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-light);
+            color: var(--text-dim);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .dash-toggle-btn.active {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .dash-view {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .dash-view.active {
+            display: block;
+        }
+
+        /* Slide 15: SQL Query Selector */
+        .sql-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            color: var(--text-dim);
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            margin-bottom: 0.6rem;
+            text-align: left;
+        }
+
+        .sql-btn.active {
+            background: rgba(6, 182, 212, 0.1);
+            color: white;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.15);
+        }
+
+        .sql-query-pane {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .sql-query-pane.active {
+            display: block;
+        }
+
+        .formula-math {
+            font-family: 'Fira Code', 'Courier New', monospace;
+            background: #020617;
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: 8px;
+            color: var(--accent-cyan);
+            font-size: 0.85rem;
+            display: inline-block;
+            margin: 6px 0;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);
+        }
+    </style>
+</head>
+
+<body class="presentation-mode">
+
+    <!-- BARRA DE NAVEGACIÓN -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <div class="logo-icon" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));">S</div>
+                <div class="brand">
+                    <h1>Sistemas Empotrados y Ubicuos</h1>
+                    <span>Fusión de Conocimiento (HAR)</span>
+                </div>
+            </a>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <!-- Botón del Ponente -->
+            <button id="notesToggleBtn" class="notes-toggle-btn" onclick="toggleSpeakerNotes()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                Guion del Ponente
+            </button>
+            <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold;">MAYO 2026</div>
+        </div>
+    </nav>
+
+    <!-- BARRA DE PROGRESO SUPERIOR -->
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar" style="background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan)); box-shadow: 0 0 15px var(--accent-purple);"></div>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL DE DIAPOSITIVAS -->
+    <div class="presentation-viewport">
+
+        <!-- DIAPOSITIVA 1: PORTADA -->
+        <div class="slide active">
+            <div class="accent-bar" style="background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));"></div>
+            <span class="tech-badge">Práctica 1: Sistemas Empotrados y Ubicuos</span>
+            <h1 class="slide-title" style="background: linear-gradient(to right, #ffffff, var(--accent-purple), var(--accent-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-size: 2.5rem; margin-top: 5px;">Fusión de Conocimiento – Reconocimiento de Actividades Humanas (HAR)</h1>
+            <p class="slide-subtitle" style="color: var(--accent-cyan); letter-spacing: 0.1em; font-size: 0.85rem; margin-bottom: 1rem;">Diseño, desarrollo y despliegue de un prototipo funcional de red de sensores ubicuos</p>
+            
+            <div class="grid-2">
+                <div style="text-align: left; padding-right: 1rem;">
+                    <p style="color: var(--text-dim); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+                        Un ciclo de ingeniería de extremo a extremo que unifica la adquisición móvil nativa, la ingesta backend asíncrona optimizada para hosting compartido y la analítica visual interactiva en tiempo real.
+                    </p>
+                    <div style="background: rgba(255,255,255,0.02); padding: 12px 18px; border-radius: 12px; border: 1px solid var(--border-light); font-size: 0.8rem; color: var(--text-dim);">
+                        <strong style="color: white; display: block; margin-bottom: 2px;">Institución:</strong>
+                        Escuela Politécnica Superior de Jaén / Máster Universitario en Ingeniería Informática
+                    </div>
+                    <div class="authors-box" style="margin-top: 1rem; padding-top: 1rem; text-align: left;">
+                        <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 0.4rem;">Autores del Proyecto:</div>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <div class="author-tag" style="font-size: 0.85rem; background: rgba(255, 255, 255, 0.03); padding: 4px 10px; border-radius: 8px; border: 1px solid var(--border-light);">Raúl Gómez Téllez</div>
+                            <div class="author-tag" style="font-size: 0.85rem; background: rgba(255, 255, 255, 0.03); padding: 4px 10px; border-radius: 8px; border: 1px solid var(--border-light);">Rubén Ramírez Peña</div>
+                            <div class="author-tag" style="font-size: 0.85rem; background: rgba(255, 255, 255, 0.03); padding: 4px 10px; border-radius: 8px; border: 1px solid var(--border-light);">Oscar Reimar Cedeño Delgado</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 260px; border-color: rgba(168,85,247,0.15);">
+                    <!-- Diagrama SVG Animado Portada -->
+                    <svg class="network-svg" viewBox="0 0 400 200">
+                        <defs>
+                            <linearGradient id="grad-purple" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#a855f7" />
+                                <stop offset="100%" stop-color="#7e22ce" />
+                            </linearGradient>
+                            <linearGradient id="grad-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#06b6d4" />
+                                <stop offset="100%" stop-color="#0891b2" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Local node (Smartphone) -->
+                        <g transform="translate(60, 100)">
+                            <rect x="-20" y="-35" width="40" height="70" rx="6" fill="#1e293b" stroke="var(--accent-purple)" stroke-width="2" />
+                            <rect x="-16" y="-27" width="32" height="50" rx="2" fill="#0f172a" />
+                            <circle cx="0" cy="28" r="2.5" fill="var(--accent-purple)" />
+                            <circle cx="0" cy="0" r="8" fill="var(--accent-purple)" class="node-pulse" style="animation-duration: 3s;" />
+                            <text x="0" y="48" fill="var(--text-dim)" font-size="8" text-anchor="middle">Android Node</text>
+                        </g>
+
+                        <!-- Backend API / DB -->
+                        <g transform="translate(200, 100)">
+                            <rect x="-25" y="-25" width="50" height="50" rx="8" fill="#1e293b" stroke="var(--accent-cyan)" stroke-width="2" />
+                            <text x="0" y="-5" fill="white" font-size="9" font-weight="900" text-anchor="middle">PHP API</text>
+                            <text x="0" y="8" fill="var(--accent-cyan)" font-size="7" font-weight="700" text-anchor="middle">MySQL</text>
+                            <circle cx="0" cy="0" r="10" fill="var(--accent-cyan)" class="node-pulse" style="animation-duration: 2.5s;" />
+                            <text x="0" y="38" fill="var(--text-dim)" font-size="8" text-anchor="middle">Ingesta / DB</text>
+                        </g>
+
+                        <!-- Dashboard Web Browser -->
+                        <g transform="translate(340, 100)">
+                            <rect x="-30" y="-22" width="60" height="44" rx="4" fill="#1e293b" stroke="var(--accent-blue)" stroke-width="2" />
+                            <rect x="-26" y="-18" width="52" height="30" rx="1" fill="#0f172a" />
+                            <rect x="-30" y="22" width="60" height="3" fill="var(--accent-blue)" />
+                            <circle cx="-20" cy="24" r="1.5" fill="white" />
+                            <circle cx="-15" cy="24" r="1.5" fill="white" />
+                            <circle cx="0" cy="-3" r="6" fill="var(--accent-blue)" class="node-pulse" style="animation-duration: 3.5s;" />
+                            <text x="0" y="36" fill="var(--text-dim)" font-size="8" text-anchor="middle">React Web</text>
+                        </g>
+
+                        <!-- Communication flow -->
+                        <path d="M 80 100 L 175 100" fill="none" stroke="var(--accent-purple)" stroke-width="2" class="data-flow-line" />
+                        <path d="M 225 100 L 310 100" fill="none" stroke="var(--accent-cyan)" stroke-width="2" class="data-flow-line" />
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">01 / 16</div>
+        </div>
+
+        <!-- DIAPOSITIVA 2: ÍNDICE -->
+        <div class="slide">
+            <div class="accent-bar" style="background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));"></div>
+            <h1 class="slide-title">Índice General</h1>
+            <p class="slide-subtitle">Distribución temporal y agenda técnica (15 minutos)</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 0.5rem;">
+                <div>
+                    <div class="index-item" onclick="goToSlide(3)">
+                        <div class="index-num" style="background: var(--accent-purple);">1</div>
+                        <div>
+                            <strong style="color: white; font-size: 0.9rem;">Introducción, Contexto y Objetivos</strong>
+                            <p style="font-size: 0.72rem; color: var(--text-dim); margin-top: 1px;">Sistemas Ubicuos, HAR y metas de la WSN Android. (Slide 3-4)</p>
+                        </div>
+                    </div>
+                    <div class="index-item" onclick="goToSlide(5)">
+                        <div class="index-num" style="background: var(--accent-purple);">2</div>
+                        <div>
+                            <strong style="color: white; font-size: 0.9rem;">Restricciones y Arquitectura Global</strong>
+                            <p style="font-size: 0.72rem; color: var(--text-dim); margin-top: 1px;">Hosting compartido, React Native, Expo y 3 capas. (Slide 5-6)</p>
+                        </div>
+                    </div>
+                    <div class="index-item" onclick="goToSlide(7)">
+                        <div class="index-num" style="background: var(--accent-purple);">3</div>
+                        <div>
+                            <strong style="color: white; font-size: 0.9rem;">Stack y Optimización de Sensor App</strong>
+                            <p style="font-size: 0.72rem; color: var(--text-dim); margin-top: 1px;">AsyncStorage, servicio foreground y doble bucle. (Slide 7-8)</p>
+                        </div>
+                    </div>
+                    <div class="index-item" onclick="goToSlide(9)">
+                        <div class="index-num" style="background: var(--accent-purple);">4</div>
+                        <div>
+                            <strong style="color: white; font-size: 0.9rem;">Sensores y Fundamento Científico</strong>
+                            <p style="font-size: 0.72rem; color: var(--text-dim); margin-top: 1px;">Acelerómetro, Giroscopio, Barómetro, Magnetómetro, GPS. (Slide 9)</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="index-item" onclick="goToSlide(10)">
+                        <div class="index-num" style="background: var(--accent-cyan);">5</div>
+                        <div>
+                            <strong style="color: white; font-size: 0.9rem;">Base de Datos y Backend PHP</strong>
+                            <p style="font-size: 0.72rem; color: var(--text-dim); margin-top: 1px;">Modelo normalizado, índices, PDO, autenticación. (Slide 10-11)</p>
+                        </div>
+                    </div>
+                    <div class="index-item" onclick="goToSlide(12)">
+                        <div class="index-num" style="background: var(--accent-cyan);">6</div>
+                        <div>
+                            <strong style="color: white; font-size: 0.9rem;">Dashboard de Visualización SPA</strong>
+                            <p style="font-size: 0.72rem; color: var(--text-dim); margin-top: 1px;">React 18, Leaflet, KPIs, gráficos inerciales en tiempo real. (Slide 12)</p>
+                        </div>
+                    </div>
+                    <div class="index-item" onclick="goToSlide(13)">
+                        <div class="index-num" style="background: var(--accent-cyan);">7</div>
+                        <div>
+                            <strong style="color: white; font-size: 0.9rem;">Experimentación y Dataset Recopilado</strong>
+                            <p style="font-size: 0.72rem; color: var(--text-dim); margin-top: 1px;">3x S20 FE, autoetiquetado in-situ, 39k registros. (Slide 13-14)</p>
+                        </div>
+                    </div>
+                    <div class="index-item" onclick="goToSlide(15)">
+                        <div class="index-num" style="background: var(--accent-cyan);">8</div>
+                        <div>
+                            <strong style="color: white; font-size: 0.9rem;">Potencial Analítico y Conclusiones</strong>
+                            <p style="font-size: 0.72rem; color: var(--text-dim); margin-top: 1px;">Magnitud inercial, trazas SQL, ML y trabajo futuro. (Slide 15-16)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">02 / 16</div>
+        </div>
+
+        <!-- DIAPOSITIVA 3: INTRODUCCIÓN Y CONTEXTO -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-purple);"></div>
+            <span class="tech-badge">01. Introducción y Contexto</span>
+            <h1 class="slide-title">Fusión de Conocimiento en HAR</h1>
+            <p class="slide-subtitle">Integración Invisible y la Oportunidad del Móvil</p>
+            
+            <div class="grid-2">
+                <div>
+                    <div class="bullet-point" style="margin-bottom: 12px; font-size: 0.92rem;">
+                        <div>
+                            <strong style="color: white;">Sistemas Empotrados y Ubicuos:</strong> Integración invisible del procesamiento matemático en el entorno cotidiano de las personas para adquirir y computar magnitudes físicas dinámicas.
+                        </div>
+                    </div>
+                    <div class="bullet-point" style="margin-bottom: 12px; font-size: 0.92rem;">
+                        <div>
+                            <strong style="color: white;">El Smartphone como Nodo Sensor:</strong> Plataforma inmejorable por su altísima tasa de penetración social, conectividad redundante permanente, poder de cálculo multinúcleo y coprocesadores inerciales de alta precisión.
+                        </div>
+                    </div>
+                    <div class="bullet-point" style="margin-bottom: 12px; font-size: 0.92rem;">
+                        <div>
+                            <strong style="color: white;">Actividades Humanas (HAR):</strong> Identificación estocástica de estados dinámicos (quieto, caminar, correr, conducir) con alto impacto en e-Health, optimización del rendimiento atlético y movilidad inteligente sostenible.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-card" style="border-left: 4px solid var(--accent-purple);">
+                    <h4 style="color: var(--accent-purple);">Estrategia Integradora del Ciclo</h4>
+                    <p style="margin-bottom: 10px; font-size: 0.85rem;">
+                        Este proyecto no se detiene en la mera captura o el análisis aislado. Diseña e implementa un ciclo de ingeniería completo y desacoplado:
+                    </p>
+                    <div style="background: rgba(2, 6, 23, 0.4); border: 1px solid var(--border-light); padding: 10px; border-radius: 8px; font-size: 0.78rem;">
+                        <span style="color: var(--accent-purple); font-weight: 800;">[1] Adquisición:</span> Sensor App móvil nativa.<br>
+                        <span style="color: var(--accent-cyan); font-weight: 800;">[2] Persistencia:</span> API PHP y BD MySQL unificada.<br>
+                        <span style="color: var(--accent-blue); font-weight: 800;">[3] Analítica:</span> Dashboard SPA interactivo.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">03 / 16</div>
+        </div>
+
+        <!-- DIAPOSITIVA 4: OBJETIVOS DEL PROYECTO -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-purple);"></div>
+            <span class="tech-badge">01. Objetivos del Proyecto</span>
+            <h1 class="slide-title">Hitos de Ingeniería y Metas</h1>
+            <p class="slide-subtitle">Despliegue WSN y Robustez Tecnológica</p>
+            
+            <div class="grid-2">
+                <div class="glass-card" style="border-top: 3px solid var(--accent-purple);">
+                    <h4 style="color: var(--accent-purple); font-size: 1.1rem; margin-bottom: 8px;">Objetivos Generales</h4>
+                    <ul style="margin-top: 0;">
+                        <li style="padding: 6px 10px; font-size: 0.82rem; margin-bottom: 6px;">
+                            Desplegar un prototipo de Red de Sensores Inalámbricos (WSN) empleando smartphones comerciales Android.
+                        </li>
+                        <li style="padding: 6px 10px; font-size: 0.82rem; margin-bottom: 6px;">
+                            Recopilar y estructurar un dataset masivo dinámico y autoetiquetado in-situ idóneo para técnicas de fusión.
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="glass-card" style="border-top: 3px solid var(--accent-cyan);">
+                    <h4 style="color: var(--accent-cyan); font-size: 1.1rem; margin-bottom: 8px;">Objetivos Específicos</h4>
+                    <ul style="margin-top: 0;">
+                        <li style="padding: 6px 10px; font-size: 0.82rem; margin-bottom: 6px;">
+                            <strong>App Nativa:</strong> Construcción de la aplicación móvil SEU Sensor App en React Native.
+                        </li>
+                        <li style="padding: 6px 10px; font-size: 0.82rem; margin-bottom: 6px;">
+                            <strong>Persistencia:</strong> Evitar la pérdida de datos mediante servicios en segundo plano permanentes.
+                        </li>
+                        <li style="padding: 6px 10px; font-size: 0.82rem; margin-bottom: 6px;">
+                            <strong>Sincronización:</strong> Diseñar un backend compatible con AWARE mediante lotes JSON asíncronos.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">04 / 16</div>
+        </div>
+
+        <!-- DIAPOSITIVA 5: RESTRICCIONES TECNOLÓGICAS Y DECISIONES DE DISEÑO -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-purple);"></div>
+            <span class="tech-badge">02. Restricciones y Soluciones</span>
+            <h1 class="slide-title">Superando el Hosting Compartido</h1>
+            <p class="slide-subtitle">Ingeniería a Medida vs. Dependencias Pesadas</p>
+            
+            <div class="grid-2">
+                <div>
+                    <div class="bullet-point warning" style="margin-bottom: 12px; font-size: 0.88rem;">
+                        <div>
+                            <strong style="color: var(--accent-red);">Restricción de Infraestructura:</strong> El servidor de hosting compartido carece de permisos de superusuario, impidiendo la instalación del gestor del protocolo AWARE-Light original.
+                        </div>
+                    </div>
+                    <div class="bullet-point" style="margin-bottom: 12px; font-size: 0.88rem;">
+                        <div>
+                            <strong style="color: var(--accent-green);">Arquitectura a Medida:</strong> Creación de una API REST y esquemas MySQL que emulan con total precisión la interfaz estándar de AWARE, eludiendo la restricción.
+                        </div>
+                    </div>
+                    <div class="bullet-point" style="margin-bottom: 12px; font-size: 0.88rem;">
+                        <div>
+                            <strong style="color: var(--accent-cyan);">Expo & React Native:</strong> Adopción de Expo SDK en TypeScript para compilar de forma ágil e inalámbrica a través de servicios cloud (EAS Build), anulando la necesidad de configurar pesados entornos locales de Android Studio.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-card" style="text-align: center; border-color: rgba(6,182,212,0.25);">
+                    <div class="tech-badge cyan">Decisión Estratégica de Desarrollo</div>
+                    <p style="font-size: 0.82rem; line-height: 1.4; text-align: justify; margin-top: 8px;">
+                        El uso de React Native y TypeScript permite reutilizar el 100% de la lógica tipada tanto en la adquisición nativa móvil como en el parseo del backend, acelerando la depuración y garantizando la coherencia conceptual del protocolo de comunicaciones.
+                    </p>
+                    <div class="formula-math" style="font-size: 0.72rem; margin-top: 10px;">
+                        Expo SDK 55 + PHP 8.2 + React 18 SPA
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">05 / 16</div>
+        </div>
+
+        <!-- DIAPOSITIVA 6: ARQUITECTURA GENERAL DEL SISTEMA -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-purple);"></div>
+            <span class="tech-badge">02. Arquitectura General</span>
+            <h1 class="slide-title">Arquitectura Global en Tres Capas</h1>
+            <p class="slide-subtitle">Flujo Desacoplado y Persistencia Segura</p>
+            
+            <div class="grid-3">
+                <div class="glass-card" style="border-left: 3px solid var(--accent-purple);">
+                    <div class="tech-badge">Capa 1: Adquisición</div>
+                    <h4 style="font-size: 1rem; margin-top: 5px;">SEU Sensor App</h4>
+                    <p style="font-size: 0.78rem; color: var(--text-dim);">
+                        Cliente nativo Android encargado del muestreo multicanal de los coprocesadores de silicio a 50 Hz, etiquetado en caliente interactivo de la actividad actual y serialización en buffers de memoria RAM local.
+                    </p>
+                </div>
+                <div class="glass-card" style="border-left: 3px solid var(--accent-cyan);">
+                    <div class="tech-badge cyan">Capa 2: Ingesta</div>
+                    <h4 style="font-size: 1rem; margin-top: 5px;">Backend & MySQL</h4>
+                    <p style="font-size: 0.78rem; color: var(--text-dim);">
+                        Script ligero PHP 8 y base de datos relacional MySQL. Responsable directo de procesar peticiones JSON por lotes masivos de 30s, validando la integridad temporal y previniendo la inyección a través de sentencias PDO.
+                    </p>
+                </div>
+                <div class="glass-card" style="border-left: 3px solid var(--accent-blue);">
+                    <div class="tech-badge green">Capa 3: Explotación</div>
+                    <h4 style="font-size: 1rem; margin-top: 5px;">Dashboard Web</h4>
+                    <p style="font-size: 0.78rem; color: var(--text-dim);">
+                        Aplicación de página única (SPA) desarrollada en React 18 que interroga periódicamente a la base de datos de manera reactiva para realizar representaciones cartográficas, KPI numéricos y series temporales inerciales.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">06 / 16</div>
+        </div>
+
+        <!-- DIAPOSITIVA 7: SEU SENSOR APP – STACK TECNOLÓGICO INTERNO -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-purple);"></div>
+            <span class="tech-badge">03. Stack de Adquisición</span>
+            <h1 class="slide-title">SEU Sensor App: Stack Tecnológico</h1>
+            <p class="slide-subtitle">Robustez Nativa en Primer Plano</p>
+            
+            <div class="grid-2">
+                <div>
+                    <div class="bullet-point" style="margin-bottom: 8px; font-size: 0.85rem;">
+                        <div>
+                            <strong style="color: white;">Núcleo Nativo:</strong> Expo SDK 55 + React Native 0.83.6 implementando tipos estrictos en TypeScript 5.9.2 para evitar comportamientos nulos o indefinidos en la captura.
+                        </div>
+                    </div>
+                    <div class="bullet-point" style="margin-bottom: 8px; font-size: 0.85rem;">
+                        <div>
+                            <strong style="color: white;">Módulos Inerciales:</strong> Uso de `expo-sensors` para la adquisición paralela de acelerómetro, giroscopio, magnetómetro y barómetro a nivel hardware.
+                        </div>
+                    </div>
+                    <div class="bullet-point" style="margin-bottom: 8px; font-size: 0.85rem;">
+                        <div>
+                            <strong style="color: white;">Geolocalización Continua:</strong> `expo-location` configurada en modo continuo de alta precisión con refrescos de 1 Hz.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-card" style="border-color: rgba(168,85,247,0.2);">
+                    <h4 style="color: var(--accent-purple); font-size: 1.05rem; margin-bottom: 8px;">Garantía de Persistencia Local</h4>
+                    <p style="font-size: 0.78rem; line-height: 1.4; color: var(--text-dim); margin-bottom: 8px;">
+                        Para garantizar que el sistema operativo no congele ni mate la aplicación móvil durante las caminatas prolongadas, se incorporaron dos mecanismos críticos:
+                    </p>
+                    <div style="background: rgba(2, 6, 23, 0.4); border: 1px solid var(--border-light); padding: 8px; border-radius: 8px; font-size: 0.75rem;">
+                        <span style="color: var(--accent-purple); font-weight: bold;">[A] AsyncStorage:</span> Resguarda de forma local el UUID único de dispositivo y estados de etiqueta en caso de reinicio forzado.<br>
+                        <span style="color: var(--accent-cyan); font-weight: bold;">[B] Foreground Service:</span> La librería `react-native-background-actions` inyecta un hilo permanente con notificación en la barra de tareas, evitando que Android reclame los recursos del sistema.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">07 / 16</div>
+        </div>
+
+        <!-- DIAPOSITIVA 8: EL NÚCLEO DE LA APP – DESACOPLAMIENTO DE BUECLES -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-purple);"></div>
+            <span class="tech-badge">03. Optimización del Pipeline</span>
+            <h1 class="slide-title">Desacoplamiento de Bucles</h1>
+            <p class="slide-subtitle">Evitando la Saturación del Hilo de Renderizado (UI Thread)</p>
+            
+            <div class="grid-2">
+                <div>
+                    <p style="font-size: 0.85rem; line-height: 1.4; color: var(--text-dim); margin-bottom: 10px;">
+                        <strong>El Desafío:</strong> Muestrear sensores a 50 Hz provoca 50 disparos de eventos por segundo. Actualizar el estado de React con cada disparo satura por completo el hilo principal de renderizado (UI Thread), congelando la aplicación y tirando la tasa de fotogramas a menos de 5 FPS.
+                    </p>
+                    <div style="background: rgba(2, 6, 23, 0.4); border: 1px solid var(--border-light); padding: 10px; border-radius: 10px; font-size: 0.78rem; margin-bottom: 10px;">
+                        <strong style="color: white; display: block; margin-bottom: 4px;">Arquitectura de Doble Bucle Desacoplado:</strong>
+                        <span style="color: var(--accent-purple); font-weight: 800;">Bucle 1 (Adquisición - 50 Hz):</span> Escribe de forma directa en variables mutables en memoria RAM (`useRef`), consumiendo menos de un 5% de procesador.<br>
+                        <span style="color: var(--accent-cyan); font-weight: 800;">Bucle 2 (Render UI - 10 Hz):</span> Un temporizador desacoplado lee las variables de memoria cada 100 ms solo para pintar las métricas en la interfaz, **reduciendo la carga en UI en un 80%**.
+                    </div>
+                </div>
+                
+                <!-- SIMULADOR INTERACTIVO DEL NÚCLEO DE LA APP -->
+                <div class="simulator-box">
+                    <div>
+                        <span class="tech-badge cyan" id="simModeBadge">Simulador: Modo Desacoplado</span>
+                        <div style="font-size: 0.8rem; color: var(--text-main); margin-bottom: 5px;">
+                            Comportamiento del Hilo Principal ante 50 Hz de Ingesta:
+                        </div>
+                        <div class="loop-ball animating-decoupled-fast" id="loopBall"></div>
+                        <div style="font-size: 0.75rem; color: var(--text-dim);">
+                            Uso del CPU Estimado: <strong id="cpuText" style="color: var(--accent-green);">15% (Óptimo)</strong>
+                        </div>
+                        <div class="cpu-bar-container">
+                            <div class="cpu-bar" id="cpuBar" style="width: 15%; background: var(--accent-green);"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="stopwatch-btn" style="flex: 1; padding: 6px;" onclick="switchSim('classic')">Modo Clásico (Saturado)</button>
+                        <button class="stopwatch-btn" style="flex: 1; padding: 6px; background: var(--accent-purple);" onclick="switchSim('decoupled')">Modo Desacoplado (Optimizado)</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">08 / 16</div>
+        </div>
+
+        <!-- DIAPOSITIVA 9: SENSORES UTILIZADOS Y FUNDAMENTO CIENTÍFICO -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-purple);"></div>
+            <span class="tech-badge">03. Marco Físico y Científico</span>
+            <h1 class="slide-title">Sensores Utilizados y Muestreo</h1>
+            <p class="slide-subtitle">Fundamentos del Reconocimiento de Actividades</p>
+            
+            <div class="grid-2">
+                <!-- Selectores de Sensores -->
+                <div>
+                    <button class="sensor-btn active" id="btnAccel" onclick="switchSensorTab('accel')">
+                        <span>Acelerómetro (50 Hz)</span>
+                        <span style="color: var(--accent-purple); font-family: monospace;">m/s²</span>
+                    </button>
+                    <button class="sensor-btn" id="btnGyro" onclick="switchSensorTab('gyro')">
+                        <span>Giroscopio (50 Hz)</span>
+                        <span style="color: var(--accent-purple); font-family: monospace;">rad/s</span>
+                    </button>
+                    <button class="sensor-btn" id="btnBaro" onclick="switchSensorTab('baro')">
+                        <span>Barómetro (Freq. Nativa)</span>
+                        <span style="color: var(--accent-purple); font-family: monospace;">hPa</span>
+                    </button>
+                    <button class="sensor-btn" id="btnMag" onclick="switchSensorTab('mag')">
+                        <span>Magnetómetro (20 Hz)</span>
+                        <span style="color: var(--accent-purple); font-family: monospace;">μT</span>
+                    </button>
+                    <button class="sensor-btn" id="btnGps" onclick="switchSensorTab('gps')">
+                        <span>GPS (1 Hz)</span>
+                        <span style="color: var(--accent-purple); font-family: monospace;">Lat/Lon</span>
+                    </button>
+                </div>
+                
+                <!-- Detalles Dinámicos de Sensores -->
+                <div class="glass-card" style="min-height: 270px; display: flex; flex-direction: column; justify-content: center; border-color: rgba(168,85,247,0.2);">
+                    
+                    <!-- Acelerómetro -->
+                    <div id="paneAccel" class="sensor-detail-pane active">
+                        <span class="tech-badge">Movimiento e Impacto</span>
+                        <h4 style="margin: 5px 0; color: white;">Acelerómetro Triaxial</h4>
+                        <p style="font-size: 0.8rem; line-height: 1.4; color: var(--text-dim); margin-bottom: 8px;">
+                            Mide la aceleración física aplicada sobre el dispositivo en los tres ejes espaciales. Permite identificar la periodicidad del paso del usuario y la amplitud de los impactos para discriminar con precisión entre caminar y correr.
+                        </p>
+                        <div class="formula-math">
+                            \vec{a} = (a_x, a_y, a_z) \quad \text{Magnitude: } ||a|| = \sqrt{a_x^2 + a_y^2 + a_z^2}
+                        </div>
+                    </div>
+
+                    <!-- Giroscopio -->
+                    <div id="paneGyro" class="sensor-detail-pane">
+                        <span class="tech-badge">Rotación y Orientación</span>
+                        <h4 style="margin: 5px 0; color: white;">Giroscopio de Precisión</h4>
+                        <p style="font-size: 0.8rem; line-height: 1.4; color: var(--text-dim); margin-bottom: 8px;">
+                            Registra la velocidad angular del chasis móvil. Esencial para caracterizar giros complejos, pérdidas de equilibrio o dinámicas de rotación que el acelerómetro no puede aislar (como subir/bajar escaleras).
+                        </p>
+                        <div class="formula-math">
+                            \vec{\omega} = (\omega_x, \omega_y, \omega_z) \quad (rad/s)
+                        </div>
+                    </div>
+
+                    <!-- Barómetro -->
+                    <div id="paneBaro" class="sensor-detail-pane">
+                        <span class="tech-badge">Cambios de Altitud</span>
+                        <h4 style="margin: 5px 0; color: white;">Sensor de Presión Barométrica</h4>
+                        <p style="font-size: 0.8rem; line-height: 1.4; color: var(--text-dim); margin-bottom: 8px;">
+                            Monitorea los cambios de presión atmosférica ambiental a nivel nativo. Posibilita calcular altimetrías relativas con margen de centímetros, detectando ascensos verticales mecánicos (como en un ascensor) imperceptibles para el GPS.
+                        </p>
+                        <div class="formula-math">
+                            \Delta h \approx 44330 \times \left(1 - \left(\frac{P}{P_0}\right)^{\frac{1}{5.255}}\right)
+                        </div>
+                    </div>
+
+                    <!-- Magnetómetro -->
+                    <div id="paneMag" class="sensor-detail-pane">
+                        <span class="tech-badge">Orientación Absoluta</span>
+                        <h4 style="margin: 5px 0; color: white;">Magnetómetro de Silicio</h4>
+                        <p style="font-size: 0.8rem; line-height: 1.4; color: var(--text-dim); margin-bottom: 8px;">
+                            Registra la intensidad del campo magnético circundante en microteslas. Proporciona la orientación absoluta respecto al norte magnético y permite geolocalización interior mediante firmas ferromagnéticas en edificios.
+                        </p>
+                        <div class="formula-math">
+                            \vec{B} = (B_x, B_y, B_z) \quad (\mu T)
+                        </div>
+                    </div>
+
+                    <!-- GPS -->
+                    <div id="paneGps" class="sensor-detail-pane">
+                        <span class="tech-badge">Posicionamiento y Velocidad</span>
+                        <h4 style="margin: 5px 0; color: white;">Geolocalización por Satélite</h4>
+                        <p style="font-size: 0.8rem; line-height: 1.4; color: var(--text-dim); margin-bottom: 8px;">
+                            Entrega coordenadas espaciales y velocidad de desplazamiento a 1 Hz. Es la variable fundamental de desambiguación para separar desplazamientos vehiculares rápidos de carreras pedestres de alta intensidad.
+                        </p>
+                        <div class="formula-math">
+                            v_{lineal} = \frac{d(P_1, P_2)}{\Delta t} \quad \text{(Haversine Distance)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">09 / 16</div>
+        </div>
+
+        <!-- DIAPOSITIVA 10: DISEÑO DE LA BASE DE DATOS -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-cyan);"></div>
+            <span class="tech-badge cyan">04. Diseño de Base de Datos</span>
+            <h1 class="slide-title">Modelo de Datos y Sincronización</h1>
+            <p class="slide-subtitle">Garantizando Rendimiento y Autonomía de Batería</p>
+            
+            <div class="grid-2">
+                <div>
+                    <div class="bullet-point" style="margin-bottom: 10px; font-size: 0.88rem;">
+                        <div>
+                            <strong style="color: white;">Estructura Normalizada:</strong> Siguiendo el protocolo AWARE, se divide el modelo en una tabla de metadatos de dispositivos y tablas de lectura segregadas por sensor para eludir colisiones de tipos de datos.
+                        </div>
+                    </div>
+                    <div class="bullet-point" style="margin-bottom: 10px; font-size: 0.88rem;">
+                        <div>
+                            <strong style="color: white;">Índices Compuestos:</strong> Inclusión crítica de un índice compuesto `(device_id, timestamp)` en todas las tablas de lectura analíticas, impidiendo lecturas secuenciales de tabla completa (*table scans*) durante las consultas de series temporales del Dashboard.
+                        </div>
+                    </div>
+                    <div class="bullet-point" style="margin-bottom: 10px; font-size: 0.88rem;">
+                        <div>
+                            <strong style="color: white;">Sincronización por Lotes:</strong> Para salvaguardar la autonomía de la batería y la red celular del móvil, los registros se acumulan localmente en la RAM y se envían asíncronamente en paquetes JSON de gran tamaño cada 30 segundos.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-card" style="border-color: rgba(6,182,212,0.2);">
+                    <h4 style="color: var(--accent-cyan); font-size: 1.05rem; margin-bottom: 8px;">Esquema de Índices Optimizados</h4>
+                    <p style="font-size: 0.78rem; color: var(--text-dim); margin-bottom: 6px;">
+                        Las tablas analíticas como `sensor_accelerometer` crecen de forma exponencial. Sin índices adecuados, las lecturas colapsan el backend:
+                    </p>
+                    <pre style="margin-top: 5px; font-size: 0.72rem; padding: 8px 12px; border-left-color: var(--accent-cyan);">
+CREATE TABLE sensor_accelerometer (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    device_id VARCHAR(50),
+    timestamp DOUBLE,
+    double_x DOUBLE,
+    double_y DOUBLE,
+    double_z DOUBLE,
+    label VARCHAR(30),
+    INDEX idx_dev_time (device_id, timestamp)
+);</pre>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">10 / 16</div>
+        </div>
+
+        <!-- DIAPOSITIVA 11: BACKEND PHP – CONTROL DE INGESTA Y SEGURIDAD -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-cyan);"></div>
+            <span class="tech-badge cyan">04. Backend y API</span>
+            <h1 class="slide-title">Backend Extensible en PHP</h1>
+            <p class="slide-subtitle">Inyección Segura y Enrutamiento Eficiente</p>
+            
+            <div class="grid-2">
+                <div>
+                    <div class="bullet-point" style="margin-bottom: 12px; font-size: 0.88rem;">
+                        <div>
+                            <strong style="color: white;">Punto de Entrada Único:</strong> Archivo `index.php` auto-enrutable mediante parámetros que discrimina de forma automática entre la ingesta masiva JSON del móvil y las consultas de consulta analítica solicitadas por el cliente React.
+                        </div>
+                    </div>
+                    <div class="bullet-point" style="margin-bottom: 12px; font-size: 0.88rem;">
+                        <div>
+                            <strong style="color: white;">Sentencias Preparadas PDO:</strong> Vinculación estricta de parámetros en MySQL para neutralizar vulnerabilidades críticas por inyección de código SQL malicioso.
+                        </div>
+                    </div>
+                    <div class="bullet-point" style="margin-bottom: 12px; font-size: 0.88rem;">
+                        <div>
+                            <strong style="color: white;">Lista Blanca de Sensores:</strong> Un middleware de validación selectiva intercepta las cargas y descarta flujos no registrados, blindando la integridad física de la base de datos.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-card" style="border-color: rgba(6,182,212,0.2);">
+                    <h4 style="color: var(--accent-cyan); font-size: 1.05rem; margin-bottom: 5px;">Protección contra Falsificación</h4>
+                    <p style="font-size: 0.78rem; line-height: 1.45; color: var(--text-dim); text-align: justify; margin-bottom: 8px;">
+                        Dado que los smartphones envían información de forma directa por red celular expuesta, se inyecta un encabezado de autorización basado en firma compartida (*Shared Secret*) de estudio para el registro inicial de nuevos nodos sensores en la tabla maestra.
+                    </p>
+                    <div style="background: rgba(2,6,23,0.3); border: 1px solid var(--border-light); padding: 8px; border-radius: 8px; font-size: 0.72rem; font-family: monospace; color: var(--accent-green);">
+                        if ($_SERVER['HTTP_X_STUDY_AUTH'] !== STUDY_SECRET) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;http_response_code(401);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;exit("No autorizado");<br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">11 / 16</div>
+        </div>
+
+        <!-- DIAPOSITIVA 12: DASHBOARD WEB DE VISUALIZACIÓN -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-cyan);"></div>
+            <span class="tech-badge cyan">05. Visualización Web</span>
+            <h1 class="slide-title">Dashboard Analítico SPA</h1>
+            <p class="slide-subtitle">Arquitectura React 18 e Interactividad de Datos</p>
+            
+            <div class="grid-2">
+                <div>
+                    <p style="font-size: 0.85rem; line-height: 1.45; color: var(--text-dim); margin-bottom: 10px;">
+                        <strong>Arquitectura Cliente:</strong> Single Page Application (SPA) sobre React 18, construida mediante componentes atómicos desacoplados. Se ejecuta de forma directa en navegador libre de costosos procesos de compilación en servidor de hosting.
+                    </p>
+                    <div style="background: rgba(2, 6, 23, 0.4); border: 1px solid var(--border-light); padding: 10px; border-radius: 10px; font-size: 0.78rem; margin-bottom: 10px;">
+                        <strong style="color: white; display: block; margin-bottom: 4px;">Módulos del Dashboard:</strong>
+                        <span style="color: var(--accent-blue);">KPIs en Tiempo Real:</span> Tarjetas informativas con los últimos valores de barometría e inercia.<br>
+                        <span style="color: var(--accent-purple);">Gráficos Interactivos:</span> Series dinámicas en Canvas para el análisis visual inercial.<br>
+                        <span style="color: var(--accent-green);">Cartografía Geo:</span> Traza dinámica de geolocalización continua sobre mapas integrados Leaflet y OpenStreetMap.
+                    </div>
+                </div>
+                
+                <!-- DASHBOARD INTERACTIVO SIMULADO -->
+                <div class="glass-card" style="min-height: 270px; border-color: rgba(6,182,212,0.25); display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; gap: 8px;">
+                        <button class="dash-toggle-btn active" id="btnDashKPI" onclick="switchDashView('kpi')">KPIs</button>
+                        <button class="dash-toggle-btn" id="btnDashChart" onclick="switchDashView('chart')">Gráficos</button>
+                        <button class="dash-toggle-btn" id="btnDashMap" onclick="switchDashView('map')">Mapa GPS</button>
+                    </div>
+
+                    <!-- KPIs view -->
+                    <div id="viewDashKPI" class="dash-view active" style="margin-top: 15px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; text-align: center; border: 1px solid rgba(255,255,255,0.03);">
+                                <div style="font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase;">Aceleración Activa</div>
+                                <div style="font-size: 1.3rem; font-weight: 800; color: var(--accent-purple); margin-top: 4px;">9.81 m/s²</div>
+                            </div>
+                            <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; text-align: center; border: 1px solid rgba(255,255,255,0.03);">
+                                <div style="font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase;">Estado HAR</div>
+                                <div style="font-size: 1.3rem; font-weight: 800; color: var(--accent-green); margin-top: 4px;">CAMINAR</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(2,6,23,0.5); padding: 8px; border-radius: 8px; font-size: 0.72rem; color: var(--text-dim); text-align: center; margin-top: 10px; border: 1px solid rgba(6,182,212,0.15);">
+                            Última sincronización: <strong style="color: white;">hace 2s</strong> | Dispositivos: <strong style="color: white;">3 activos</strong>
+                        </div>
+                    </div>
+
+                    <!-- Chart view -->
+                    <div id="viewDashChart" class="dash-view" style="margin-top: 15px;">
+                        <div style="background: rgba(0,0,0,0.4); border-radius: 8px; height: 110px; display: flex; align-items: flex-end; justify-content: space-around; padding: 10px; border: 1px solid rgba(255,255,255,0.02);">
+                            <div style="width: 12px; height: 35%; background: var(--accent-purple); border-radius: 3px 3px 0 0;"></div>
+                            <div style="width: 12px; height: 75%; background: var(--accent-cyan); border-radius: 3px 3px 0 0;"></div>
+                            <div style="width: 12px; height: 45%; background: var(--accent-purple); border-radius: 3px 3px 0 0;"></div>
+                            <div style="width: 12px; height: 90%; background: var(--accent-cyan); border-radius: 3px 3px 0 0;"></div>
+                            <div style="width: 12px; height: 25%; background: var(--accent-purple); border-radius: 3px 3px 0 0;"></div>
+                            <div style="width: 12px; height: 60%; background: var(--accent-cyan); border-radius: 3px 3px 0 0;"></div>
+                            <div style="width: 12px; height: 85%; background: var(--accent-purple); border-radius: 3px 3px 0 0;"></div>
+                        </div>
+                        <div style="text-align: center; font-size: 0.65rem; color: var(--text-dim); margin-top: 6px;">
+                            Espectro de Magnitud Temporal - Eje X (Púrpura) / Eje Y (Cian)
+                        </div>
+                    </div>
+
+                    <!-- Map view -->
+                    <div id="viewDashMap" class="dash-view" style="margin-top: 15px;">
+                        <svg viewBox="0 0 300 110" style="background: rgba(0,0,0,0.4); border-radius: 8px; border: 1px solid rgba(255,255,255,0.02); width: 100%; height: 110px;">
+                            <path d="M 20 90 L 80 50 L 150 70 L 220 20 L 280 40" fill="none" stroke="var(--accent-green)" stroke-width="3" stroke-linecap="round" />
+                            <circle cx="20" cy="90" r="5" fill="var(--accent-red)" />
+                            <circle cx="280" cy="40" r="5" fill="var(--accent-green)" />
+                            <text x="30" y="93" fill="white" font-size="8">Inicio</text>
+                            <text x="250" y="43" fill="white" font-size="8">Actual</text>
+                        </svg>
+                        <div style="text-align: center; font-size: 0.65rem; color: var(--text-dim); margin-top: 6px;">
+                            Geolocalización GPS activa sobre OpenStreetMap
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">12 / 16</div>
+        </div>
+
+        <!-- DIAPOSITIVA 13: EXPERIMENTACIÓN Y PROTOCOLO DE RECOGIDA -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-cyan);"></div>
+            <span class="tech-badge cyan">06. Experimentación de Campo</span>
+            <h1 class="slide-title">Protocolo de Recogida Experimental</h1>
+            <p class="slide-subtitle">Metodología y Control Dinámico</p>
+            
+            <div class="grid-2">
+                <div>
+                    <div class="bullet-point" style="margin-bottom: 12px; font-size: 0.88rem;">
+                        <div>
+                            <strong style="color: white;">Hardware Homogéneo de Prueba:</strong> Despliegue simultáneo del prototipo de adquisición móvil en tres terminales idénticos (Samsung Galaxy S20 FE, Android 13, procesadores Snapdragon 865).
+                        </div>
+                    </div>
+                    <div class="bullet-point" style="margin-bottom: 12px; font-size: 0.88rem;">
+                        <div>
+                            <strong style="color: white;">Metodología Rigurosa de Campo:</strong> Sesiones continuadas de adquisición con una duración fija de al menos 5 minutos para cada una de las actividades definidas en el estudio.
+                        </div>
+                    </div>
+                    <div class="bullet-point" style="margin-bottom: 12px; font-size: 0.88rem;">
+                        <div>
+                            <strong style="color: white;">Etiquetado de Ground Truth:</strong> El propio usuario móvil ingresa de forma activa su estado actual en la pantalla de la SEU Sensor App previo a iniciar la marcha.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-card" style="border-left: 4px solid var(--accent-green);">
+                    <h4 style="color: var(--accent-green); font-size: 1.05rem; margin-bottom: 8px;">Simplificación de Pipeline Analítico</h4>
+                    <p style="font-size: 0.8rem; line-height: 1.45; color: var(--text-dim); text-align: justify;">
+                        Al incrustar la etiqueta de Ground Truth (*label*) directamente en caliente en la estructura interna de cada muestra en el hilo nativo de captura del móvil, se descarta por completo la necesidad de realizar alineaciones temporales manuales complejas durante la fase de análisis del dataset.
+                    </p>
+                    <div style="background: rgba(2,6,23,0.3); border: 1px solid var(--border-light); padding: 8px; border-radius: 8px; font-size: 0.72rem; text-align: center; color: white; margin-top: 10px;">
+                        Muestra Física ➔ <span style="color: var(--accent-purple); font-weight: bold;">(Data, DeviceID, Timestamp, Label)</span> ➔ Base de Datos PHP
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">13 / 16</div>
+        </div>
+
+        <!-- DIAPOSITIVA 14: DESCRIPCIÓN DEL DATASET RECOPILADO -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-cyan);"></div>
+            <span class="tech-badge cyan">06. Análisis del Dataset</span>
+            <h1 class="slide-title">Volumen y Estructura del Dataset</h1>
+            <p class="slide-subtitle">Resumen Cuantitativo de Ingesta</p>
+            
+            <div class="grid-2">
+                <div class="glass-card" style="border-top: 3px solid var(--accent-cyan);">
+                    <h4 style="color: var(--accent-cyan); font-size: 1.05rem; margin-bottom: 8px;">Muestras Recopiladas</h4>
+                    <div style="font-size: 0.8rem; color: var(--text-dim);">
+                        Volúmenes totalizados en BD tras el despliegue experimental de campo:
+                    </div>
+                    <ul style="margin-top: 5px;">
+                        <li style="padding: 4px 10px; font-size: 0.78rem; margin-bottom: 4px;">
+                            <strong>Acelerómetro & Giroscopio:</strong> 15.000 registros capturados a 50 Hz.
+                        </li>
+                        <li style="padding: 4px 10px; font-size: 0.78rem; margin-bottom: 4px;">
+                            <strong>Magnetómetro:</strong> 6.000 registros a 20 Hz.
+                        </li>
+                        <li style="padding: 4px 10px; font-size: 0.78rem; margin-bottom: 4px;">
+                            <strong>Barómetro:</strong> 3.000 registros de presión física.
+                        </li>
+                        <li style="padding: 4px 10px; font-size: 0.78rem; margin-bottom: 4px;">
+                            <strong>GPS:</strong> 300 puntos de ruta continua a 1 Hz.
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="glass-card" style="border-top: 3px solid var(--accent-green); display: flex; flex-direction: column; justify-content: center;">
+                    <h4 style="color: var(--accent-green); font-size: 1.05rem; margin-bottom: 8px;">Diseño Analítico Inmediato</h4>
+                    <p style="font-size: 0.8rem; line-height: 1.45; color: var(--text-dim); text-align: justify;">
+                        La segregación por tablas dinámicas y la inyección transparente del Ground Truth simplifican la extracción inmediata de segmentos temporales coherentes mediante consultas lógicas directas.
+                    </p>
+                    <div style="background: rgba(2,6,23,0.3); border: 1px solid var(--border-light); padding: 10px; border-radius: 8px; font-size: 0.72rem; font-family: monospace; color: var(--accent-cyan); margin-top: 8px;">
+                        SELECT * FROM sensor_accelerometer <br>
+                        WHERE label = 'caminar' AND device_id = 'S20FE_01';
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">14 / 16</div>
+        </div>
+
+        <!-- DIAPOSITIVA 15: POTENCIAL ANALÍTICO DEL SISTEMA -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-cyan);"></div>
+            <span class="tech-badge cyan">07. Explotación Analítica</span>
+            <h1 class="slide-title">Consultas de Fusión de Conocimiento</h1>
+            <p class="slide-subtitle">Demostración Práctica del Potencial SQL en HAR</p>
+            
+            <div class="grid-2">
+                <!-- Selector de Consultas -->
+                <div>
+                    <button class="sql-btn active" id="btnSqlMagnitude" onclick="switchSqlQuery('magnitude')">
+                        1. Magnitud Vectorial Inercial
+                    </button>
+                    <button class="sql-btn" id="btnSqlTrajectory" onclick="switchSqlQuery('trajectory')">
+                        2. Reconstrucción de Trayectorias
+                    </button>
+                    <button class="sql-btn" id="btnSqlElevation" onclick="switchSqlQuery('elevation')">
+                        3. Detección de Elevación Relativa
+                    </button>
+                </div>
+                
+                <!-- Visores de Consultas -->
+                <div class="glass-card" style="min-height: 270px; border-color: rgba(6,182,212,0.25); display: flex; flex-direction: column; justify-content: center;">
+                    
+                    <!-- Magnitud Vectorial -->
+                    <div id="paneSqlMagnitude" class="sql-query-pane active">
+                        <span class="tech-badge cyan">Caracterización de Firma Física</span>
+                        <h4 style="margin: 5px 0; color: white;">Fusión del Acelerómetro Triaxial</h4>
+                        <p style="font-size: 0.78rem; line-height: 1.4; color: var(--text-dim); margin-bottom: 6px;">
+                            Calcula la aceleración resultante eliminando el factor del sesgo por orientación espacial del dispositivo, facilitando la identificación inmediata de la intensidad dinámica.
+                        </p>
+                        <pre style="margin-top: 4px; font-size: 0.68rem; padding: 6px 10px; border-left-color: var(--accent-cyan);">
+SELECT label, 
+       AVG(SQRT(double_x*double_x + double_y*double_y + double_z*double_z)) AS magnitude_avg, 
+       VARIANCE(SQRT(double_x*double_x + double_y*double_y + double_z*double_z)) AS magnitude_var
+FROM sensor_accelerometer
+GROUP BY label;</pre>
+                    </div>
+
+                    <!-- Trayectorias -->
+                    <div id="paneSqlTrajectory" class="sql-query-pane">
+                        <span class="tech-badge green">Análisis Espacio-Temporal</span>
+                        <h4 style="margin: 5px 0; color: white;">Reconstrucción Cronológica GPS</h4>
+                        <p style="font-size: 0.78rem; line-height: 1.4; color: var(--text-dim); margin-bottom: 6px;">
+                            Combina velocidad, geoposicionamiento y marcas temporales para modelar trayectorias físicas completas y aislar aceleraciones externas.
+                        </p>
+                        <pre style="margin-top: 4px; font-size: 0.68rem; padding: 6px 10px; border-left-color: var(--accent-green);">
+SELECT timestamp, latitude, longitude, speed, label
+FROM sensor_gps
+WHERE device_id = 'S20FE_01'
+ORDER BY timestamp ASC;</pre>
+                    </div>
+
+                    <!-- Elevación Barométrica -->
+                    <div id="paneSqlElevation" class="sql-query-pane">
+                        <span class="tech-badge amber">Detección de Movimientos Verticales</span>
+                        <h4 style="margin: 5px 0; color: white;">Variación Atmosférica</h4>
+                        <p style="font-size: 0.78rem; line-height: 1.4; color: var(--text-dim); margin-bottom: 6px;">
+                            Agrupa lecturas del barómetro en tramos temporales consecutivos para estimar velocidades de elevación vertical y correlacionar subida de rampas.
+                        </p>
+                        <pre style="margin-top: 4px; font-size: 0.68rem; padding: 6px 10px; border-left-color: var(--accent-amber);">
+SELECT ROUND(timestamp/10) * 10 AS time_block,
+       (MAX(pressure) - MIN(pressure)) AS pressure_delta,
+       AVG(pressure) AS pressure_avg
+FROM sensor_barometer
+GROUP BY time_block
+ORDER BY time_block ASC;</pre>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">15 / 16</div>
+        </div>
+
+        <!-- DIAPOSITIVA 16: CONCLUSIONES, AUTOEVALUACIÓN Y TRABAJO FUTURO -->
+        <div class="slide">
+            <div class="accent-bar" style="background-color: var(--accent-cyan);"></div>
+            <span class="tech-badge cyan">07. Conclusiones y Futuro</span>
+            <h1 class="slide-title">Conclusiones y Trabajo Futuro</h1>
+            <p class="slide-subtitle">Sistemas Ubicuos y Próximos Hitos</p>
+            
+            <div class="grid-2">
+                <div class="glass-card" style="border-left: 4px solid var(--accent-purple);">
+                    <h4 style="color: var(--accent-purple); font-size: 1.05rem; margin-bottom: 8px;">Conclusiones Destacadas</h4>
+                    <p style="font-size: 0.78rem; line-height: 1.45; color: var(--text-dim); text-align: justify; margin-bottom: 4px;">
+                        • <strong>Flexibilidad frente a Restricciones:</strong> Éxito en la superación de hosting limitados mediante emulación del protocolo AWARE a medida.<br>
+                        • <strong>Arquitectura Desacoplada:</strong> Validación empírica del doble bucle en la Sensor App, protegiendo la responsividad de la interfaz a 50 Hz.<br>
+                        • <strong>Continuidad de Fondo:</strong> Uso de foreground services para garantizar adquisición ininterrumpida sin pérdidas por bloqueos del SO.
+                    </p>
+                </div>
+                
+                <div class="glass-card" style="border-left: 4px solid var(--accent-cyan);">
+                    <h4 style="color: var(--accent-cyan); font-size: 1.05rem; margin-bottom: 8px;">Trabajo Futuro</h4>
+                    <p style="font-size: 0.78rem; line-height: 1.45; color: var(--text-dim); text-align: justify; margin-bottom: 4px;">
+                        • <strong>Clasificación Inteligente:</strong> Despliegue de algoritmos de clasificación supervisados (k-NN, SVM o Redes Neuronales Convolucionales 1D) entrenados de forma directa sobre el dataset generado.<br>
+                        • <strong>Seguridad en Tránsito:</strong> Migración de canales a HTTPS e implementación de compresión nativa JSON (GZIP) para economizar consumo de datos.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="slide-internal-num">16 / 16</div>
+        </div>
+
+    </div>
+
+    <!-- CONTROLES DE NAVEGACIÓN INFERIORES -->
+    <div class="controls-wrapper">
+        <button class="nav-btn" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <div id="pageIndicator" class="page-indicator">1 / 16</div>
+        <button class="nav-btn primary" onclick="changeSlide(1)">
+            Siguiente
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <!-- PANEL DEL PONENTE (NOTAS DE VOZ) -->
+    <div id="speakerNotesPanel" class="speaker-notes-panel">
+        <div class="notes-header">
+            <div class="notes-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="22"></line>
+                </svg>
+                Guion del Ponente • Diapositiva <span id="notesSlideNum">1</span>
+            </div>
+            
+            <!-- Cronómetro Interactivo para Ensayar -->
+            <div class="notes-timer-wrapper">
+                <div style="font-size: 0.75rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase;">Cronómetro de Ensayo:</div>
+                <div id="stopwatchDisplay" class="stopwatch-display">00:00</div>
+                <button id="stopwatchBtn" class="stopwatch-btn" onclick="toggleStopwatch()">Iniciar</button>
+                <button class="stopwatch-btn" onclick="resetStopwatch()">Reiniciar</button>
+            </div>
+            
+            <button class="notes-close-btn" onclick="toggleSpeakerNotes()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="notes-content-body">
+            <div id="notesScriptText" class="notes-script-text">
+                Cargando notas...
+            </div>
+            
+            <div class="notes-sidebar-info">
+                <div>
+                    <strong style="color: var(--accent-purple); display: block; margin-bottom: 2px;">Tiempo Recomendado:</strong>
+                    <span id="notesSuggestedTime" style="color: white; font-weight: bold;">0:00 - 0:15</span>
+                </div>
+                <div>
+                    <strong style="color: var(--accent-cyan); display: block; margin-bottom: 2px;">Foco del Discurso:</strong>
+                    <span id="notesFocusPoint" style="color: white;">Introducción conceptual y definición del paradigma.</span>
+                </div>
+                <div style="margin-top: auto; border-top: 1px solid var(--border); padding-top: 8px; font-size: 0.7rem;">
+                    <em>Tono: Alta densidad, formalidad académica y precisión de ingeniería.</em>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS DE NAVEGACIÓN Y COMPONENTES INTERACTIVOS -->
+    <script>
+        // Array de Notas de Voz / Guion del Ponente
+        const speakerNotesData = [
+            {
+                slideNum: 1,
+                time: "0:00 - 0:15 (Duración: 15s)",
+                focus: "Presentación inicial del consorcio",
+                script: "Buenas tardes a todos. Damos inicio a la defensa técnica de la Práctica 1 sobre Fusión de Conocimiento y Reconocimiento de Actividades Humanas en la asignatura Sistemas Empotrados y Ubicuos. Los autores de este proyecto somos Raúl Gómez Téllez, Rubén Ramírez Peña y Oscar Reimar Cedeño Delgado. En esta sesión abordaremos el diseño de hardware y software de red de sensores de principio a fin."
+            },
+            {
+                slideNum: 2,
+                time: "0:15 - 0:30 (Duración: 15s)",
+                focus: "Estructura general y agenda",
+                script: "La agenda de nuestra defensa se estructurará en ocho bloques clave repartidos estrictamente a lo largo de los 15 minutos asignados. Analizaremos la justificación y objetivos, las restricciones de hosting compartido que motivaron soluciones a medida, el stack nativo móvil con optimizaciones de hilo (doble bucle), los fundamentos científicos de los sensores, el diseño analítico de bases de datos, el backend PHP seguro, el dashboard interactivo y la experimentación final en smartphones."
+            },
+            {
+                slideNum: 3,
+                time: "0:30 - 1:45 (Duración: 1m 15s)",
+                focus: "Introducción y Contexto (HAR)",
+                script: "Comencemos analizando el contexto de los sistemas empotrados. La computación ubicua persigue que el procesamiento de datos se integre de forma imperceptible en nuestro día a día. Para ello, los smartphones representan el nodo sensor idóneo debido a que combinan hardware de precisión, conectividad constante y gran capacidad de cómputo en un único dispositivo de mano. El Reconocimiento de Actividades Humanas (HAR) busca inferir el comportamiento del usuario a través de la fusión estocástica de estas lecturas, abriendo un abanico inmenso de posibilidades en telemedicina, entrenamiento personalizado y Smart Cities. Nuestro proyecto cierra el ciclo completo implementando desde la captación móvil nativa en caliente, pasando por una ingesta API robusta, hasta culminar en un dashboard de visualización dinámico."
+            },
+            {
+                slideNum: 4,
+                time: "1:45 - 2:45 (Duración: 1m 00s)",
+                focus: "Objetivos generales y hitos",
+                script: "Los objetivos planteados en la práctica se dividen en dos niveles. A nivel general, nos propusimos desplegar un prototipo real y operativo de red de sensores inalámbricos basado en smartphones comerciales Android y consolidar un dataset enriquecido e autoetiquetado para tareas de análisis de patrones físicos. Específicamente, los hitos de ingeniería incluyeron construir la Sensor App nativa, asegurar que no haya interrupción en la captura por bloqueos del sistema operativo, diseñar un backend modular compatible con AWARE de fácil mantenimiento y programar una interfaz SPA web reactiva en tiempo real."
+            },
+            {
+                slideNum: 5,
+                time: "2:45 - 3:30 (Duración: 45s)",
+                focus: "Restricciones de hosting e EAS Build",
+                script: "Un desafío crucial en el proyecto fue la restricción de infraestructura. El servidor de hosting compartido provisto para la asignatura carece de privilegios avanzados sobre la base de datos MySQL, impidiendo desplegar directamente el motor AWARE-Light tradicional. Para sortear este obstáculo, optamos por diseñar un backend a medida en PHP que replica de forma exacta el protocolo de comunicación de AWARE. A su vez, para simplificar el proceso de desarrollo y evitar la pesada configuración local de Android Studio, adoptamos Expo y React Native con TypeScript, agilizando el ciclo de compilaciones inalámbricas multiplataforma mediante EAS Build en la nube."
+            },
+            {
+                slideNum: 6,
+                time: "3:30 - 4:45 (Duración: 1m 15s)",
+                focus: "Flujo de arquitectura global",
+                script: "La arquitectura del prototipo se organiza en tres capas independientes y desacopladas para garantizar el máximo rendimiento del ecosistema. La primera capa, de adquisición nativa en Android, es la Sensor App, encargada del muestreo multifrecuencia de los sensores inerciales y barométricos, el etiquetado en caliente de la actividad y la serialización local. La segunda capa, de persistencia, consta de la API en PHP 8 y la base de datos relacional MySQL encargada de la ingesta por lotes. Y la tercera capa, de visualización, interroga reactivamente mediante peticiones HTTP asíncronas para actualizar de forma interactiva mapas y métricas en tiempo real."
+            },
+            {
+                slideNum: 7,
+                time: "4:45 - 5:45 (Duración: 1m 00s)",
+                focus: "Stack de la aplicación y persistencia",
+                script: "Para el desarrollo del cliente nativo móvil adoptamos Expo SDK 55 junto a React Native 0.83.6 implementado en TypeScript estricto. La adquisición física de datos inerciales y GPS se encomendó a los módulos nativos 'expo-sensors' y 'expo-location' configurada esta última para geolocalización permanente a 1 Hz. Para salvaguardar la robustez y evitar la pérdida de muestras por bloqueos del sistema operativo, inyectamos un Foreground Service permanente mediante 'react-native-background-actions' que muestra una notificación ininterrumpida a nivel de sistema, garantizando la persistencia local de metadatos del nodo a través de AsyncStorage."
+            },
+            {
+                slideNum: 8,
+                time: "5:45 - 7:00 (Duración: 1m 15s)",
+                focus: "Desacoplamiento de hilos y doble bucle",
+                script: "El núcleo algorítmico y de optimización de la Sensor App radica en el desacoplamiento de bucles. Muestrear múltiples sensores a frecuencias de 50 Hz satura por completo el hilo principal de renderizado de la UI de React en un flujo clásico secuencial, degradando el rendimiento y congelando la aplicación. Para mitigar esto, implementamos una arquitectura de doble bucle: el Bucle 1 (Adquisición a 50 Hz) funciona basado en eventos y escribe directamente sobre referencias mutables en memoria RAM sin disparar refrescos de render. El Bucle 2 (Render UI a 10 Hz) consulta estas referencias mediante un timer cada 100 ms solo para pintar los datos numéricos en pantalla. Esta separación reduce la sobrecarga de computación de la UI en un 80%, garantizando una experiencia de usuario sumamente fluida."
+            },
+            {
+                slideNum: 9,
+                time: "7:00 - 8:00 (Duración: 1m 00s)",
+                focus: "Física y fundamentación científica de sensores",
+                script: "El reconocimiento de actividades humanas descansa sobre fundamentos físicos bien definidos. El acelerómetro a 50 Hz captura aceleración lineal resultante y caracteriza la periodicidad e intensidad del paso (separando caminar de correr). El giroscopio registra rotaciones angulares complejas útiles para detectar cambios de plano o giros bruscos. El barómetro nativo aporta altimetrías relativas con extrema precisión para detectar desplazamientos verticales imperceptibles al GPS. El GPS proporciona velocidad instantánea lineal y coordenadas a 1 Hz, desambiguando traslados vehiculares de carreras intensas. Y el magnetómetro mide la inducción magnética en microteslas, aportando orientación absoluta y firmas ferromagnéticas en entornos cerrados."
+            },
+            {
+                slideNum: 10,
+                time: "8:00 - 9:00 (Duración: 1m 00s)",
+                focus: "Modelado de base de datos e índices",
+                script: "El diseño de persistencia se normalizó inspirándose en el protocolo AWARE. Almacenamos una tabla maestra de dispositivos y tablas de lectura independientes para acelerómetro, giroscopio, barómetro, magnetómetro y GPS para eludir colisiones de tipos de datos. Para blindar la velocidad de consulta ante millones de filas, inyectamos un índice compuesto crucial (device_id, timestamp) en todas las tablas analíticas, evitando lecturas secuenciales completas de tabla durante la carga del Dashboard. Finalmente, para optimizar el consumo de batería y datos móviles, la Sensor App almacena las lecturas localmente en la RAM y realiza cargas masivas asíncronas en lotes JSON comprimidos cada 30 segundos."
+            },
+            {
+                slideNum: 11,
+                time: "9:00 - 10:00 (Duración: 1m 00s)",
+                focus: "Backend PHP seguro y API",
+                script: "El backend PHP se diseñó bajo el principio de extensibilidad y robustez ante vulnerabilidades. Consta de un archivo único index.php auto-enrutable que canaliza tanto la inserción de lotes masivos como el servicio analítico de datos al Dashboard React. La seguridad e integridad física de la base de datos se robustece mediante el uso estricto de sentencias preparadas PDO para eludir inyección SQL, validación de variables frente a una lista blanca de sensores del sistema y autenticación obligatoria del registro de nodos mediante un código de firma compartida inyectado en la cabecera HTTP de la petición móvil."
+            },
+            {
+                slideNum: 12,
+                time: "10:00 - 11:30 (Duración: 1m 30s)",
+                focus: "Dashboard interactivo en React 18",
+                script: "La interfaz web de explotación analítica es una Single Page Application (SPA) React 18 pura, maquetada en componentes atómicos autogestionados de alta velocidad y libre de procesos de render en servidor. Incorpora paneles numéricos KPI reactivos con refrescos automáticos periódicos, series temporales gráficas en Canvas para auditar visualmente las ondas de aceleración y barometría de los nodos inerciales, y un mapa geográfico interactivo mediante la librería Leaflet e imágenes cartográficas de OpenStreetMap que dibuja de forma fluida la traza espacial real del recorrido GPS del usuario."
+            },
+            {
+                slideNum: 13,
+                time: "11:30 - 12:15 (Duración: 45s)",
+                focus: "Metodología y protocolo de experimentación",
+                script: "Para validar empíricamente la robustez de todo el sistema empotrado de extremo a extremo, definimos un estricto protocolo de recogida experimental. Desplegamos la Sensor App de manera simultánea en tres terminales idénticos Samsung Galaxy S20 FE equipados con Android 13 para asegurar homogeneidad de hardware. La metodología de campo exigió que cada usuario registrara un mínimo de 5 minutos continuos de actividad por cada estado definido en el selector. Al pre-etiquetar el Ground Truth en caliente desde la Sensor App antes de comenzar, simplificamos radicalmente el post-procesamiento al asociar la etiqueta directamente en la fila de datos en la base de datos."
+            },
+            {
+                slideNum: 14,
+                time: "12:15 - 13:15 (Duración: 1m 00s)",
+                focus: "Volumen del dataset capturado",
+                script: "El resultado de este protocolo de campo fue la recopilación de un dataset analítico masivo de alta calidad y coherencia temporal. Logramos capturar e indexar en base de datos un volumen totalizado de 15.000 muestras para acelerómetro y giroscopio inerciales (frecuencia de 50 Hz), 6.000 muestras magnetométricas (20 Hz), 3.000 muestras barométricas y 300 puntos geográficos de ruta GPS completa indexados a 1 Hz. Toda esta base de datos se encuentra estructurada y lista para alimentar segmentaciones sencillas mediante consultas condicionales de tipo WHERE label."
+            },
+            {
+                slideNum: 15,
+                time: "13:15 - 14:15 (Duración: 1m 00s)",
+                focus: "Consultas analíticas de fusión en SQL",
+                script: "La viabilidad del modelo analítico propuesto se demuestra de forma directa mediante la ejecución de sentencias de consulta SQL de fusión de conocimiento. En primer lugar, la extracción matemática de la magnitud vectorial inercial resultante combina los tres ejes del acelerómetro, neutralizando el factor de la orientación espacial para caracterizar la firma física de cada actividad (diferenciando reposo de movimiento intenso). En segundo lugar, la reconstrucción cronológica espacial dibuja trayectorias asociando posicionamiento GPS y velocidad instantánea. Y en tercer lugar, la variación de presión barométrica en bloques temporales específicos permite identificar cotas de elevación vertical con precisión milimétrica."
+            },
+            {
+                slideNum: 16,
+                time: "14:15 - 15:00 (Duración: 1m 00s)",
+                focus: "Conclusiones y trabajo futuro",
+                script: "En conclusión, este proyecto demuestra que es viable superar limitaciones severas de hosting compartido mediante desarrollo de software a medida y emulación del protocolo AWARE. Hemos validado la técnica de doble bucle para proteger la usabilidad del hilo de render móvil a 50 Hz y la relevancia de hilos foreground persistentes de fondo. Como líneas de trabajo futuro inmediatas, planeamos integrar modelos de clasificación supervisada en tiempo real como k-NN o Redes Neuronales Convolucionales 1D consumiendo el dataset creado, migrar los flujos de comunicación a canales cifrados HTTPS e implementar compresión GZIP de cargas en tránsito para mitigar consumo de datos. Agradecemos su atención y quedamos a su entera disposición para el debate y turno de preguntas técnicas."
+            }
+        ];
+
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const totalSlides = slides.length;
+
+        // Elementos del panel del ponente
+        const notesPanel = document.getElementById('speakerNotesPanel');
+        const notesToggleBtn = document.getElementById('notesToggleBtn');
+        const notesSlideNum = document.getElementById('notesSlideNum');
+        const notesScriptText = document.getElementById('notesScriptText');
+        const notesSuggestedTime = document.getElementById('notesSuggestedTime');
+        const notesFocusPoint = document.getElementById('notesFocusPoint');
+
+        // Cronómetro
+        let stopwatchTimer = null;
+        let stopwatchSeconds = 0;
+        let stopwatchRunning = false;
+        const stopwatchDisplay = document.getElementById('stopwatchDisplay');
+        const stopwatchBtn = document.getElementById('stopwatchBtn');
+
+        // Inicialización y Actualización de UI
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+            const percent = ((currentIdx + 1) / totalSlides) * 100;
+            progressBar.style.width = percent + '%';
+            pageIndicator.innerText = `${currentIdx + 1} / ${totalSlides}`;
+            
+            // Actualizar notas del ponente
+            updateSpeakerNotes();
+        }
+
+        function changeSlide(dir) {
+            currentIdx = (currentIdx + dir + totalSlides) % totalSlides;
+            updateUI();
+        }
+
+        function goToSlide(idx) {
+            currentIdx = idx - 1;
+            updateUI();
+        }
+
+        // Teclado para controlar diapositivas
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") {
+                e.preventDefault();
+                changeSlide(1);
+            }
+            if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                changeSlide(-1);
+            }
+            if (e.key.toLowerCase() === "n") {
+                e.preventDefault();
+                toggleSpeakerNotes();
+            }
+        });
+
+        // Funciones del Panel del Ponente
+        function toggleSpeakerNotes() {
+            notesPanel.classList.toggle('open');
+            notesToggleBtn.classList.toggle('active');
+        }
+
+        function updateSpeakerNotes() {
+            const data = speakerNotesData[currentIdx];
+            if (data) {
+                notesSlideNum.innerText = data.slideNum;
+                notesScriptText.innerHTML = data.script;
+                notesSuggestedTime.innerText = data.time;
+                notesFocusPoint.innerText = data.focus;
+            }
+        }
+
+        // Cronómetro de Ensayo
+        function toggleStopwatch() {
+            if (stopwatchRunning) {
+                // Pausar
+                clearInterval(stopwatchTimer);
+                stopwatchBtn.innerText = "Reanudar";
+                stopwatchRunning = false;
+            } else {
+                // Iniciar
+                stopwatchBtn.innerText = "Pausar";
+                stopwatchRunning = true;
+                stopwatchTimer = setInterval(() => {
+                    stopwatchSeconds++;
+                    const minutes = Math.floor(stopwatchSeconds / 60);
+                    const seconds = stopwatchSeconds % 60;
+                    stopwatchDisplay.innerText = 
+                        (minutes < 10 ? "0" + minutes : minutes) + ":" + 
+                        (seconds < 10 ? "0" + seconds : seconds);
+                }, 1000);
+            }
+        }
+
+        function resetStopwatch() {
+            clearInterval(stopwatchTimer);
+            stopwatchSeconds = 0;
+            stopwatchDisplay.innerText = "00:00";
+            stopwatchBtn.innerText = "Iniciar";
+            stopwatchRunning = false;
+        }
+
+        // Diapositiva 8: Simulación interactiva de hilos/bucles
+        function switchSim(mode) {
+            const badge = document.getElementById('simModeBadge');
+            const ball = document.getElementById('loopBall');
+            const cpu = document.getElementById('cpuText');
+            const cpuBar = document.getElementById('cpuBar');
+
+            if (mode === 'classic') {
+                badge.innerText = "Simulador: Modo Clásico";
+                badge.style.background = "rgba(244, 63, 94, 0.1)";
+                badge.style.color = "var(--accent-red)";
+                badge.style.borderColor = "rgba(244, 63, 94, 0.2)";
+                
+                ball.className = "loop-ball animating-classic";
+                cpu.innerText = "90% (Saturación UI)";
+                cpu.style.color = "var(--accent-red)";
+                cpuBar.style.width = "90%";
+                cpuBar.style.background = "var(--accent-red)";
+            } else {
+                badge.innerText = "Simulador: Modo Desacoplado";
+                badge.style.background = "rgba(6, 182, 212, 0.1)";
+                badge.style.color = "var(--accent-cyan)";
+                badge.style.borderColor = "rgba(6, 182, 212, 0.2)";
+                
+                ball.className = "loop-ball animating-decoupled-fast";
+                cpu.innerText = "15% (Óptimo)";
+                cpu.style.color = "var(--accent-green)";
+                cpuBar.style.width = "15%";
+                cpuBar.style.background = "var(--accent-green)";
+            }
+        }
+
+        // Diapositiva 9: Toggle interactivo de detalles de sensores
+        function switchSensorTab(sensorId) {
+            const buttons = ['accel', 'gyro', 'baro', 'mag', 'gps'];
+            buttons.forEach(id => {
+                const btn = document.getElementById('btn' + id.charAt(0).toUpperCase() + id.slice(1));
+                const pane = document.getElementById('pane' + id.charAt(0).toUpperCase() + id.slice(1));
+                
+                btn.classList.toggle('active', id === sensorId);
+                pane.classList.toggle('active', id === sensorId);
+            });
+        }
+
+        // Diapositiva 12: Toggle interactivo del dashboard
+        function switchDashView(viewId) {
+            const views = ['kpi', 'chart', 'map'];
+            views.forEach(id => {
+                const btn = document.getElementById('btnDash' + id.charAt(0).toUpperCase() + id.slice(1));
+                const view = document.getElementById('viewDash' + id.charAt(0).toUpperCase() + id.slice(1));
+                
+                btn.classList.toggle('active', id === viewId);
+                view.classList.toggle('active', id === viewId);
+            });
+        }
+
+        // Diapositiva 15: Toggle interactivo de consultas SQL
+        function switchSqlQuery(queryId) {
+            const queries = ['magnitude', 'trajectory', 'elevation'];
+            queries.forEach(id => {
+                const btn = document.getElementById('btnSql' + id.charAt(0).toUpperCase() + id.slice(1));
+                const pane = document.getElementById('paneSql' + id.charAt(0).toUpperCase() + id.slice(1));
+                
+                btn.classList.toggle('active', id === queryId);
+                pane.classList.toggle('active', id === queryId);
+            });
+        }
+
+        // Inicializar la UI al cargar
+        updateUI();
+    </script>
+</body>
+
+</html>
